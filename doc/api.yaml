@@ -33,21 +33,30 @@ tags:
   - name: login
     description: Login API
 paths:
+  # createUser
   /users:
     post:
       tags:
         - users
-      summary: start a new game
+      summary: create a new user
       description: |
-        Start a new game generating the secret number 
-        and return the created game id
+        Create a new user and return the identifier.
+      operationId: createUser
+      requestBody:
+        description: The username of the new user
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Username'
       responses:
-        "200":
-          description: new game created
+        "201":
+          description: New user created
           content:
             application/json:
               schema:
-                type: integer
+                $ref: '#/components/schemas/User/properties/id'
+        "400":
+          description: Username already taken
   
   # getUserProfile
   /users/getUserProfile:
@@ -85,13 +94,19 @@ paths:
       description: |
         Change username to a new one. The user provides a new username and the system verifies the username's validity.
       operationId: setMyUserName
+#      parameters:
+#        - name: username
+#          in: query
+#          description: The new username to be validated
+#          required: true
+#          schema:
+#            $ref: '#/components/schemas/User/properties/username'
       requestBody:
-        description: |
-          The new username to be validated.
+        description: The new username to be validated
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/User'
+              $ref: '#/components/schemas/Username'
       responses:
         "200":
           description: Username changed successfully
@@ -99,6 +114,10 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/User'
+        "400":
+          description: Username already used
+        "404":
+          description: User not found
     
     get:
       tags:
@@ -114,7 +133,28 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/UserProfile'
-        
+                
+  # getMyStream
+  /users/{userId}/getMyStream:
+    parameters:
+      - $ref: '#/components/parameters/userId'
+    get:
+      tags:
+        - users
+      summary: Get followings photos
+      description: |
+        Return an array of photos posted by the users in the user's following list
+      operationId: getMyStream
+      responses:
+        "200":
+          description: Operation successful
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Photo'
+                  
   # banUser
   /users/{userId}/banned:
     parameters:
@@ -228,10 +268,10 @@ paths:
                 $ref: "#/components/schemas/User"
 
   # unfollowUser
-  /users/{userId}/following/{followedId}:
+  /users/{userId}/following/{followingId}:
     parameters:
       - $ref: '#/components/parameters/userId'
-      - name: followedId
+      - name: followingId
         in: path
         description: id of the banned user
         required: true
@@ -252,7 +292,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/User'
         "404":
-          description: Followed user not found
+          description: Following user not found
   
   # uploadPhoto
   /photos:
@@ -276,6 +316,9 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Photo'
+                
+  /photos/getMyStream:
+    
   
   # deletePhoto
   /photos/{photoId}:
@@ -286,7 +329,7 @@ paths:
         - photos
       summary: Delete a photo
       description: |
-        Delete a photo given its id from the user profile.
+        Delete a photo from the user profile using its ID. This will also delete all associated likes and comments.
       operationId: deletePhoto
       responses:
         "200":
@@ -298,6 +341,7 @@ paths:
         "404":
           description: Photo not found
   
+  # likePhoto
   /photos/{photoId}/likes:
     parameters:
       - $ref: '#/components/parameters/photoId'
@@ -306,7 +350,7 @@ paths:
         - photos
       summary: Put a like
       description: |
-        The user can put a like to a photo
+        The user can put a like to a photo. If the photo has already been liked, no changes will be made.
       operationId: likePhoto
       requestBody:
         description: |
@@ -317,8 +361,88 @@ paths:
               $ref: '#/components/schemas/User'
       responses:
         "200":
+          description: Photo already liked
+        "201":
           description: Photo liked successfully
+        "404":
+          description: Photo not found
   
+  # unlikePhoto
+  /photos/{photoId}/likes/{likedId}:
+    parameters:
+      - $ref: '#/components/parameters/photoId'
+      - name: likedId
+        in: path
+        description: User id of the user who liked
+        required: true
+        schema:
+          $ref: '#/components/schemas/User/properties/id'
+    delete:
+      tags:
+        - photos
+      summary: Remove a like
+      description: |
+        The user can remove a like to a photo
+      operationId: unlikePhoto
+      responses:
+        "200":
+          description: Photo unliked successfully
+        "404":
+          description: Photo or like not found
+  
+  # commentPhoto
+  /photos/{photoId}/comments:
+    parameters:
+      - $ref: '#/components/parameters/photoId'
+    post:
+      tags:
+        - photos
+      summary: Post a comment
+      description: |
+        Leave a text comment on a photo
+      operationId: commentPhoto
+      requestBody:
+        description: The text comment along with the corresponding user.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Comment'
+      responses:
+        "201":
+          description: Comment created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Comment'
+        "404":
+          description: Photo not found
+      
+  # uncommentPhoto
+  /photos/{photoId}/comments/{commentId}:
+    parameters:
+      - $ref: '#/components/parameters/photoId'
+      - name: commentId
+        in: path
+        description: Id of the comment
+        required: true
+        schema:
+          $ref: '#/components/schemas/Comment/properties/id'
+    delete:
+      tags:
+        - photos
+      summary: Remove a comment
+      description: |
+        Remove a comment on a photo
+      responses:
+        "200":
+          description: Comment removed successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Comment'
+        "404":
+          description: Photo or comment not found
+      
   #doLogin
   /session:
     post:
@@ -374,12 +498,12 @@ components:
       schema:
         $ref: '#/components/schemas/Photo/properties/id'
   schemas:
-#    Username:
-#      type: string
-#      example: Maria
-#      pattern: 'ˆ.*?$'
-#      minLength: 3
-#      maxLength: 16
+    Username:
+      type: string
+      example: Maria
+      pattern: 'ˆ.*?$'
+      minLength: 3
+      maxLength: 16
     UserProfile:
       type: object
       properties:
@@ -405,12 +529,12 @@ components:
           example: 1
           readOnly: true
         username:
-          type: string
-          example: Maria
-          pattern: 'ˆ.*?$'
-          minLength: 3
-          maxLength: 16          
-#          $ref: "#/components/schemas/Username"
+#          type: string
+#          example: Maria
+#          pattern: 'ˆ.*?$'
+#          minLength: 3
+#          maxLength: 16          
+          $ref: "#/components/schemas/Username"
     Photo:
       type: object
       properties:
@@ -428,4 +552,19 @@ components:
           type: string
           format: date-time
           example: "2017-07-21T17:32:28Z"
+    Comment:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+          description: id of the comment
+          readOnly: true
+        text:
+          type: string
+          example: i like this photo!
+          description: text of the comment
+          minLength: 1
+        user:
+          $ref: '#/components/schemas/User/properties/id'
           
