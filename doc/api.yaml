@@ -1,0 +1,431 @@
+openapi: 3.0.0
+info:
+  title: WasaPhoto
+  description: |
+    Each user will be presented with a stream of photos (images) in reverse chronological order, with
+    information about when each photo was uploaded (date and time) and how many likes and comments
+    it has. 
+    
+    The stream is composed by photos from “following” (other users that the user follows).
+    
+    Users can place (and later remove) a “like” to photos from other users. Also, users can add comments to any
+    image (even those uploaded by themself). Only authors can remove their comments.
+    
+    Users can ban other users. If user Alice bans user Eve, Eve won’t be able to see any information about
+    Alice. Alice can decide to remove the ban at any moment.
+    
+    Users will have their profiles. The personal profile page for the user shows: the user’s photos (in reverse
+    chronological order), how many photos have been uploaded, and the user’s followers and following.
+    
+    Users can change their usernames, upload photos, remove photos, and follow/unfollow other users.
+    
+    Removal of an image will also remove likes and comments.
+    
+    A user can search other user profiles via username.
+    
+    A user can log in just by specifying the username. See the “Simplified login” section for details
+  version: 0.0.1
+tags:
+  - name: users
+    description: Users of the system
+  - name: photos
+    description: Photos posted by the users
+  - name: login
+    description: Login API
+paths:
+  /users:
+    post:
+      tags:
+        - users
+      summary: start a new game
+      description: |
+        Start a new game generating the secret number 
+        and return the created game id
+      responses:
+        "200":
+          description: new game created
+          content:
+            application/json:
+              schema:
+                type: integer
+  
+  # getUserProfile
+  /users/getUserProfile:
+    get:
+      tags:
+        - users
+      summary: Search by username
+      description: | 
+        Search for the user matching the provided username and return their profile.
+      operationId: getUserProfile
+      parameters:
+        - name: username
+          in: query
+          description: The username of the profile to search
+          required: true
+          schema:
+            $ref: '#/components/schemas/User/properties/username'
+      responses:
+        "200":
+          description: Profile found and retrieved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserProfile'
+          
+  # setMyUserName
+  # getUserProfileById
+  /users/{userId}:
+    parameters:
+      - $ref: '#/components/parameters/userId'
+    put:
+      tags:
+        - users
+      summary: Change username
+      description: |
+        Change username to a new one. The user provides a new username and the system verifies the username's validity.
+      operationId: setMyUserName
+      requestBody:
+        description: |
+          The new username to be validated.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        "200":
+          description: Username changed successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+    
+    get:
+      tags:
+        - users
+      summary: Get current user profile
+      description: |
+        Return the current user profile
+      operationId: getUserProfileById
+      responses:
+        "200":
+          description: Operation successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserProfile'
+        
+  # banUser
+  /users/{userId}/banned:
+    parameters:
+      - $ref: '#/components/parameters/userId'
+    put:
+      tags:
+        - users
+      summary: Ban an user
+      description: |
+        Put an user in the banned list. The users in this list cannot see any information about the current user
+      operationId: banUser
+      requestBody:
+        description: |
+          User to be banned
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        "200":
+          description: Operation successful
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+  
+  # unbanUser
+  /users/{userId}/banned/{bannedId}:
+    parameters:
+      - $ref: '#/components/parameters/userId'
+      - name: bannedId
+        in: path
+        description: id of the banned user
+        required: true
+        schema:
+          $ref: '#/components/schemas/User/properties/id'
+    delete:
+      tags: 
+        - users
+      summary: Unban an user
+      description: | 
+        Remove an user from the banned list
+      operationId: unbanUser
+      responses:
+        "200":
+          description: Operation successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        "404":
+          description: Banned user not found
+
+  # /users/{userId}/followed:
+  #   post:
+  #     tags:
+  #       - users
+  #     summary: start a new game
+  #     description: |
+  #       Start a new game generating the secret number 
+  #       and return the created game id
+  #     responses:
+  #       "200":
+  #         description: new game created
+  #         content:
+  #           application/json:
+  #             schema:
+  #               type: integer
+  # /users/{userId}/followed/{id}:
+  #   post:
+  #     tags:
+  #       - users
+  #     summary: start a new game
+  #     description: |
+  #       Start a new game generating the secret number 
+  #       and return the created game id
+  #     responses:
+  #       "200":
+  #         description: new game created
+  #         content:
+  #           application/json:
+  #             schema:
+  #               type: integer
+  
+  #followUser
+  
+  # followUser
+  /users/{userId}/following:
+    parameters:
+      - $ref: '#/components/parameters/userId'
+    put:
+      tags:
+        - users
+      summary: Follow another user
+      description: |
+        Put an user in the following list. The current user will be able to see photos posted by the users in this list.
+      operationId: followUser
+      requestBody:
+        description: |
+          User to be followed
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        "200":
+          description: User followed successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+
+  # unfollowUser
+  /users/{userId}/following/{followedId}:
+    parameters:
+      - $ref: '#/components/parameters/userId'
+      - name: followedId
+        in: path
+        description: id of the banned user
+        required: true
+        schema:
+          $ref: '#/components/schemas/User/properties/id'
+    delete:
+      tags: 
+        - users
+      summary: Unfollow an user
+      description: | 
+        Remove an user from the following list.
+      operationId: unfollowUser
+      responses:
+        "200":
+          description: User unfollowed successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        "404":
+          description: Followed user not found
+  
+  # uploadPhoto
+  /photos:
+    post:
+      tags:
+        - photos
+      summary: Upload a new photo
+      description: |
+        Upload a new photo in the user profile.
+      operationId: uploadPhoto
+      requestBody:
+        description: Create a new photo
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Photo'
+      responses:
+        "201":
+          description: Photo uploaded successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Photo'
+  
+  # deletePhoto
+  /photos/{photoId}:
+    parameters:
+      - $ref: '#/components/parameters/photoId'
+    delete:
+      tags:
+        - photos
+      summary: Delete a photo
+      description: |
+        Delete a photo given its id from the user profile.
+      operationId: deletePhoto
+      responses:
+        "200":
+          description: Photo deleted successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Photo'
+        "404":
+          description: Photo not found
+  
+  /photos/{photoId}/likes:
+    parameters:
+      - $ref: '#/components/parameters/photoId'
+    put:
+      tags:
+        - photos
+      summary: Put a like
+      description: |
+        The user can put a like to a photo
+      operationId: likePhoto
+      requestBody:
+        description: |
+          The user putting the like to the photo
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        "200":
+          description: Photo liked successfully
+  
+  #doLogin
+  /session:
+    post:
+      tags: ["login"]
+      summary: Logs in the user
+      description: |-
+        If the user does not exist, it will be created,
+        and an identifier is returned.
+        If the user exists, the user identifier is returned.
+      operationId: doLogin
+      requestBody:
+        description: User details
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: Maria
+                  pattern: 'ˆ.*?$'
+                  minLength: 3
+                  maxLength: 16
+        required: true
+      responses:
+        '201':
+          description: User log-in action successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  identifier:
+                    # change here if you decide to use an integer
+                    # or any other type of identifier
+                    type: integer
+                    example: 1
+  
+components:
+  parameters:
+    userId:
+      name: userId
+      in: path
+      description: Id of the current user
+      required: true
+      schema:
+        $ref: '#/components/schemas/User/properties/id'
+    photoId:
+      name: photoId
+      in: path
+      description: The id of the photo
+      required: true
+      schema:
+        $ref: '#/components/schemas/Photo/properties/id'
+  schemas:
+#    Username:
+#      type: string
+#      example: Maria
+#      pattern: 'ˆ.*?$'
+#      minLength: 3
+#      maxLength: 16
+    UserProfile:
+      type: object
+      properties:
+        user:
+          $ref: '#/components/schemas/User'
+        images:
+          type: array
+          items:
+            $ref: '#/components/schemas/Photo'
+        following:
+          type: array
+          items:
+            $ref: '#/components/schemas/User'
+        followers:
+          type: array
+          items:
+            $ref: '#/components/schemas/User'
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+          readOnly: true
+        username:
+          type: string
+          example: Maria
+          pattern: 'ˆ.*?$'
+          minLength: 3
+          maxLength: 16          
+#          $ref: "#/components/schemas/Username"
+    Photo:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+          readOnly: true
+        user:
+          $ref: '#/components/schemas/User/properties/id'
+        image:
+          type: string
+          format: binary
+          #example: "/images/imageId"
+        timestamp:
+          type: string
+          format: date-time
+          example: "2017-07-21T17:32:28Z"
+          
