@@ -477,8 +477,14 @@ paths:
                     # or any other type of identifier
                     type: integer
                     example: 1
-  
+      # Only disable bearer authentication for this method
+      security: []
+
 components:
+  securitySchemes:
+    userAuth:
+      type: http
+      scheme: bearer
   parameters:
     userId:
       name: userId
@@ -564,4 +570,8 @@ components:
           minLength: 1
         user:
           $ref: '#/components/schemas/User/properties/id'
+
+# Apply bearer authentication to every method
+security:
+  - userAuth: []
           
