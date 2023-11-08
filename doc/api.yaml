@@ -316,9 +316,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Photo'
-                
-  /photos/getMyStream:
-    
   
   # deletePhoto
   /photos/{photoId}:
