@@ -430,6 +430,7 @@ paths:
       summary: Remove a comment
       description: |
         Remove a comment on a photo
+      operationId: uncommentPhoto
       responses:
         "200":
           description: Comment removed successfully
