@@ -30,8 +30,16 @@ tags:
     description: Login API
   - name: users
     description: Users of the system
+  - name: ban
+    description: Users ban operations
+  - name: following
+    description: Users following operations 
   - name: photos
     description: Photos posted by the users
+  - name: likes
+    description: Photos like operations
+  - name: comments
+    description: Photos comment operations
 paths:
   # createUser
   /users:
@@ -172,7 +180,7 @@ paths:
 
     put:
       tags:
-        - users
+        - ban
       summary: Ban an user
       description: |
         Put an user in the banned list. The users in this list cannot see any information about the current user
@@ -187,7 +195,7 @@ paths:
 
     delete:
       tags: 
-        - users
+        - ban
       summary: Unban an user
       description: | 
         Remove an user from the banned list
@@ -219,7 +227,7 @@ paths:
 
     put:
       tags:
-        - users
+        - following
       summary: Follow another user
       description: |
         Put an user in the following list. The current user will be able to see photos posted by the users in this list.
@@ -234,7 +242,7 @@ paths:
       
     delete:
       tags: 
-        - users
+        - following
       summary: Unfollow an user
       description: | 
         Remove an user from the following list.
@@ -310,7 +318,7 @@ paths:
 
     put:
       tags:
-        - photos
+        - likes
       summary: Put a like
       description: |
         The user can put a like to a photo. If the photo has already been liked, no changes will be made.
@@ -325,7 +333,7 @@ paths:
 
     delete:
       tags:
-        - photos
+        - likes
       summary: Remove a like
       description: |
         The user can remove a like to a photo
@@ -342,7 +350,7 @@ paths:
       - $ref: '#/components/parameters/photoId'
     post:
       tags:
-        - photos
+        - comments
       summary: Post a comment
       description: |
         Leave a text comment on a photo
@@ -375,7 +383,7 @@ paths:
           $ref: '#/components/schemas/Comment/properties/id'
     delete:
       tags:
-        - photos
+        - comments
       summary: Remove a comment
       description: |
         Remove a comment on a photo
