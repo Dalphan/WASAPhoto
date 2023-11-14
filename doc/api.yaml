@@ -26,12 +26,12 @@ info:
     A user can log in just by specifying the username. See the “Simplified login” section for details
   version: 0.0.1
 tags:
+  - name: login
+    description: Login API
   - name: users
     description: Users of the system
   - name: photos
     description: Photos posted by the users
-  - name: login
-    description: Login API
 paths:
   # createUser
   /users:
@@ -156,9 +156,20 @@ paths:
                   $ref: '#/components/schemas/Photo'
                   
   # banUser
-  /users/{userId}/banned:
+  # /users/{userId}/banned:
+
+  # banUser
+  # unbanUser
+  /users/{userId}/banned/{bannedId}:
     parameters:
       - $ref: '#/components/parameters/userId'
+      - name: bannedId
+        in: path
+        description: Id of ther user to ban
+        required: true
+        schema:
+          $ref: '#/components/schemas/User/properties/id'
+
     put:
       tags:
         - users
@@ -166,13 +177,6 @@ paths:
       description: |
         Put an user in the banned list. The users in this list cannot see any information about the current user
       operationId: banUser
-      requestBody:
-        description: |
-          User to be banned
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/User'
       responses:
         "200":
           description: Operation successful
@@ -180,17 +184,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/User"
-  
-  # unbanUser
-  /users/{userId}/banned/{bannedId}:
-    parameters:
-      - $ref: '#/components/parameters/userId'
-      - name: bannedId
-        in: path
-        description: id of the banned user
-        required: true
-        schema:
-          $ref: '#/components/schemas/User/properties/id'
+
     delete:
       tags: 
         - users
@@ -208,43 +202,21 @@ paths:
         "404":
           description: Banned user not found
 
-  # /users/{userId}/followed:
-  #   post:
-  #     tags:
-  #       - users
-  #     summary: start a new game
-  #     description: |
-  #       Start a new game generating the secret number 
-  #       and return the created game id
-  #     responses:
-  #       "200":
-  #         description: new game created
-  #         content:
-  #           application/json:
-  #             schema:
-  #               type: integer
-  # /users/{userId}/followed/{id}:
-  #   post:
-  #     tags:
-  #       - users
-  #     summary: start a new game
-  #     description: |
-  #       Start a new game generating the secret number 
-  #       and return the created game id
-  #     responses:
-  #       "200":
-  #         description: new game created
-  #         content:
-  #           application/json:
-  #             schema:
-  #               type: integer
-  
-  #followUser
-  
   # followUser
-  /users/{userId}/following:
+  #/users/{userId}/following:  
+
+  # followUser
+  # unfollowUser
+  /users/{userId}/following/{followingId}:
     parameters:
       - $ref: '#/components/parameters/userId'
+      - name: followingId
+        in: path
+        description: Id of the user to follow
+        required: true
+        schema:
+          $ref: '#/components/schemas/User/properties/id'
+
     put:
       tags:
         - users
@@ -252,13 +224,6 @@ paths:
       description: |
         Put an user in the following list. The current user will be able to see photos posted by the users in this list.
       operationId: followUser
-      requestBody:
-        description: |
-          User to be followed
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/User'
       responses:
         "200":
           description: User followed successfully
@@ -266,17 +231,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/User"
-
-  # unfollowUser
-  /users/{userId}/following/{followingId}:
-    parameters:
-      - $ref: '#/components/parameters/userId'
-      - name: followingId
-        in: path
-        description: id of the banned user
-        required: true
-        schema:
-          $ref: '#/components/schemas/User/properties/id'
+      
     delete:
       tags: 
         - users
@@ -339,9 +294,20 @@ paths:
           description: Photo not found
   
   # likePhoto
-  /photos/{photoId}/likes:
+  # /photos/{photoId}/likes:
+  
+  # likePhoto
+  # unlikePhoto
+  /photos/{photoId}/likes/{likedId}:
     parameters:
       - $ref: '#/components/parameters/photoId'
+      - name: likedId
+        in: path
+        description: Id of the user putting the like
+        required: true
+        schema:
+          $ref: '#/components/schemas/User/properties/id'
+
     put:
       tags:
         - photos
@@ -349,13 +315,6 @@ paths:
       description: |
         The user can put a like to a photo. If the photo has already been liked, no changes will be made.
       operationId: likePhoto
-      requestBody:
-        description: |
-          The user putting the like to the photo
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/User'
       responses:
         "200":
           description: Photo already liked
@@ -363,17 +322,7 @@ paths:
           description: Photo liked successfully
         "404":
           description: Photo not found
-  
-  # unlikePhoto
-  /photos/{photoId}/likes/{likedId}:
-    parameters:
-      - $ref: '#/components/parameters/photoId'
-      - name: likedId
-        in: path
-        description: User id of the user who liked
-        required: true
-        schema:
-          $ref: '#/components/schemas/User/properties/id'
+
     delete:
       tags:
         - photos
@@ -504,7 +453,7 @@ components:
   schemas:
     Username:
       type: string
-      example: Maria
+      example: Maria99
       pattern: 'ˆ.*?$'
       minLength: 3
       maxLength: 16
@@ -526,6 +475,8 @@ components:
           items:
             $ref: '#/components/schemas/User'
     User:
+      description: |
+        The profile of the user
       type: object
       properties:
         id:
@@ -539,6 +490,31 @@ components:
 #          minLength: 3
 #          maxLength: 16          
           $ref: "#/components/schemas/Username"
+        name:
+          type: string
+          example: Maria
+          minLength: 1
+          maxLength: 20
+        surname:
+          type: string
+          example: Rossi
+          minLength: 1
+          maxLength: 25
+        followersCount:
+          type: integer
+          example: 10
+          minimum: 0
+          readOnly: true
+        followingCount:
+          type: integer
+          example: 10
+          minimum: 0
+          readOnly: true
+        photoCount:
+          type: integer
+          example: 12
+          minimum: 0
+          readOnly: true
     Photo:
       type: object
       properties:
