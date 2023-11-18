@@ -41,33 +41,8 @@ tags:
   - name: comments
     description: Photos comment operations
 paths:
-  # createUser
-  # /users:
-  #   post:
-  #     tags:
-  #       - users
-  #     summary: create a new user
-  #     description: |
-  #       Create a new user and return the identifier.
-  #     operationId: createUser
-  #     requestBody:
-  #       description: The username of the new user
-  #       content:
-  #         application/json:
-  #           schema:
-  #             $ref: '#/components/schemas/Username'
-  #     responses:
-  #       "201":
-  #         description: New user created
-  #         content:
-  #           application/json:
-  #             schema:
-  #               $ref: '#/components/schemas/User/properties/id'
-  #       "400":
-  #         description: Username already taken
-  
   # getUserProfile
-  /users/:
+  /users:
     get:
       tags:
         - users
@@ -89,8 +64,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/User'
+        "400":
+          $ref: '#/components/responses/BadRequest'
+        "406":
+          $ref: '#/components/responses/NotAcceptable'
           
-  # setMyUserName
+  # updateProfile
   # getUserProfileById
   /users/{userId}:
     parameters:
@@ -98,33 +77,27 @@ paths:
     put:
       tags:
         - users
-      summary: Change username
+      summary: Update profile
       description: |
-        Change username to a new one. The user provides a new username and the system verifies the username's validity.
-      operationId: setMyUserName
-#      parameters:
-#        - name: username
-#          in: query
-#          description: The new username to be validated
-#          required: true
-#          schema:
-#            $ref: '#/components/schemas/User/properties/username'
+        Update information about the user profile. The user can change name, surname or his username.
+      operationId: updateProfile
       requestBody:
-        description: The new username to be validated
+        description: The user with the information to change 
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Username'
+              $ref: '#/components/schemas/User'
       responses:
         "200":
-          description: Username changed successfully
+          description: Infomrations changed successfully
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/User'
-        "400": { $ref: '#/components/responses/BadRequest'} 
+        "400": 
+          $ref: '#/components/responses/BadRequest'
         "404":
-          description: User not found
+          $ref: '#/components/responses/NotFound'
     
     get:
       tags:
@@ -140,6 +113,43 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/User'
+        "400": 
+          $ref: '#/components/responses/BadRequest'
+        "404":
+          $ref: '#/components/responses/NotFound'
+  
+  # setMyUserName
+  /users/{userId}/username:
+    parameters:
+      - $ref: '#/components/parameters/userId'
+    
+    put:
+      tags:
+        - users
+      summary: Change username
+      description: |
+        Change username to a new one. The user provides a new username and the system verifies the username's validity.
+      operationId: setMyUserName
+      parameters:
+        - name: username
+          in: query
+          description: The new username to be validated
+          required: true
+          schema:
+            $ref: '#/components/schemas/User/properties/username'
+      responses:
+        "200":
+          description: Username changed successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        "400": 
+          $ref: '#/components/responses/BadRequest'
+        "404":
+          $ref: '#/components/responses/NotFound'
+        "406":
+          $ref: '#/components/responses/NotAcceptable'
                 
   # getMyStream
   /users/{userId}/stream:
@@ -161,9 +171,10 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Photo'
-                  
-  # banUser
-  # /users/{userId}/banned:
+        "400": 
+          $ref: '#/components/responses/BadRequest'
+        "404":
+          $ref: '#/components/responses/NotFound'
 
   # banUser
   # unbanUser
@@ -186,11 +197,21 @@ paths:
       operationId: banUser
       responses:
         "200":
-          description: Operation successful
+          description: The user was already banned
+          content:
+            text/plain:
+              schema:
+                type: string
+        "201":
+          description: User banned successfully
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/User"
+        "400": 
+          $ref: '#/components/responses/BadRequest'
+        "404":
+          $ref: '#/components/responses/NotFound'
 
     delete:
       tags: 
@@ -201,13 +222,15 @@ paths:
       operationId: unbanUser
       responses:
         "200":
-          description: Operation successful
+          description: User unbanned successfully
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/User'
+        "400": 
+          $ref: '#/components/responses/BadRequest'
         "404":
-          description: Banned user not found
+          $ref: '#/components/responses/NotFound'
 
   # getFollowing
   /users/{userId}/following:
@@ -233,6 +256,10 @@ paths:
                 maxItems: 2147483647  #integer max value
                 items:
                   $ref: '#/components/schemas/User'
+        "400": 
+          $ref: '#/components/responses/BadRequest'
+        "404":
+          $ref: '#/components/responses/NotFound'
 
   # getFollowers
   /users/{userId}/followers:
@@ -258,6 +285,10 @@ paths:
                 maxItems: 2147483647  #integer max value
                 items:
                   $ref: '#/components/schemas/User'
+        "400": 
+          $ref: '#/components/responses/BadRequest'
+        "404":
+          $ref: '#/components/responses/NotFound'
 
   # followUser
   # unfollowUser
@@ -280,11 +311,21 @@ paths:
       operationId: followUser
       responses:
         "200":
+          description: User was already followed
+          content:
+            text/plain:
+              schema: 
+                type: string
+        "201":
           description: User followed successfully
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/User"
+        "400": 
+          $ref: '#/components/responses/BadRequest'
+        "404":
+          $ref: '#/components/responses/NotFound'
       
     delete:
       tags: 
@@ -300,8 +341,10 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/User'
+        "400": 
+          $ref: '#/components/responses/BadRequest'
         "404":
-          description: Following user not found
+          $ref: '#/components/responses/NotFound'
   
   # uploadPhoto
   /photos:
@@ -325,7 +368,10 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Photo'
-        "400": { $ref: '#/components/responses/BadRequest'} 
+        "400": 
+          $ref: '#/components/responses/BadRequest'
+        "406": 
+          $ref: '#/components/responses/NotAcceptable'
   
   # deletePhoto
   /photos/{photoId}:
@@ -345,11 +391,10 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Photo'
+        "400": 
+          $ref: '#/components/responses/BadRequest'
         "404":
-          description: Photo not found
-  
-  # likePhoto
-  # /photos/{photoId}/likes:
+          $ref: '#/components/responses/NotFound'
   
   # likePhoto
   # unlikePhoto
@@ -373,10 +418,20 @@ paths:
       responses:
         "200":
           description: Photo already liked
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Photo'
         "201":
           description: Photo liked successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Photo'
+        "400": 
+          $ref: '#/components/responses/BadRequest'
         "404":
-          description: Photo not found
+          $ref: '#/components/responses/NotFound'
 
     delete:
       tags:
@@ -388,8 +443,14 @@ paths:
       responses:
         "200":
           description: Photo unliked successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Photo'
+        "400": 
+          $ref: '#/components/responses/BadRequest'
         "404":
-          description: Photo or like not found
+          $ref: '#/components/responses/NotFound'
   
   # getComments
   # commentPhoto
@@ -416,6 +477,10 @@ paths:
                 maxItems: 1000000
                 items:
                   $ref: '#/components/schemas/Comment'
+        "400": 
+          $ref: '#/components/responses/BadRequest'
+        "404":
+          $ref: '#/components/responses/NotFound'
     
     post:
       tags:
@@ -437,8 +502,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Comment'
+        "400": 
+          $ref: '#/components/responses/BadRequest'
         "404":
-          description: Photo not found
+          $ref: '#/components/responses/NotFound'
+        "406": 
+          $ref: '#/components/responses/NotAcceptable'
       
   # uncommentPhoto
   /photos/{photoId}/comments/{commentId}:
@@ -464,8 +533,10 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Comment'
+        "400": 
+          $ref: '#/components/responses/BadRequest'
         "404":
-          description: Photo or comment not found
+          $ref: '#/components/responses/NotFound'
       
   #doLogin
   /session:
@@ -636,6 +707,7 @@ components:
           example: i like this photo!
           description: text of the comment
           minLength: 1
+          maxLength: 5000
         user:
           $ref: '#/components/schemas/User/properties/id'
     Error:
@@ -648,6 +720,20 @@ components:
     BadRequest:
       description: |
         The server could not understand the request due to malformed syntax, invalid parameters, or missing required information.
+      content:
+        text/plain:
+          schema:
+            $ref: '#/components/schemas/Error'
+    NotFound:
+      description: |
+        Resource not found. The requested URL or endpoint does not exist.
+      content:
+        text/plain:
+          schema:
+            $ref: '#/components/schemas/Error'
+    NotAcceptable:
+      description: |
+        Requested representation not acceptable. Adjust request headers or content.
       content:
         text/plain:
           schema:
