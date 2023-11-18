@@ -42,32 +42,32 @@ tags:
     description: Photos comment operations
 paths:
   # createUser
-  /users:
-    post:
-      tags:
-        - users
-      summary: create a new user
-      description: |
-        Create a new user and return the identifier.
-      operationId: createUser
-      requestBody:
-        description: The username of the new user
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Username'
-      responses:
-        "201":
-          description: New user created
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/User/properties/id'
-        "400":
-          description: Username already taken
+  # /users:
+  #   post:
+  #     tags:
+  #       - users
+  #     summary: create a new user
+  #     description: |
+  #       Create a new user and return the identifier.
+  #     operationId: createUser
+  #     requestBody:
+  #       description: The username of the new user
+  #       content:
+  #         application/json:
+  #           schema:
+  #             $ref: '#/components/schemas/Username'
+  #     responses:
+  #       "201":
+  #         description: New user created
+  #         content:
+  #           application/json:
+  #             schema:
+  #               $ref: '#/components/schemas/User/properties/id'
+  #       "400":
+  #         description: Username already taken
   
   # getUserProfile
-  /users/getUserProfile:
+  /users/:
     get:
       tags:
         - users
@@ -122,8 +122,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/User'
-        "400":
-          description: Username already used
+        "400": { $ref: '#/components/responses/BadRequest'} 
         "404":
           description: User not found
     
@@ -143,7 +142,7 @@ paths:
                 $ref: '#/components/schemas/UserProfile'
                 
   # getMyStream
-  /users/{userId}/getMyStream:
+  /users/{userId}/stream:
     parameters:
       - $ref: '#/components/parameters/userId'
     get:
@@ -267,11 +266,11 @@ paths:
         Upload a new photo in the user profile.
       operationId: uploadPhoto
       requestBody:
-        description: Create a new photo
+        description: The photo to be posted
         content:
-          application/json:
+          image/*:
             schema:
-              $ref: '#/components/schemas/Photo'
+              $ref: '#/components/schemas/Photo/properties/image'     
       responses:
         "201":
           description: Photo uploaded successfully
@@ -279,6 +278,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Photo'
+        "400": { $ref: '#/components/responses/BadRequest'} 
   
   # deletePhoto
   /photos/{photoId}:
@@ -530,8 +530,11 @@ components:
         user:
           $ref: '#/components/schemas/User/properties/id'
         image:
+          description: The binary representation of the photo. Max 20MB supported
           type: string
           format: binary
+          minLength: 1
+          maxLength: 20971520 
         timestamp:
           type: string
           format: date-time
@@ -566,6 +569,20 @@ components:
           minLength: 1
         user:
           $ref: '#/components/schemas/User/properties/id'
+    Error:
+      description: Message containing additional info about the error
+      type: string
+      minLength: 0
+      maxLength: 255
+      readOnly: true
+  responses:
+    BadRequest:
+      description: |
+        The server could not understand the request due to malformed syntax, invalid parameters, or missing required information.
+      content:
+        text/plain:
+          schema:
+            $ref: '#/components/schemas/Error'
 
 # Apply bearer authentication to every method
 security:
