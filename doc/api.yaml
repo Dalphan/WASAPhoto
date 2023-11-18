@@ -88,7 +88,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/UserProfile'
+                $ref: '#/components/schemas/User'
           
   # setMyUserName
   # getUserProfileById
@@ -139,7 +139,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/UserProfile'
+                $ref: '#/components/schemas/User'
                 
   # getMyStream
   /users/{userId}/stream:
@@ -209,8 +209,55 @@ paths:
         "404":
           description: Banned user not found
 
-  # followUser
-  #/users/{userId}/following:  
+  # getFollowing
+  /users/{userId}/following:
+    parameters:
+      - $ref: '#/components/parameters/userId'
+    
+    get:
+      tags:
+        - following
+      summary: Return user followings
+      description: |
+        Return the list of users followed by the current user
+      operationId: getFollowings
+      responses:
+        "200":
+          description: List returned successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                description: The list of the users
+                minItems: 0
+                maxItems: 2147483647  #integer max value
+                items:
+                  $ref: '#/components/schemas/User'
+
+  # getFollowers
+  /users/{userId}/followers:
+    parameters:
+      - $ref: '#/components/parameters/userId'
+
+    get:
+      tags:
+        - following
+      summary: Return user followers
+      description: |
+        Return the list of users who follow the current user
+      operationId: getFollowers
+      responses:
+        "200":
+          description: List returned successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                description: The list of the users
+                minItems: 0
+                maxItems: 2147483647  #integer max value
+                items:
+                  $ref: '#/components/schemas/User'
 
   # followUser
   # unfollowUser
@@ -344,10 +391,32 @@ paths:
         "404":
           description: Photo or like not found
   
+  # getComments
   # commentPhoto
   /photos/{photoId}/comments:
     parameters:
       - $ref: '#/components/parameters/photoId'
+
+    get:
+      tags:
+        - comments
+      summary: Return photo comments
+      description: |
+        Return the list of comments for the given photo
+      operationId: getComments
+      responses:
+        "200":
+          description: List returned successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                description: The list of comments
+                minItems: 0
+                maxItems: 1000000
+                items:
+                  $ref: '#/components/schemas/Comment'
+    
     post:
       tags:
         - comments
@@ -462,7 +531,7 @@ components:
     Username:
       type: string
       example: Maria99
-      pattern: 'ˆ.*?$'
+      pattern: '^[a-zA-Z0-9._]{3,16}$'
       minLength: 3
       maxLength: 16
     UserProfile:
