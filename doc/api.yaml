@@ -712,6 +712,8 @@ components:
           maxLength: 5000
         user:
           $ref: '#/components/schemas/User/properties/id'
+        photo:
+          $ref: '#/components/schemas/Photo/properties/id' 
     Error:
       description: Message containing additional info about the error
       type: string
