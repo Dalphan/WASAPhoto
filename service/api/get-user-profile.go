@@ -4,7 +4,7 @@ import (
 	"errors"
 	"net/http"
 
-	"github.com/Dalphan/WASAPhoto/service/api/utils"
+	"github.com/Dalphan/WASAPhoto/service/utils"
 	"github.com/julienschmidt/httprouter"
 )
 

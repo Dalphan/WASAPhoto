@@ -1,7 +1,7 @@
 package api
 
 import (
-	"github.com/Dalphan/WASAPhoto/service/api/utils"
+	"github.com/Dalphan/WASAPhoto/service/utils"
 )
 
 var users = []utils.User{
