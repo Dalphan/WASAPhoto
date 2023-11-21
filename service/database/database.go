@@ -59,7 +59,85 @@ func New(db *sql.DB) (AppDatabase, error) {
 	var tableName string
 	err := db.QueryRow(`SELECT name FROM sqlite_master WHERE type='table' AND name='example_table';`).Scan(&tableName)
 	if errors.Is(err, sql.ErrNoRows) {
-		sqlStmt := `CREATE TABLE example_table (id INTEGER NOT NULL PRIMARY KEY, name TEXT);`
+		//sqlStmt := `CREATE TABLE example_table (id INTEGER NOT NULL PRIMARY KEY, name TEXT);`
+		// _, err = db.Exec(sqlStmt)
+		// if err != nil {
+		// 	return nil, fmt.Errorf("error creating database structure: %w", err)
+		// }
+		sqlStmt := `PRAGMA foreign_keys = ON`
+		_, err = db.Exec(sqlStmt)
+		if err != nil {
+			return nil, fmt.Errorf("error creating database structure: %w", err)
+		}
+
+		sqlStmt = `CREATE TABLE "Users" (
+			"UID" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+			"Username" TEXT NOT NULL UNIQUE,
+			"name" TEXT,
+			"surname" TEXT
+		);`
+		_, err = db.Exec(sqlStmt)
+		if err != nil {
+			return nil, fmt.Errorf("error creating database structure: %w", err)
+		}
+
+		sqlStmt = `CREATE TABLE "Photo" (
+			"PID" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+			"UID" INTEGER NOT NULL,
+			"image" BLOB,
+			"date" TEXT,
+			FOREIGN KEY (UID) references Users(UID)
+		);`
+		_, err = db.Exec(sqlStmt)
+		if err != nil {
+			return nil, fmt.Errorf("error creating database structure: %w", err)
+		}
+
+		sqlStmt = `CREATE TABLE "Comment" (
+			"CID" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT
+			"PID" INTEGER NOT NULL,
+			"UID" INTEGER NOT NULL,
+			"text" TEXT,
+			"date" TEXT,
+			FOREIGN KEY (UID) references Users(UID)
+			FOREIGN KEY (PID) references Photo(PID)
+		);`
+		_, err = db.Exec(sqlStmt)
+		if err != nil {
+			return nil, fmt.Errorf("error creating database structure: %w", err)
+		}
+
+		sqlStmt = `CREATE TABLE "Like" (
+			"PID" INTEGER NOT NULL,
+			"UID" INTEGER NOT NULL,
+			PRIMARY KEY (PID, UID),
+			FOREIGN KEY (UID) references Users(UID)
+			FOREIGN KEY (PID) references Photo(PID)
+		);`
+		_, err = db.Exec(sqlStmt)
+		if err != nil {
+			return nil, fmt.Errorf("error creating database structure: %w", err)
+		}
+
+		sqlStmt = `CREATE TABLE "Bans" (
+			"UID" INTEGER NOT NULL,
+			"BannedID" INTEGER NOT NULL,
+			PRIMARY KEY (UID, BannedID),
+			FOREIGN KEY (UID) references Users(UID)
+			FOREIGN KEY (BannedID) references Users(UID)
+		);`
+		_, err = db.Exec(sqlStmt)
+		if err != nil {
+			return nil, fmt.Errorf("error creating database structure: %w", err)
+		}
+
+		sqlStmt = `CREATE TABLE "Followings" (
+			"UID" INTEGER NOT NULL,
+			"followedID" INTEGER NOT NULL,
+			PRIMARY KEY (UID, followedID),
+			FOREIGN KEY (UID) references Users(UID)
+			FOREIGN KEY (followedID) references Users(UID)
+		);`
 		_, err = db.Exec(sqlStmt)
 		if err != nil {
 			return nil, fmt.Errorf("error creating database structure: %w", err)

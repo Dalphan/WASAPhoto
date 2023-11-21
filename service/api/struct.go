@@ -26,4 +26,5 @@ type Comment struct {
 	Text      string `json:"text"`
 	UserID    uint   `json:"user"`
 	PhotoID   uint   `json:"photo"`
+	Date      string `json:"date"`
 }
