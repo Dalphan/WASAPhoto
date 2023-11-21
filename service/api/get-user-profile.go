@@ -4,7 +4,7 @@ import (
 	"errors"
 	"net/http"
 
-	_ "github.com/Dalphan/WASAPhoto/service/api/utilities"
+	"github.com/Dalphan/WASAPhoto/service/api/utils"
 	"github.com/julienschmidt/httprouter"
 )
 
@@ -13,11 +13,11 @@ func (rt *_router) getUserProfile(w http.ResponseWriter, r *http.Request, ps htt
 
 	username := r.URL.Query().Get("username")
 
-	err := validateUsername(username)
+	err := utils.ValidateUsername(username)
 
-	if errors.Is(err, ErrUsernameMissing) {
+	if errors.Is(err, utils.ErrUsernameMissing) {
 		http.Error(w, err.Error(), http.StatusBadRequest)
-	} else if errors.Is(err, ErrUsernameNotValid) {
+	} else if errors.Is(err, utils.ErrUsernameNotValid) {
 		http.Error(w, err.Error(), http.StatusNotAcceptable)
 		//other way
 		//w.WriteHeader(http.StatusNotAcceptable)
