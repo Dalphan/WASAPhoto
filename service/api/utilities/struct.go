@@ -1,4 +1,6 @@
-package api
+package utilities
+
+import "errors"
 
 // `
 
@@ -27,4 +29,17 @@ type Comment struct {
 	UserID    uint   `json:"user"`
 	PhotoID   uint   `json:"photo"`
 	Date      string `json:"date"`
+}
+
+var ErrUsernameMissing = errors.New("missing required username")
+var ErrUsernameNotValid = errors.New("the username doesnt match the required pattern")
+
+func validateUsername(username string) error {
+	if len(username) == 0 {
+		return ErrUsernameMissing
+	}
+	if len(username) < 3 || len(username) > 16 {
+		return ErrUsernameNotValid
+	}
+	return nil
 }

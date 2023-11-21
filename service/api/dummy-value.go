@@ -1,5 +1,9 @@
 package api
 
+import (
+	_ "github.com/Dalphan/WASAPhoto/service/api/utilities"
+)
+
 var users = []User{
 	{
 		UserID:         1,
