@@ -18,23 +18,11 @@ func (rt *_router) login(w http.ResponseWriter, r *http.Request, ps httprouter.P
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-	// username := string(bytedata)
 
+	var UID int
 	var result map[string]string
 	json.Unmarshal([]byte(bytedata), &result)
 	username := result["name"]
-
-	// decoder := json.NewDecoder(r.Body)
-	// var username string
-	// err := decoder.Decode(&username)
-	// if err != nil {
-	// 	panic(err)
-	// }
-
-	//username := ps.ByName("name")
-	// r.ParseForm()
-	// username := r.Form.Get("name")
-	var UID int
 
 	fmt.Println("USername: ", username)
 
@@ -58,5 +46,6 @@ func (rt *_router) login(w http.ResponseWriter, r *http.Request, ps httprouter.P
 		UID = int(user.UserID)
 	}
 
+	w.WriteHeader(http.StatusCreated)
 	json.NewEncoder(w).Encode(UID)
 }

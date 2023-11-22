@@ -8,22 +8,25 @@ import (
 )
 
 func (db *appdbimpl) FindUserByUsername(username string) (utils.User, int, error) {
-	var UID int
-	var name, surname string
+	var user utils.User
+
 	err := db.c.QueryRow(`	SELECT 
 								UID,
-								Username,
 								name,
 								surname
 							FROM Users
-							Where Username = ?`, username).Scan(&UID, &name, &surname)
+							Where Username = ?`, username).Scan(&user.UserID, &user.Name, &user.Surname)
+
+	// La SELECT non ritorna niente
 	if errors.Is(err, sql.ErrNoRows) {
 		return *new(utils.User), NO_ROWS, nil
-	} else if err != nil {
-		return *new(utils.User), NO_ROWS, nil
+	} else if user.UserID != 0 { // La SELECT ha ritornato un utente che ha solo username al momento
+		return user, SUCCESS, nil
+	} else if err != nil { //La SELECT ha ritornato un errore imprevisto
+		return user, ERROR, err
 	}
-
-	return *new(utils.User), SUCCESS, nil
+	//La SELECT ha ritornato l'utente completo di informazioni
+	return user, SUCCESS, nil
 }
 
 func (db *appdbimpl) CreateUser(username string) (int, int, error) {
