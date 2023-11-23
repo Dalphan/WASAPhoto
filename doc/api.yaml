@@ -108,7 +108,7 @@ paths:
       operationId: getUserProfileById
       responses:
         "200":
-          description: Operation successful
+          description: Profile returned successfully
           content:
             application/json:
               schema:
@@ -170,11 +170,13 @@ paths:
       operationId: getMyStream
       responses:
         "200":
-          description: Operation successful
+          description: Photos returned successfully
           content:
             application/json:
               schema:
                 type: array
+                minItems: 0
+                maxItems: 10000
                 items:
                   $ref: '#/components/schemas/Photo'
         "400": 
@@ -559,14 +561,7 @@ paths:
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                name:
-                  type: string
-                  example: Maria
-                  pattern: 'ˆ.*?$'
-                  minLength: 3
-                  maxLength: 16
+              $ref: '#/components/schemas/Username'
         required: true
       responses:
         '201':
@@ -613,6 +608,7 @@ components:
   schemas:
     Username:
       type: string
+      description: The username of the user. Should be aplhanumeric between 3 and 16 characters.
       example: Maria99
       pattern: '^[a-zA-Z0-9._]{3,16}$'
       minLength: 3
@@ -622,24 +618,24 @@ components:
       type: string
       format: binary
       minLength: 1
-      maxLength: 20971520 
-    UserProfile:
-      type: object
-      properties:
-        user:
-          $ref: '#/components/schemas/User'
-        images:
-          type: array
-          items:
-            $ref: '#/components/schemas/Photo'
-        following:
-          type: array
-          items:
-            $ref: '#/components/schemas/User'
-        followers:
-          type: array
-          items:
-            $ref: '#/components/schemas/User'
+      maxLength: 20971520
+    # UserProfile:
+    #   type: object
+    #   properties:
+    #     user:
+    #       $ref: '#/components/schemas/User'
+    #     images:
+    #       type: array
+    #       items:
+    #         $ref: '#/components/schemas/Photo'
+    #     following:
+    #       type: array
+    #       items:
+    #         $ref: '#/components/schemas/User'
+    #     followers:
+    #       type: array
+    #       items:
+    #         $ref: '#/components/schemas/User'
     User:
       description: |
         The profile of the user
@@ -647,32 +643,38 @@ components:
       properties:
         id:
           type: integer
+          description: The ID of the user
           example: 1
           readOnly: true
         username:         
           $ref: "#/components/schemas/Username"
         name:
           type: string
+          description: The user's name
           example: Maria
           minLength: 1
           maxLength: 20
         surname:
           type: string
+          description: The user's surname
           example: Rossi
           minLength: 1
           maxLength: 25
         followersCount:
           type: integer
+          description: The number of users who follow the current user
           example: 10
           minimum: 0
           readOnly: true
         followingCount:
           type: integer
+          description: The number of users followed by the current user
           example: 10
           minimum: 0
           readOnly: true
         photoCount:
           type: integer
+          description: The number of photos posted by the user
           example: 12
           minimum: 0
           readOnly: true
@@ -683,6 +685,7 @@ components:
       properties:
         id:
           type: integer
+          description: The ID of the photo
           example: 1
           readOnly: true
         user:
@@ -691,6 +694,7 @@ components:
           $ref: '#/components/schemas/Image'
         timestamp:
           type: string
+          description: The date and time when the image was posted
           format: date-time
           example: "2017-07-21T17:32:28Z"
           minLength: 20
@@ -714,12 +718,12 @@ components:
         id:
           type: integer
           example: 1
-          description: id of the comment
+          description: The Id of the comment
           readOnly: true
         text:
           type: string
-          example: i like this photo!
-          description: text of the comment
+          example: I like this photo!
+          description: The text of the comment
           minLength: 1
           maxLength: 5000
         user:
@@ -728,6 +732,7 @@ components:
           $ref: '#/components/schemas/Photo/properties/id' 
         date:
           type: string
+          description: The date and time when the comment was posted
           format: date-time
           example: "2017-07-21T17:32:28Z"
           minLength: 20
