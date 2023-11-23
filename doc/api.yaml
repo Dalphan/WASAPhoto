@@ -575,6 +575,12 @@ paths:
                     # or any other type of identifier
                     type: integer
                     example: 1
+        "400": 
+          $ref: '#/components/responses/BadRequest'
+        "406":
+          $ref: '#/components/responses/NotAcceptable'
+        "500":
+          $ref: '#/components/responses/InternalServerError'
       # Only disable bearer authentication for this method
       security: []
 
@@ -745,6 +751,13 @@ components:
     NotAcceptable:
       description: |
         Requested representation not acceptable. Adjust request headers or content.
+      content:
+        text/plain:
+          schema:
+            $ref: '#/components/schemas/Error'
+    InternalServerError:
+      description: |
+        Internal Server Error. An unexpected server error occurred while processing the request.
       content:
         text/plain:
           schema:

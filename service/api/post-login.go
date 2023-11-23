@@ -2,29 +2,36 @@ package api
 
 import (
 	"encoding/json"
-	"fmt"
-	"io"
+	"errors"
 	"net/http"
 
 	"github.com/Dalphan/WASAPhoto/service/database"
+	"github.com/Dalphan/WASAPhoto/service/utils"
 	"github.com/julienschmidt/httprouter"
 )
 
 func (rt *_router) login(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	w.Header().Set("content-type", "application/json")
 
-	bytedata, err := io.ReadAll(r.Body)
+	var UID int
+	var requestBody map[string]string
+	err := json.NewDecoder(r.Body).Decode(&requestBody)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 
-	var UID int
-	var result map[string]string
-	json.Unmarshal([]byte(bytedata), &result)
-	username := result["name"]
+	// Get 'name' field from requestBody
+	username := requestBody["name"]
+	err = utils.ValidateUsername(username)
 
-	fmt.Println("USername: ", username)
+	if errors.Is(err, utils.ErrUsernameMissing) {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	} else if errors.Is(err, utils.ErrUsernameNotValid) {
+		http.Error(w, err.Error(), http.StatusNotAcceptable)
+		return
+	}
 
 	// Controlla se esiste l'utente e nel caso lo ritorna
 	user, res, err := rt.db.FindUserByUsername(username)
@@ -32,8 +39,6 @@ func (rt *_router) login(w http.ResponseWriter, r *http.Request, ps httprouter.P
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-
-	fmt.Println(res)
 
 	// Se non ha trovato niente, allora crea l'utente e ritorna l'id
 	if res == database.NO_ROWS {
