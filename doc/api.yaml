@@ -130,13 +130,19 @@ paths:
       description: |
         Change username to a new one. The user provides a new username and the system verifies the username's validity.
       operationId: setMyUserName
-      parameters:
-        - name: username
-          in: query
-          description: The new username to be validated
-          required: true
-          schema:
-            $ref: '#/components/schemas/User/properties/username'
+      # parameters:
+      #   - name: username
+      #     in: query
+      #     description: The new username to be validated
+      #     required: true
+      #     schema:
+      #       $ref: '#/components/schemas/User/properties/username'
+      requestBody:
+        description: The new username to be validated
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Username'
       responses:
         "200":
           description: Username changed successfully
