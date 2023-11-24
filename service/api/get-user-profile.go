@@ -22,7 +22,20 @@ func (rt *_router) getUserProfile(w http.ResponseWriter, r *http.Request, ps htt
 		//other way
 		//w.WriteHeader(http.StatusNotAcceptable)
 		//fmt.Fprint(w, err.Error())
-	} else {
-		//cerca nel db
+	} else { 
+		//Lo username è valido, cerca nel database
+		user, res, err := db.FindUserByUsername(username)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+	
+		// Se non ha trovato niente, allora ritorna codice 404 Not Found
+		if res == database.NO_ROWS {
+			http.Error(w, utils.ErrUserNotFound.Error(), http.StatusNotFound)
+		} else { // Utente trovato, ritornalo
+			w.Header().Set("content-type", "application/json")
+			json.NewEncoder(w).Encode(user)
+		}
 	}
 }

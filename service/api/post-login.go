@@ -11,7 +11,7 @@ import (
 )
 
 func (rt *_router) login(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
-	w.Header().Set("content-type", "application/json")
+	w.Header().Set("content-type", "text/plain")
 
 	var UID int
 	var requestBody map[string]string
@@ -51,6 +51,7 @@ func (rt *_router) login(w http.ResponseWriter, r *http.Request, ps httprouter.P
 		UID = int(user.UserID)
 	}
 
+	w.Header().Set("content-type", "application/json")
 	w.WriteHeader(http.StatusCreated)
 	json.NewEncoder(w).Encode(UID)
 }
