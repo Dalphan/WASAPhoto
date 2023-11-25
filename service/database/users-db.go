@@ -8,14 +8,7 @@ import (
 	"github.com/Dalphan/WASAPhoto/service/utils"
 )
 
-func (db *appdbimpl) UpdateUser(user utils.User) (utils.User, int, error) {
-	err := db.c.QueryRow(`	UPDATE Users
-							SET
-								Username = ?,
-								name = ?,
-								surname = ?
-							WHERE UID = ?
-							RETURNING *`, user.Username, user.Name, user.Surname, user.UserID).Scan(&user.UserID, &user.Username, &user.Name, &user.Surname)
+func checkUpdateUser(user utils.User, err error) (utils.User, int, error) {
 	if errors.Is(err, sql.ErrNoRows) {
 		return *new(utils.User), NO_ROWS, err
 	}
@@ -27,6 +20,33 @@ func (db *appdbimpl) UpdateUser(user utils.User) (utils.User, int, error) {
 	}
 
 	return user, SUCCESS, nil
+}
+
+func (db *appdbimpl) UpdateUsername(uid int, username string) (utils.User, int, error) {
+	var user utils.User
+	var name, surname sql.NullString
+
+	err := db.c.QueryRow(`	UPDATE Users
+							SET
+								Username = ?
+							WHERE UID = ?
+							RETURNING *`, username, uid).Scan(&user.UserID, &user.Username, &name, &surname)
+
+	user.Name = name.String
+	user.Surname = surname.String
+	return checkUpdateUser(user, err)
+}
+
+func (db *appdbimpl) UpdateUser(user utils.User) (utils.User, int, error) {
+	err := db.c.QueryRow(`	UPDATE Users
+							SET
+								Username = ?,
+								name = ?,
+								surname = ?
+							WHERE UID = ?
+							RETURNING *`, user.Username, user.Name, user.Surname, user.UserID).Scan(&user.UserID, &user.Username, &user.Name, &user.Surname)
+
+	return checkUpdateUser(user, err)
 }
 
 func (db *appdbimpl) FindUserByUsername(username string) (utils.User, int, error) {

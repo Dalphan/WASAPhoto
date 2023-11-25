@@ -18,6 +18,7 @@ func (rt *_router) Handler() http.Handler {
 	// User routes
 	rt.router.GET("/users", rt.getUserProfile)
 	rt.router.PUT("/users/:id", rt.updateProfile)
+	rt.router.PUT("/users/:id/username", rt.setMyUsername)
 
 	return rt.router
 }
