@@ -25,4 +25,14 @@ func (rt *_router) updateProfile(w http.ResponseWriter, r *http.Request, ps http
 		return
 	}
 
+	//Update user in database. If the username or the user doesn't exist, is already taken it should return an error
+	user, _, err = rt.db.UpdateUser(user)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	//Return the user updated in the response
+	w.Header().Set("content-type", "application/json")
+	json.NewEncoder(w).Encode(user)
 }

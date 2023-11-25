@@ -45,6 +45,7 @@ type AppDatabase interface {
 
 	FindUserByUsername(username string) (utils.User, int, error)
 	CreateUser(username string) (int, int, error)
+	UpdateUser(utils.User) (utils.User, int, error)
 
 	Ping() error
 }

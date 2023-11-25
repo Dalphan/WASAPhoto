@@ -7,6 +7,22 @@ import (
 	"github.com/Dalphan/WASAPhoto/service/utils"
 )
 
+func (db *appdbimpl) UpdateUser(user utils.User) (utils.User, int, error) {
+	err := db.c.QueryRow(`	UPDATE 
+								Users
+							SET
+								Username = ?
+								name = ?
+								surname = ?
+							WHERE 
+								UID = ?
+							RETURNING *`, user.Username, user.Name, user.Surname, user.UserID).Scan(&user.UserID, &user.Username, &user.Name, &user.Surname)
+	if err != nil {
+		return *new(utils.User), ERROR, err
+	}
+	return user, SUCCESS, nil
+}
+
 func (db *appdbimpl) FindUserByUsername(username string) (utils.User, int, error) {
 	var user utils.User
 
