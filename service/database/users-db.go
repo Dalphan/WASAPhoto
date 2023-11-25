@@ -3,23 +3,29 @@ package database
 import (
 	"database/sql"
 	"errors"
+	"strings"
 
 	"github.com/Dalphan/WASAPhoto/service/utils"
 )
 
 func (db *appdbimpl) UpdateUser(user utils.User) (utils.User, int, error) {
-	err := db.c.QueryRow(`	UPDATE 
-								Users
+	err := db.c.QueryRow(`	UPDATE Users
 							SET
-								Username = ?
-								name = ?
+								Username = ?,
+								name = ?,
 								surname = ?
-							WHERE 
-								UID = ?
+							WHERE UID = ?
 							RETURNING *`, user.Username, user.Name, user.Surname, user.UserID).Scan(&user.UserID, &user.Username, &user.Name, &user.Surname)
+	if errors.Is(err, sql.ErrNoRows) {
+		return *new(utils.User), NO_ROWS, err
+	}
 	if err != nil {
+		if strings.Contains(err.Error(), "UNIQUE constraint failed") {
+			return *new(utils.User), UNIQUE_FAILED, err
+		}
 		return *new(utils.User), ERROR, err
 	}
+
 	return user, SUCCESS, nil
 }
 
@@ -28,10 +34,11 @@ func (db *appdbimpl) FindUserByUsername(username string) (utils.User, int, error
 
 	err := db.c.QueryRow(`	SELECT 
 								UID,
+								Username,
 								name,
 								surname
 							FROM Users
-							Where Username = ?`, username).Scan(&user.UserID, &user.Name, &user.Surname)
+							Where Username = ?`, username).Scan(&user.UserID, &user.Username, &user.Name, &user.Surname)
 
 	// La SELECT non ritorna niente
 	if errors.Is(err, sql.ErrNoRows) {

@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"net/http"
 
+	"github.com/Dalphan/WASAPhoto/service/database"
 	"github.com/Dalphan/WASAPhoto/service/utils"
 	"github.com/julienschmidt/httprouter"
 )
@@ -26,8 +27,16 @@ func (rt *_router) updateProfile(w http.ResponseWriter, r *http.Request, ps http
 	}
 
 	//Update user in database. If the username or the user doesn't exist, is already taken it should return an error
-	user, _, err = rt.db.UpdateUser(user)
-	if err != nil {
+	user, res, err := rt.db.UpdateUser(user)
+	if res == database.UNIQUE_FAILED { // The updated username is already taken
+		http.Error(w, utils.ErrUsernameTaken.Error(), http.StatusNotAcceptable)
+		return
+	}
+	if res == database.NO_ROWS { // The UserID doesn't exist
+		http.Error(w, utils.ErrUserNotFound.Error(), http.StatusNotFound)
+		return
+	}
+	if err != nil { // Generic error
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
