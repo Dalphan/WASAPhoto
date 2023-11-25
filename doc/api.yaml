@@ -66,8 +66,12 @@ paths:
                 $ref: '#/components/schemas/User'
         "400":
           $ref: '#/components/responses/BadRequest'
+        "404":
+          $ref: '#/components/responses/NotFound'
         "406":
           $ref: '#/components/responses/NotAcceptable'
+        "500":
+          $ref: '#/components/responses/InternalServerError'
           
   # updateProfile
   # getUserProfileById
@@ -98,6 +102,10 @@ paths:
           $ref: '#/components/responses/BadRequest'
         "404":
           $ref: '#/components/responses/NotFound'
+        "406":
+          $ref: '#/components/responses/NotAcceptable'
+        "500":
+          $ref: '#/components/responses/InternalServerError'
     
     get:
       tags:
@@ -117,6 +125,8 @@ paths:
           $ref: '#/components/responses/BadRequest'
         "404":
           $ref: '#/components/responses/NotFound'
+        "500":
+          $ref: '#/components/responses/InternalServerError'
   
   # setMyUserName
   /users/{userId}/username:
@@ -156,6 +166,8 @@ paths:
           $ref: '#/components/responses/NotFound'
         "406":
           $ref: '#/components/responses/NotAcceptable'
+        "500":
+          $ref: '#/components/responses/InternalServerError'
                 
   # getMyStream
   /users/{userId}/stream:
@@ -183,6 +195,8 @@ paths:
           $ref: '#/components/responses/BadRequest'
         "404":
           $ref: '#/components/responses/NotFound'
+        "500":
+          $ref: '#/components/responses/InternalServerError'
 
   # banUser
   # unbanUser
@@ -220,6 +234,8 @@ paths:
           $ref: '#/components/responses/BadRequest'
         "404":
           $ref: '#/components/responses/NotFound'
+        "500":
+          $ref: '#/components/responses/InternalServerError'
 
     delete:
       tags: 
@@ -239,6 +255,8 @@ paths:
           $ref: '#/components/responses/BadRequest'
         "404":
           $ref: '#/components/responses/NotFound'
+        "500":
+          $ref: '#/components/responses/InternalServerError'
 
   # getFollowing
   /users/{userId}/following:
@@ -268,6 +286,8 @@ paths:
           $ref: '#/components/responses/BadRequest'
         "404":
           $ref: '#/components/responses/NotFound'
+        "500":
+          $ref: '#/components/responses/InternalServerError'
 
   # getFollowers
   /users/{userId}/followers:
@@ -297,6 +317,8 @@ paths:
           $ref: '#/components/responses/BadRequest'
         "404":
           $ref: '#/components/responses/NotFound'
+        "500":
+          $ref: '#/components/responses/InternalServerError'
 
   # followUser
   # unfollowUser
@@ -334,6 +356,8 @@ paths:
           $ref: '#/components/responses/BadRequest'
         "404":
           $ref: '#/components/responses/NotFound'
+        "500":
+          $ref: '#/components/responses/InternalServerError'
       
     delete:
       tags: 
@@ -353,6 +377,8 @@ paths:
           $ref: '#/components/responses/BadRequest'
         "404":
           $ref: '#/components/responses/NotFound'
+        "500":
+          $ref: '#/components/responses/InternalServerError'
   
   # uploadPhoto
   /photos:
@@ -380,6 +406,8 @@ paths:
           $ref: '#/components/responses/BadRequest'
         "406": 
           $ref: '#/components/responses/NotAcceptable'
+        "500":
+          $ref: '#/components/responses/InternalServerError'
   
   # deletePhoto
   /photos/{photoId}:
@@ -403,6 +431,8 @@ paths:
           $ref: '#/components/responses/BadRequest'
         "404":
           $ref: '#/components/responses/NotFound'
+        "500":
+          $ref: '#/components/responses/InternalServerError'
   
   # likePhoto
   # unlikePhoto
@@ -440,6 +470,8 @@ paths:
           $ref: '#/components/responses/BadRequest'
         "404":
           $ref: '#/components/responses/NotFound'
+        "500":
+          $ref: '#/components/responses/InternalServerError'
 
     delete:
       tags:
@@ -459,6 +491,8 @@ paths:
           $ref: '#/components/responses/BadRequest'
         "404":
           $ref: '#/components/responses/NotFound'
+        "500":
+          $ref: '#/components/responses/InternalServerError'
   
   # getComments
   # commentPhoto
@@ -489,6 +523,8 @@ paths:
           $ref: '#/components/responses/BadRequest'
         "404":
           $ref: '#/components/responses/NotFound'
+        "500":
+          $ref: '#/components/responses/InternalServerError'
     
     post:
       tags:
@@ -516,6 +552,8 @@ paths:
           $ref: '#/components/responses/NotFound'
         "406": 
           $ref: '#/components/responses/NotAcceptable'
+        "500":
+          $ref: '#/components/responses/InternalServerError'
       
   # uncommentPhoto
   /photos/{photoId}/comments/{commentId}:
@@ -545,6 +583,8 @@ paths:
           $ref: '#/components/responses/BadRequest'
         "404":
           $ref: '#/components/responses/NotFound'
+        "500":
+          $ref: '#/components/responses/InternalServerError'
       
   #doLogin
   /session:
