@@ -77,7 +77,7 @@ func New(db *sql.DB) (AppDatabase, error) {
 
 		sqlStmt = `CREATE TABLE Users (
 			UID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-			Username TEXT NOT NULL UNIQUE,
+			Username TEXT NOT NULL UNIQUE CHECK(length(Username) >= 3 AND length(Username <= 16)),
 			name TEXT,
 			surname TEXT
 		);`

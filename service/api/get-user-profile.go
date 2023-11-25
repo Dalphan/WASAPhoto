@@ -2,7 +2,6 @@ package api
 
 import (
 	"encoding/json"
-	"errors"
 	"net/http"
 
 	"github.com/Dalphan/WASAPhoto/service/database"
@@ -15,15 +14,8 @@ func (rt *_router) getUserProfile(w http.ResponseWriter, r *http.Request, ps htt
 
 	username := r.URL.Query().Get("username")
 
-	err := utils.ValidateUsername(username)
-
-	if errors.Is(err, utils.ErrUsernameMissing) {
-		http.Error(w, err.Error(), http.StatusBadRequest)
-	} else if errors.Is(err, utils.ErrUsernameNotValid) {
-		http.Error(w, err.Error(), http.StatusNotAcceptable)
-		//other way
-		//w.WriteHeader(http.StatusNotAcceptable)
-		//fmt.Fprint(w, err.Error())
+	if !utils.HttpValidateUsername(w, username) {
+		return
 	} else {
 		//Lo username è valido, cerca nel database
 		user, res, err := rt.db.FindUserByUsername(username)

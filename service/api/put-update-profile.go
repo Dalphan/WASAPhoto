@@ -2,7 +2,6 @@ package api
 
 import (
 	"encoding/json"
-	"errors"
 	"net/http"
 
 	"github.com/Dalphan/WASAPhoto/service/utils"
@@ -22,12 +21,7 @@ func (rt *_router) updateProfile(w http.ResponseWriter, r *http.Request, ps http
 	}
 
 	//Check username validity
-	err = utils.ValidateUsername(user.Username)
-	if errors.Is(err, utils.ErrUsernameMissing) {
-		http.Error(w, err.Error(), http.StatusBadRequest)
-		return
-	} else if errors.Is(err, utils.ErrUsernameNotValid) {
-		http.Error(w, err.Error(), http.StatusNotAcceptable)
+	if !utils.HttpValidateUsername(w, user.Username) {
 		return
 	}
 
