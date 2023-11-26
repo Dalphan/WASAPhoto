@@ -11,7 +11,7 @@ import (
 )
 
 func (rt *_router) setMyUsername(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
-	w.Header().Set("content-type", "text/plain")
+	utils.SetHeaderText(w)
 
 	uid, err := strconv.Atoi(ps.ByName("id"))
 
@@ -49,6 +49,6 @@ func (rt *_router) setMyUsername(w http.ResponseWriter, r *http.Request, ps http
 	}
 
 	//Return the user updated in the response
-	w.Header().Set("content-type", "application/json")
+	utils.SetHeaderJson(w)
 	json.NewEncoder(w).Encode(user)
 }

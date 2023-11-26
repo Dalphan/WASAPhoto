@@ -20,5 +20,8 @@ func (rt *_router) Handler() http.Handler {
 	rt.router.PUT("/users/:id", rt.updateProfile)
 	rt.router.PUT("/users/:id/username", rt.setMyUsername)
 
+	// Ban routs
+	rt.router.PUT("/users/:id/banned/:bid", rt.banUser)
+
 	return rt.router
 }

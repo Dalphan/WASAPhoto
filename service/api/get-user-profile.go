@@ -10,7 +10,7 @@ import (
 )
 
 func (rt *_router) getUserProfile(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
-	w.Header().Set("content-type", "text/plain")
+	utils.SetHeaderText(w)
 
 	username := r.URL.Query().Get("username")
 
@@ -28,7 +28,7 @@ func (rt *_router) getUserProfile(w http.ResponseWriter, r *http.Request, ps htt
 		if res == database.NO_ROWS {
 			http.Error(w, utils.ErrUserNotFound.Error(), http.StatusNotFound)
 		} else { // Utente trovato, ritornalo
-			w.Header().Set("content-type", "application/json")
+			utils.SetHeaderJson(w)
 			json.NewEncoder(w).Encode(user)
 		}
 	}

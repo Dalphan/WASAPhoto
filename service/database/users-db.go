@@ -3,20 +3,15 @@ package database
 import (
 	"database/sql"
 	"errors"
-	"strings"
 
 	"github.com/Dalphan/WASAPhoto/service/utils"
 )
 
 func checkUpdateUser(user utils.User, err error) (utils.User, int, error) {
-	if errors.Is(err, sql.ErrNoRows) {
-		return *new(utils.User), NO_ROWS, err
-	}
-	if err != nil {
-		if strings.Contains(err.Error(), "UNIQUE constraint failed") {
-			return *new(utils.User), UNIQUE_FAILED, err
-		}
-		return *new(utils.User), ERROR, err
+	res := checkResults(err)
+
+	if res != SUCCESS {
+		return *new(utils.User), res, err
 	}
 
 	return user, SUCCESS, nil
@@ -49,14 +44,24 @@ func (db *appdbimpl) UpdateUser(user utils.User) (utils.User, int, error) {
 	return checkUpdateUser(user, err)
 }
 
+func (db *appdbimpl) FindUserByID(uid int) (utils.User, int, error) {
+	var user utils.User
+
+	err := db.c.QueryRow(`	SELECT *
+							FROM Users
+							WHERE UID = ?`, uid).Scan(&user.UserID, &user.Username, &user.Name, &user.Surname)
+
+	if res := checkResults(err); res != SUCCESS {
+		return *new(utils.User), res, err
+	} else {
+		return user, res, nil
+	}
+}
+
 func (db *appdbimpl) FindUserByUsername(username string) (utils.User, int, error) {
 	var user utils.User
 
-	err := db.c.QueryRow(`	SELECT 
-								UID,
-								Username,
-								name,
-								surname
+	err := db.c.QueryRow(`	SELECT *
 							FROM Users
 							Where Username = ?`, username).Scan(&user.UserID, &user.Username, &user.Name, &user.Surname)
 

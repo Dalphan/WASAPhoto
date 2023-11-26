@@ -34,3 +34,11 @@ func HttpValidateUsername(w http.ResponseWriter, username string) bool {
 	}
 	return true
 }
+
+func SetHeaderText(w http.ResponseWriter) {
+	w.Header().Set("Content-Type", "text/plain")
+}
+
+func SetHeaderJson(w http.ResponseWriter) {
+	w.Header().Set("Content-Type", "application/json")
+}

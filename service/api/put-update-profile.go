@@ -11,7 +11,7 @@ import (
 )
 
 func (rt *_router) updateProfile(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
-	w.Header().Set("content-type", "text/plain")
+	utils.SetHeaderText(w)
 
 	var user utils.User
 	err := json.NewDecoder(r.Body).Decode(&user)
@@ -57,6 +57,6 @@ func (rt *_router) updateProfile(w http.ResponseWriter, r *http.Request, ps http
 	}
 
 	//Return the user updated in the response
-	w.Header().Set("content-type", "application/json")
+	utils.SetHeaderJson(w)
 	json.NewEncoder(w).Encode(user)
 }

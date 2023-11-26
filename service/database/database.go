@@ -40,10 +40,12 @@ import (
 
 // AppDatabase is the high level interface for the DB
 type AppDatabase interface {
-	FindUserByUsername(username string) (utils.User, int, error)
-	CreateUser(username string) (int, int, error)
+	FindUserByUsername(string) (utils.User, int, error)
+	FindUserByID(int) (utils.User, int, error)
+	CreateUser(string) (int, int, error)
 	UpdateUser(utils.User) (utils.User, int, error)
 	UpdateUsername(int, string) (utils.User, int, error)
+	BanUser(int, int) (int, error)
 
 	Ping() error
 }
@@ -125,7 +127,7 @@ func New(db *sql.DB) (AppDatabase, error) {
 
 		sqlStmt = `CREATE TABLE Bans (
 			UID INTEGER NOT NULL,
-			BannedID INTEGER NOT NULL,
+			BannedID INTEGER NOT NULL CHECK(BannedID != UID),
 			PRIMARY KEY (UID, BannedID),
 			FOREIGN KEY (UID) references Users(UID)
 			FOREIGN KEY (BannedID) references Users(UID)
