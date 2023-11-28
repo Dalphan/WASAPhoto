@@ -22,6 +22,7 @@ func (rt *_router) Handler() http.Handler {
 
 	// Ban routs
 	rt.router.PUT("/users/:id/banned/:bid", rt.banUser)
+	rt.router.DELETE("/users/:id/banned/:bid", rt.unbanUser)
 
 	return rt.router
 }

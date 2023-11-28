@@ -46,6 +46,7 @@ type AppDatabase interface {
 	UpdateUser(utils.User) (utils.User, int, error)
 	UpdateUsername(int, string) (utils.User, int, error)
 	BanUser(int, int) (int, error)
+	UnbanUser(int, int) (int, error)
 
 	Ping() error
 }
