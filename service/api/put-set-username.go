@@ -3,7 +3,6 @@ package api
 import (
 	"encoding/json"
 	"net/http"
-	"strconv"
 
 	"github.com/Dalphan/WASAPhoto/service/database"
 	"github.com/Dalphan/WASAPhoto/service/utils"
@@ -13,11 +12,8 @@ import (
 func (rt *_router) setMyUsername(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	utils.SetHeaderText(w)
 
-	uid, err := strconv.Atoi(ps.ByName("id"))
-
-	//Error getting the user from the path
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
+	uid, err := utils.GetHttpParam(w, ps, "id")
+	if err != nil { //Error getting the user ID
 		return
 	}
 

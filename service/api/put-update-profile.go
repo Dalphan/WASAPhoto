@@ -3,7 +3,6 @@ package api
 import (
 	"encoding/json"
 	"net/http"
-	"strconv"
 
 	"github.com/Dalphan/WASAPhoto/service/database"
 	"github.com/Dalphan/WASAPhoto/service/utils"
@@ -22,11 +21,8 @@ func (rt *_router) updateProfile(w http.ResponseWriter, r *http.Request, ps http
 		return
 	}
 
-	uid, err := strconv.Atoi(ps.ByName("id"))
-
-	//Error getting the user from the path
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
+	uid, err := utils.GetHttpParam(w, ps, "id")
+	if err != nil { //Error getting the user ID
 		return
 	}
 	if user.UserID != 0 && int(user.UserID) != uid {

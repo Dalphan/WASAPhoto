@@ -4,6 +4,9 @@ import (
 	"errors"
 	"net/http"
 	"regexp"
+	"strconv"
+
+	"github.com/julienschmidt/httprouter"
 )
 
 // Database checks if username is between 3 and 16 characters
@@ -33,6 +36,15 @@ func HttpValidateUsername(w http.ResponseWriter, username string) bool {
 		return false
 	}
 	return true
+}
+
+func GetHttpParam(w http.ResponseWriter, ps httprouter.Params, name string) (int, error) {
+	uid, err := strconv.Atoi(ps.ByName(name))
+	if err != nil { //Error getting the param from the path
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return uid, err
+	}
+	return uid, nil
 }
 
 func SetHeaderText(w http.ResponseWriter) {

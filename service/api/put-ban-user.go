@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
-	"strconv"
 
 	"github.com/Dalphan/WASAPhoto/service/database"
 	"github.com/Dalphan/WASAPhoto/service/utils"
@@ -13,19 +12,17 @@ import (
 
 func (rt *_router) banUser(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	utils.SetHeaderText(w)
+	var uid int
 
-	uid, err := strconv.Atoi(ps.ByName("id"))
+	uid, err := utils.GetHttpParam(w, ps, "id")
 	if err != nil { //Error getting the user ID
-		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 
-	bid, err := strconv.Atoi(ps.ByName("bid"))
-	if err != nil { //Error getting the user ID to ban
-		http.Error(w, err.Error(), http.StatusBadRequest)
+	bid, err := utils.GetHttpParam(w, ps, "bid")
+	if err != nil { //Error getting the user ID to unban
 		return
 	}
-
 	if uid == bid {
 		http.Error(w, "you can't ban yourself", http.StatusBadRequest)
 		return
@@ -55,7 +52,7 @@ func (rt *_router) banUser(w http.ResponseWriter, r *http.Request, ps httprouter
 		return
 	}
 
-	// Banned user return succesfully
+	// Banned user returned succesfully
 	utils.SetHeaderJson(w)
 	w.WriteHeader(http.StatusCreated)
 	json.NewEncoder(w).Encode(user)
