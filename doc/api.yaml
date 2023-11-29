@@ -187,6 +187,7 @@ paths:
             application/json:
               schema:
                 type: array
+                description: The array of photos constituting the user's stream.
                 minItems: 0
                 maxItems: 10000
                 items:
@@ -224,6 +225,7 @@ paths:
             text/plain:
               schema:
                 type: string
+                description: Message containing info about the operation
         "201":
           description: User banned successfully
           content:
@@ -346,6 +348,7 @@ paths:
             text/plain:
               schema: 
                 type: string
+                description: Message containing info about the operation
         "201":
           description: User followed successfully
           content:
@@ -610,12 +613,14 @@ paths:
             application/json:
               schema:
                 type: object
+                description: Object with the user ID of the recently logged-in user.
                 properties:
                   identifier:
                     # change here if you decide to use an integer
                     # or any other type of identifier
                     type: integer
                     example: 1
+                    description: The user ID of the recently logged-in user.
         "400": 
           $ref: '#/components/responses/BadRequest'
         "406":
@@ -691,12 +696,14 @@ components:
         name:
           type: string
           description: The user's name
+          pattern: '.*'
           example: Maria
           minLength: 1
           maxLength: 20
         surname:
           type: string
           description: The user's surname
+          pattern: '.*'
           example: Rossi
           minLength: 1
           maxLength: 25
@@ -754,6 +761,7 @@ components:
           readOnly: true
     Comment:
       type: object
+      description: A comment made by a user on a photo, along with its timestamp.
       properties:
         id:
           type: integer
@@ -762,6 +770,7 @@ components:
           readOnly: true
         text:
           type: string
+          pattern: '.*'
           example: I like this photo!
           description: The text of the comment
           minLength: 1

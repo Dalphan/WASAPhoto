@@ -14,10 +14,10 @@ const (
 )
 
 func checkResults(err error) int {
-	if errors.Is(err, sql.ErrNoRows) {
-		return NO_ROWS
-	}
 	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) || strings.Contains(err.Error(), "KEY constraint failed") {
+			return NO_ROWS
+		}
 		if strings.Contains(err.Error(), "UNIQUE constraint failed") {
 			return UNIQUE_FAILED
 		}
