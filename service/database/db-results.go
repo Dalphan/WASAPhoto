@@ -27,7 +27,7 @@ func checkRowsAffected(res sql.Result) (int, error) {
 
 		return SUCCESS, nil
 	}
-	return ERROR, errors.New("non lo so?")
+	return ERROR, errors.New("unexpexted Database error")
 }
 
 func checkResults(err error) int {
