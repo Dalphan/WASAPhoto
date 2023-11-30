@@ -31,13 +31,16 @@ func (rt *_router) unbanUser(w http.ResponseWriter, r *http.Request, ps httprout
 	if res == database.ERROR {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
-	}
-
-	user, res, err := rt.db.FindUserByID(bid)
-	if res == database.NO_ROWS {
+	} else if res == database.NO_ROWS {
 		http.Error(w, utils.ErrUserNotFound.Error(), http.StatusNotFound)
 		return
 	}
+
+	user, res, err := rt.db.FindUserByID(bid)
+	// if res == database.NO_ROWS {
+	// 	http.Error(w, utils.ErrUserNotFound.Error(), http.StatusNotFound)
+	// 	return
+	// }
 	if res == database.ERROR {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
@@ -45,6 +48,9 @@ func (rt *_router) unbanUser(w http.ResponseWriter, r *http.Request, ps httprout
 
 	// Unbanned user returned succesfully
 	utils.SetHeaderJson(w)
-	w.WriteHeader(http.StatusOK)
-	json.NewEncoder(w).Encode(user)
+	err = json.NewEncoder(w).Encode(user)
+
+	if err != nil {
+		http.Error(w, utils.ErrEncodingJson.Error(), http.StatusInternalServerError)
+	}
 }

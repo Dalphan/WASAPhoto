@@ -29,7 +29,11 @@ func (rt *_router) getUserProfile(w http.ResponseWriter, r *http.Request, ps htt
 			http.Error(w, utils.ErrUserNotFound.Error(), http.StatusNotFound)
 		} else { // Utente trovato, ritornalo
 			utils.SetHeaderJson(w)
-			json.NewEncoder(w).Encode(user)
+			err = json.NewEncoder(w).Encode(user)
+
+			if err != nil {
+				http.Error(w, utils.ErrEncodingJson.Error(), http.StatusInternalServerError)
+			}
 		}
 	}
 }

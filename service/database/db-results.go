@@ -13,6 +13,23 @@ const (
 	ERROR
 )
 
+func checkRowsAffected(res sql.Result) (int, error) {
+	if res != nil {
+		rows, err := res.RowsAffected()
+
+		if err != nil {
+			return ERROR, err
+		}
+
+		if rows == 0 {
+			return NO_ROWS, nil
+		}
+
+		return SUCCESS, nil
+	}
+	return ERROR, errors.New("non lo so?")
+}
+
 func checkResults(err error) int {
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) || strings.Contains(err.Error(), "KEY constraint failed") {

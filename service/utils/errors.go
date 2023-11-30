@@ -8,3 +8,5 @@ var ErrUserNotFound = errors.New("user not found")
 var ErrUnauthorazied = errors.New("unauthorazied operation")
 
 var ErrUsernameTaken = errors.New("the username is already taken")
+
+var ErrEncodingJson = errors.New("error encoding json")

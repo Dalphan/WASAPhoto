@@ -55,6 +55,9 @@ func (rt *_router) banUser(w http.ResponseWriter, r *http.Request, ps httprouter
 	// Banned user returned succesfully
 	utils.SetHeaderJson(w)
 	w.WriteHeader(http.StatusCreated)
-	json.NewEncoder(w).Encode(user)
+	err = json.NewEncoder(w).Encode(user)
 
+	if err != nil {
+		http.Error(w, utils.ErrEncodingJson.Error(), http.StatusInternalServerError)
+	}
 }

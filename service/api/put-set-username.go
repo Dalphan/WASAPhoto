@@ -46,5 +46,9 @@ func (rt *_router) setMyUsername(w http.ResponseWriter, r *http.Request, ps http
 
 	//Return the user updated in the response
 	utils.SetHeaderJson(w)
-	json.NewEncoder(w).Encode(user)
+	err = json.NewEncoder(w).Encode(user)
+
+	if err != nil {
+		http.Error(w, utils.ErrEncodingJson.Error(), http.StatusInternalServerError)
+	}
 }
