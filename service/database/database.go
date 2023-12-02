@@ -70,7 +70,7 @@ func New(db *sql.DB) (AppDatabase, error) {
 	var tableName string
 	err := db.QueryRow(`SELECT name FROM sqlite_master WHERE type='table' AND name='Users';`).Scan(&tableName)
 	if errors.Is(err, sql.ErrNoRows) {
-		//sqlStmt := `CREATE TABLE example_table (id INTEGER NOT NULL PRIMARY KEY, name TEXT);`
+		// sqlStmt := `CREATE TABLE example_table (id INTEGER NOT NULL PRIMARY KEY, name TEXT);`
 		// _, err = db.Exec(sqlStmt)
 		// if err != nil {
 		// 	return nil, fmt.Errorf("error creating database structure: %w", err)

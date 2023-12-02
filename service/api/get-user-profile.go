@@ -17,7 +17,7 @@ func (rt *_router) getUserProfile(w http.ResponseWriter, r *http.Request, ps htt
 	if !utils.HttpValidateUsername(w, username) {
 		return
 	} else {
-		//Lo username è valido, cerca nel database
+		// Lo username è valido, cerca nel database
 		user, res, err := rt.db.FindUserByUsername(username)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)

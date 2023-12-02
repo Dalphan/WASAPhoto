@@ -15,14 +15,14 @@ func (rt *_router) updateProfile(w http.ResponseWriter, r *http.Request, ps http
 	var user utils.User
 	err := json.NewDecoder(r.Body).Decode(&user)
 
-	//Error getting the user from the requestBody
+	// Error getting the user from the requestBody
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 
 	uid, err := utils.GetHttpParam(w, ps, "id")
-	if err != nil { //Error getting the user ID
+	if err != nil { // Error getting the user ID
 		return
 	}
 	if user.UserID != 0 && int(user.UserID) != uid {
@@ -32,12 +32,12 @@ func (rt *_router) updateProfile(w http.ResponseWriter, r *http.Request, ps http
 
 	user.UserID = uint(uid)
 
-	//Check username validity
+	// Check username validity
 	if !utils.HttpValidateUsername(w, user.Username) {
 		return
 	}
 
-	//Update user in database. If the username or the user doesn't exist, is already taken it should return an error
+	// Update user in database. If the username or the user doesn't exist, is already taken it should return an error
 	user, res, err := rt.db.UpdateUser(user)
 	if res == database.UNIQUE_FAILED { // The updated username is already taken
 		http.Error(w, utils.ErrUsernameTaken.Error(), http.StatusNotAcceptable)
@@ -52,7 +52,7 @@ func (rt *_router) updateProfile(w http.ResponseWriter, r *http.Request, ps http
 		return
 	}
 
-	//Return the user updated in the response
+	// Return the user updated in the response
 	utils.SetHeaderJson(w)
 	err = json.NewEncoder(w).Encode(user)
 

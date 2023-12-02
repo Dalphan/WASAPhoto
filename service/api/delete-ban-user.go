@@ -13,12 +13,12 @@ func (rt *_router) unbanUser(w http.ResponseWriter, r *http.Request, ps httprout
 	utils.SetHeaderText(w)
 
 	uid, err := utils.GetHttpParam(w, ps, "id")
-	if err != nil { //Error getting the user ID
+	if err != nil { // Error getting the user ID
 		return
 	}
 
 	bid, err := utils.GetHttpParam(w, ps, "bid")
-	if err != nil { //Error getting the user ID to unban
+	if err != nil { // Error getting the user ID to unban
 		return
 	}
 

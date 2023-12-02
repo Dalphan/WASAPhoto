@@ -30,5 +30,8 @@ func (rt *_router) Handler() http.Handler {
 	rt.router.GET("/users/:id/following", rt.getFollowings)
 	rt.router.GET("/users/:id/followers", rt.getFollowers)
 
+	// Photos routes
+	rt.router.POST("/photos", rt.uploadPhoto)
+
 	return rt.router
 }

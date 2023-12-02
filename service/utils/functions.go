@@ -40,7 +40,7 @@ func HttpValidateUsername(w http.ResponseWriter, username string) bool {
 
 func GetHttpParam(w http.ResponseWriter, ps httprouter.Params, name string) (int, error) {
 	uid, err := strconv.Atoi(ps.ByName(name))
-	if err != nil { //Error getting the param from the path
+	if err != nil { // Error getting the param from the path
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return uid, err
 	}

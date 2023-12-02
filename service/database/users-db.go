@@ -70,10 +70,10 @@ func (db *appdbimpl) FindUserByUsername(username string) (utils.User, int, error
 		return *new(utils.User), NO_ROWS, nil
 	} else if user.UserID != 0 { // La SELECT ha ritornato un utente che ha solo username al momento
 		return user, SUCCESS, nil
-	} else if err != nil { //La SELECT ha ritornato un errore imprevisto
+	} else if err != nil { // La SELECT ha ritornato un errore imprevisto
 		return user, ERROR, err
 	}
-	//La SELECT ha ritornato l'utente completo di informazioni
+	// La SELECT ha ritornato l'utente completo di informazioni
 	return user, SUCCESS, nil
 }
 
