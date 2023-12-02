@@ -60,7 +60,7 @@ func GetAuthorization(w http.ResponseWriter, r *http.Request, id ...int) (int, e
 
 	if err != nil || (len(id) > 0 && uid != id[0]) {
 		http.Error(w, ErrUnauthorazied.Error(), http.StatusUnauthorized)
-		return 0, err
+		return 0, ErrUnauthorazied
 	}
 
 	return uid, nil

@@ -2,6 +2,7 @@ package api
 
 import (
 	"encoding/json"
+	"fmt"
 	"io"
 	"net/http"
 	"time"
@@ -33,7 +34,8 @@ func (rt *_router) uploadPhoto(w http.ResponseWriter, r *http.Request, ps httpro
 		return
 	}
 
-	photo.Image = imageBytes
+	// Non si puo salvare cosi l'immagine, la risposta è completamente occupata dall'immagine in base64
+	photo.Image = utils.BytesToBase64(imageBytes)
 	photo.Timestamp = time.Now().Format("2006-01-02T15:04:05Z")
 
 	PID, res, err := rt.db.CreatePhoto(photo)
@@ -45,10 +47,13 @@ func (rt *_router) uploadPhoto(w http.ResponseWriter, r *http.Request, ps httpro
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
+	photo.PhotoID = uint(PID)
+
+	fmt.Println("PHOTO ID", photo.PhotoID)
 
 	utils.SetHeaderJson(w)
 	w.WriteHeader(http.StatusCreated)
-	err = json.NewEncoder(w).Encode(PID)
+	err = json.NewEncoder(w).Encode(photo)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}

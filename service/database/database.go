@@ -52,6 +52,8 @@ type AppDatabase interface {
 	GetFollowings(int) ([]utils.User, int, error)
 	GetFollowers(int) ([]utils.User, int, error)
 	CreatePhoto(utils.Photo) (int, int, error)
+	DeletePhoto(int) (int, error)
+	GetPhotoById(int) (utils.Photo, int, error)
 
 	Ping() error
 }

@@ -32,6 +32,7 @@ func (rt *_router) Handler() http.Handler {
 
 	// Photos routes
 	rt.router.POST("/photos", rt.uploadPhoto)
+	rt.router.DELETE("/photos/:pid", rt.deletePhoto)
 
 	return rt.router
 }

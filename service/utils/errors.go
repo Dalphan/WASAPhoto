@@ -9,5 +9,6 @@ var ErrUnauthorazied = errors.New("unauthorazied operation")
 var ErrUsernameTaken = errors.New("the username is already taken")
 
 var ErrPhotoTooBig = errors.New("the provided photo exceeds the maximum dimension")
+var ErrPhotoNotFound = errors.New("photo not found")
 
 var ErrEncodingJson = errors.New("error encoding json")
