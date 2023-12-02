@@ -51,6 +51,7 @@ type AppDatabase interface {
 	UnfollowUser(int, int) (int, error)
 	GetFollowings(int) ([]utils.User, int, error)
 	GetFollowers(int) ([]utils.User, int, error)
+	CreatePhoto(utils.Photo) (int, int, error)
 
 	Ping() error
 }

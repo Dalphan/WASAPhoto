@@ -17,7 +17,7 @@ type User struct {
 type Photo struct {
 	PhotoID      uint   `json:"id"`
 	UserID       uint   `json:"user"`
-	Image        string `json:"image"`
+	Image        []byte `json:"image"`
 	Timestamp    string `json:"timestamp"`
 	LikeCount    int    `json:"likeCount"`
 	CommentCount int    `json:"commentCount"`
@@ -31,17 +31,16 @@ type Comment struct {
 	Date      string `json:"date"`
 }
 
-// ToBase64 encodes the image data to Base64.
-func (p *Photo) ToBase64() {
-	p.Image = base64.StdEncoding.EncodeToString([]byte(p.Image))
+func BytesToBase64(bytes []byte) string {
+	return base64.StdEncoding.EncodeToString(bytes)
 }
 
 // FromBase64 decodes the image data from Base64.
-func (p *Photo) FromBase64() error {
-	imageBytes, err := base64.StdEncoding.DecodeString(p.Image)
-	if err != nil {
-		return err
-	}
-	p.Image = string(imageBytes)
-	return nil
-}
+// func (p *Photo) FromBase64() error {
+// 	imageBytes, err := base64.StdEncoding.DecodeString(p.Image)
+// 	if err != nil {
+// 		return err
+// 	}
+// 	p.Image = string(imageBytes)
+// 	return nil
+// }

@@ -54,3 +54,14 @@ func SetHeaderText(w http.ResponseWriter) {
 func SetHeaderJson(w http.ResponseWriter) {
 	w.Header().Set("Content-Type", "application/json")
 }
+
+func GetAuthorization(w http.ResponseWriter, r *http.Request, id ...int) (int, error) {
+	uid, err := strconv.Atoi(r.Header.Get("Authorization"))
+
+	if err != nil || (len(id) > 0 && uid != id[0]) {
+		http.Error(w, ErrUnauthorazied.Error(), http.StatusUnauthorized)
+		return 0, err
+	}
+
+	return uid, nil
+}
