@@ -66,6 +66,8 @@ paths:
                 $ref: '#/components/schemas/User'
         "400":
           $ref: '#/components/responses/BadRequest'
+        "401": 
+          $ref: '#/components/responses/Unauthorized'
         "404":
           $ref: '#/components/responses/NotFound'
         "406":
@@ -100,6 +102,8 @@ paths:
                 $ref: '#/components/schemas/User'
         "400": 
           $ref: '#/components/responses/BadRequest'
+        "401": 
+          $ref: '#/components/responses/Unauthorized'
         "404":
           $ref: '#/components/responses/NotFound'
         "406":
@@ -123,6 +127,8 @@ paths:
                 $ref: '#/components/schemas/User'
         "400": 
           $ref: '#/components/responses/BadRequest'
+        "401": 
+          $ref: '#/components/responses/Unauthorized'
         "404":
           $ref: '#/components/responses/NotFound'
         "500":
@@ -162,6 +168,8 @@ paths:
                 $ref: '#/components/schemas/User'
         "400": 
           $ref: '#/components/responses/BadRequest'
+        "401": 
+          $ref: '#/components/responses/Unauthorized'
         "404":
           $ref: '#/components/responses/NotFound'
         "406":
@@ -194,6 +202,8 @@ paths:
                   $ref: '#/components/schemas/Photo'
         "400": 
           $ref: '#/components/responses/BadRequest'
+        "401": 
+          $ref: '#/components/responses/Unauthorized'
         "404":
           $ref: '#/components/responses/NotFound'
         "500":
@@ -234,6 +244,8 @@ paths:
                 $ref: "#/components/schemas/User"
         "400": 
           $ref: '#/components/responses/BadRequest'
+        "401": 
+          $ref: '#/components/responses/Unauthorized'
         "404":
           $ref: '#/components/responses/NotFound'
         "500":
@@ -255,6 +267,8 @@ paths:
                 $ref: '#/components/schemas/User'
         "400": 
           $ref: '#/components/responses/BadRequest'
+        "401": 
+          $ref: '#/components/responses/Unauthorized'
         "404":
           $ref: '#/components/responses/NotFound'
         "500":
@@ -286,6 +300,8 @@ paths:
                   $ref: '#/components/schemas/User'
         "400": 
           $ref: '#/components/responses/BadRequest'
+        "401": 
+          $ref: '#/components/responses/Unauthorized'
         "404":
           $ref: '#/components/responses/NotFound'
         "500":
@@ -317,6 +333,8 @@ paths:
                   $ref: '#/components/schemas/User'
         "400": 
           $ref: '#/components/responses/BadRequest'
+        "401": 
+          $ref: '#/components/responses/Unauthorized'
         "404":
           $ref: '#/components/responses/NotFound'
         "500":
@@ -357,6 +375,8 @@ paths:
                 $ref: "#/components/schemas/User"
         "400": 
           $ref: '#/components/responses/BadRequest'
+        "401": 
+          $ref: '#/components/responses/Unauthorized'
         "404":
           $ref: '#/components/responses/NotFound'
         "500":
@@ -378,6 +398,8 @@ paths:
                 $ref: '#/components/schemas/User'
         "400": 
           $ref: '#/components/responses/BadRequest'
+        "401": 
+          $ref: '#/components/responses/Unauthorized'
         "404":
           $ref: '#/components/responses/NotFound'
         "500":
@@ -407,6 +429,8 @@ paths:
                 $ref: '#/components/schemas/Photo'
         "400": 
           $ref: '#/components/responses/BadRequest'
+        "401": 
+          $ref: '#/components/responses/Unauthorized'
         "406": 
           $ref: '#/components/responses/NotAcceptable'
         "500":
@@ -432,6 +456,8 @@ paths:
                 $ref: '#/components/schemas/Photo'
         "400": 
           $ref: '#/components/responses/BadRequest'
+        "401": 
+          $ref: '#/components/responses/Unauthorized'
         "404":
           $ref: '#/components/responses/NotFound'
         "500":
@@ -471,6 +497,8 @@ paths:
                 $ref: '#/components/schemas/Photo'
         "400": 
           $ref: '#/components/responses/BadRequest'
+        "401": 
+          $ref: '#/components/responses/Unauthorized'
         "404":
           $ref: '#/components/responses/NotFound'
         "500":
@@ -492,6 +520,8 @@ paths:
                 $ref: '#/components/schemas/Photo'
         "400": 
           $ref: '#/components/responses/BadRequest'
+        "401": 
+          $ref: '#/components/responses/Unauthorized'
         "404":
           $ref: '#/components/responses/NotFound'
         "500":
@@ -524,6 +554,8 @@ paths:
                   $ref: '#/components/schemas/Comment'
         "400": 
           $ref: '#/components/responses/BadRequest'
+        "401": 
+          $ref: '#/components/responses/Unauthorized'
         "404":
           $ref: '#/components/responses/NotFound'
         "500":
@@ -551,6 +583,8 @@ paths:
                 $ref: '#/components/schemas/Comment'
         "400": 
           $ref: '#/components/responses/BadRequest'
+        "401": 
+          $ref: '#/components/responses/Unauthorized'
         "404":
           $ref: '#/components/responses/NotFound'
         "406": 
@@ -584,6 +618,8 @@ paths:
                 $ref: '#/components/schemas/Comment'
         "400": 
           $ref: '#/components/responses/BadRequest'
+        "401": 
+          $ref: '#/components/responses/Unauthorized'
         "404":
           $ref: '#/components/responses/NotFound'
         "500":
@@ -664,23 +700,6 @@ components:
       format: binary
       minLength: 1
       maxLength: 20971520
-    # UserProfile:
-    #   type: object
-    #   properties:
-    #     user:
-    #       $ref: '#/components/schemas/User'
-    #     images:
-    #       type: array
-    #       items:
-    #         $ref: '#/components/schemas/Photo'
-    #     following:
-    #       type: array
-    #       items:
-    #         $ref: '#/components/schemas/User'
-    #     followers:
-    #       type: array
-    #       items:
-    #         $ref: '#/components/schemas/User'
     User:
       description: |
         The profile of the user
@@ -795,6 +814,13 @@ components:
       readOnly: true
   responses:
     BadRequest:
+      description: |
+        The server could not understand the request due to malformed syntax, invalid parameters, or missing required information.
+      content:
+        text/plain:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Unauthorized:
       description: |
         The server could not understand the request due to malformed syntax, invalid parameters, or missing required information.
       content:
