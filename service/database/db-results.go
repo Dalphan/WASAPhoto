@@ -4,6 +4,8 @@ import (
 	"database/sql"
 	"errors"
 	"strings"
+
+	"github.com/Dalphan/WASAPhoto/service/utils"
 )
 
 const (
@@ -45,4 +47,16 @@ func checkResults(err error) int {
 	}
 
 	return SUCCESS
+}
+
+func getSelectedUsers(rows *sql.Rows) ([]utils.User, int, error) {
+	var users []utils.User
+	for rows.Next() {
+		var user utils.User
+		if err := rows.Scan(&user.UserID, &user.Username); err != nil {
+			return nil, ERROR, err
+		}
+		users = append(users, user)
+	}
+	return users, SUCCESS, nil
 }

@@ -49,6 +49,8 @@ type AppDatabase interface {
 	UnbanUser(int, int) (int, error)
 	FollowUser(int, int) (int, error)
 	UnfollowUser(int, int) (int, error)
+	GetFollowings(int) ([]utils.User, int, error)
+	GetFollowers(int) ([]utils.User, int, error)
 
 	Ping() error
 }
