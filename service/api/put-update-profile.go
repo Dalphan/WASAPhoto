@@ -32,6 +32,11 @@ func (rt *_router) updateProfile(w http.ResponseWriter, r *http.Request, ps http
 
 	user.UserID = uint(uid)
 
+	// Check for Authorization
+	if _, err = utils.GetAuthorization(w, r, uid); err != nil {
+		return
+	}
+
 	// Check username validity
 	if !utils.HttpValidateUsername(w, user.Username) {
 		return

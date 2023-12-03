@@ -26,21 +26,21 @@ func (rt *_router) login(w http.ResponseWriter, r *http.Request, ps httprouter.P
 		return
 	}
 
-	// Controlla se esiste l'utente e nel caso lo ritorna
+	// Check if the user exists, if yes then return the user
 	user, res, err := rt.db.FindUserByUsername(username)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
-	// Se non ha trovato niente, allora crea l'utente e ritorna l'id
+	// If the user is not found, create a new user and return the UserID
 	if res == database.NO_ROWS {
 		UID, _, err = rt.db.CreateUser(username)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
-	} else { // Utente trovato, prendi lo UserID
+	} else { // If the user exists, get the UserID
 		UID = int(user.UserID)
 	}
 

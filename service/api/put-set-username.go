@@ -17,6 +17,11 @@ func (rt *_router) setMyUsername(w http.ResponseWriter, r *http.Request, ps http
 		return
 	}
 
+	// Check for Authorization
+	if _, err = utils.GetAuthorization(w, r, uid); err != nil {
+		return
+	}
+
 	var requestBody map[string]string
 	err = json.NewDecoder(r.Body).Decode(&requestBody)
 	if err != nil {

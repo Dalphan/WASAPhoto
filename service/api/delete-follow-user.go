@@ -17,6 +17,11 @@ func (rt *_router) unfollowUser(w http.ResponseWriter, r *http.Request, ps httpr
 		return
 	}
 
+	// Check for Authorization
+	if _, err = utils.GetAuthorization(w, r, uid); err != nil {
+		return
+	}
+
 	fid, err := utils.GetHttpParam(w, ps, "fid")
 	if err != nil {
 		return

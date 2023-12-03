@@ -17,6 +17,11 @@ func (rt *_router) unbanUser(w http.ResponseWriter, r *http.Request, ps httprout
 		return
 	}
 
+	// Check for Authorization
+	if _, err = utils.GetAuthorization(w, r, uid); err != nil {
+		return
+	}
+
 	bid, err := utils.GetHttpParam(w, ps, "bid")
 	if err != nil { // Error getting the user ID to unban
 		return

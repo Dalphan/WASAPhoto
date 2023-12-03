@@ -14,20 +14,31 @@ func (rt *_router) getUserProfile(w http.ResponseWriter, r *http.Request, ps htt
 
 	username := r.URL.Query().Get("username")
 
+	// Check for Authorization
+	uid, err := utils.GetAuthorization(w, r)
+	if err != nil {
+		return
+	}
+
 	if !utils.HttpValidateUsername(w, username) {
 		return
 	} else {
-		// Lo username è valido, cerca nel database
+		// Valid username, search the profile in the database
 		user, res, err := rt.db.FindUserByUsername(username)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
 
-		// Se non ha trovato niente, allora ritorna codice 404 Not Found
+		// User not found, return 404 Not Found
 		if res == database.NO_ROWS {
 			http.Error(w, utils.ErrUserNotFound.Error(), http.StatusNotFound)
-		} else { // Utente trovato, ritornalo
+		} else { // User found
+
+			// Check if the User has banned the one searching
+			uid += 1
+			//
+
 			utils.SetHeaderJson(w)
 			err = json.NewEncoder(w).Encode(user)
 

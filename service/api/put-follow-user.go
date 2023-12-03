@@ -18,6 +18,11 @@ func (rt *_router) followUser(w http.ResponseWriter, r *http.Request, ps httprou
 		return
 	}
 
+	// Check for Authorization
+	if _, err = utils.GetAuthorization(w, r, uid); err != nil {
+		return
+	}
+
 	fid, err := utils.GetHttpParam(w, ps, "fid")
 	if err != nil {
 		return

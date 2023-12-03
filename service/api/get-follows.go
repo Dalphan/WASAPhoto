@@ -19,6 +19,11 @@ func getFollows(w http.ResponseWriter, r *http.Request, ps httprouter.Params, rt
 		return
 	}
 
+	// Check for Authorization
+	if _, err = utils.GetAuthorization(w, r, uid); err != nil {
+		return
+	}
+
 	users, res, err := follow(uid)
 	if res == database.ERROR {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
