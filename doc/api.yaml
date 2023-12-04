@@ -488,13 +488,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Photo'
+                $ref: '#/components/schemas/Like'
         "201":
           description: Photo liked successfully
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Photo'
+                $ref: '#/components/schemas/Like'
         "400": 
           $ref: '#/components/responses/BadRequest'
         "401": 
@@ -517,7 +517,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Photo'
+                $ref: '#/components/schemas/Like'
         "400": 
           $ref: '#/components/responses/BadRequest'
         "401": 
@@ -806,6 +806,14 @@ components:
           minLength: 20
           maxLength: 20
           readOnly: true
+    Like:
+      type: object
+      description: A user expressing their approval or appreciation by clicking the "like" button on a photo.
+      properties:
+        user:
+          $ref: '#/components/schemas/User/properties/id'
+        photo:
+          $ref: '#/components/schemas/Photo/properties/id'
     Error:
       description: Message containing additional info about the error
       type: string

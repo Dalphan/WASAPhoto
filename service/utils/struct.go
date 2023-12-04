@@ -31,6 +31,11 @@ type Comment struct {
 	Date      string `json:"date"`
 }
 
+type Like struct {
+	UserID  uint `json:"user"`
+	PhotoID uint `json:"photo"`
+}
+
 func BytesToBase64(bytes []byte) string {
 	return base64.StdEncoding.EncodeToString(bytes)
 }

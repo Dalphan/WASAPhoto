@@ -34,5 +34,9 @@ func (rt *_router) Handler() http.Handler {
 	rt.router.POST("/photos", rt.uploadPhoto)
 	rt.router.DELETE("/photos/:pid", rt.deletePhoto)
 
+	// Likes routes
+	rt.router.PUT("/photos/:pid/likes/:lid", rt.likePhoto)
+	rt.router.DELETE("/photos/:pid/likes/:lid", rt.unlikePhoto)
+
 	return rt.router
 }

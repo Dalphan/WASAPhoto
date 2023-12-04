@@ -54,6 +54,8 @@ type AppDatabase interface {
 	CreatePhoto(utils.Photo) (int, int, error)
 	DeletePhoto(int) (int, error)
 	GetPhotoById(int) (utils.Photo, int, error)
+	LikePhoto(int, int) (utils.Like, int, error)
+	UnlikePhoto(int, int) (int, error)
 
 	Ping() error
 }
