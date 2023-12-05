@@ -41,7 +41,7 @@ func (rt *_router) Handler() http.Handler {
 	// Comment routes
 	rt.router.POST("/photos/:pid/comments", rt.commentPhoto)
 	rt.router.GET("/photos/:pid/comments", rt.commentPhoto)
-	rt.router.DELETE("/photos/:pid/comments/:cid", rt.commentPhoto)
+	rt.router.DELETE("/photos/:pid/comments/:cid", rt.uncommentPhoto)
 
 	return rt.router
 }

@@ -14,8 +14,8 @@ func (db *appdbimpl) LikePhoto(pid int, uid int) (utils.Like, int, error) {
 	if res := checkResults(err); res != SUCCESS {
 		return like, res, err
 	}
-	like.PhotoID = uint(pid)
-	like.UserID = uint(uid)
+	like.PhotoID = pid
+	like.UserID = uid
 	return like, SUCCESS, nil
 }
 

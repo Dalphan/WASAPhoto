@@ -30,7 +30,7 @@ func (rt *_router) updateProfile(w http.ResponseWriter, r *http.Request, ps http
 		return
 	}
 
-	user.UserID = uint(uid)
+	user.UserID = uid
 
 	// Check for Authorization
 	if _, err = utils.GetAuthorization(w, r, uid); err != nil {

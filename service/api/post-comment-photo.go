@@ -25,7 +25,7 @@ func (rt *_router) commentPhoto(w http.ResponseWriter, r *http.Request, ps httpr
 	}
 
 	if !comment.Validate() {
-		http.Error(w, err.Error(), http.StatusNotAcceptable)
+		http.Error(w, utils.ErrCommentNotValid.Error(), http.StatusNotAcceptable)
 		return
 	}
 
@@ -36,8 +36,8 @@ func (rt *_router) commentPhoto(w http.ResponseWriter, r *http.Request, ps httpr
 
 	//CONTROLLA CHE IL COMMENTO E' DELL'UTENTE E CHE NON COMMENTA FOTO DI CHI LO HA BANNATO
 
-	comment.PhotoID = uint(pid)
-	comment.UserID = uint(uid)
+	comment.PhotoID = pid
+	comment.UserID = uid
 	comment.Date = utils.NowFormat()
 
 	res, err := rt.db.CommentPhoto(comment)

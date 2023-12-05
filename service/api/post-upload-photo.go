@@ -20,7 +20,7 @@ func (rt *_router) uploadPhoto(w http.ResponseWriter, r *http.Request, ps httpro
 	}
 
 	var photo utils.Photo
-	photo.UserID = uint(uid)
+	photo.UserID = uid
 
 	imageBytes, err := io.ReadAll(r.Body)
 	if err != nil {
@@ -46,7 +46,7 @@ func (rt *_router) uploadPhoto(w http.ResponseWriter, r *http.Request, ps httpro
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-	photo.PhotoID = uint(PID)
+	photo.PhotoID = PID
 
 	fmt.Println("PHOTO ID", photo.PhotoID)
 

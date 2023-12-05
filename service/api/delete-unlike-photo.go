@@ -37,8 +37,8 @@ func (rt *_router) unlikePhoto(w http.ResponseWriter, r *http.Request, ps httpro
 	}
 
 	var like utils.Like
-	like.PhotoID = uint(pid)
-	like.UserID = uint(lid)
+	like.PhotoID = pid
+	like.UserID = lid
 	utils.SetHeaderText(w)
 	err = json.NewEncoder(w).Encode(like)
 	if err != nil {

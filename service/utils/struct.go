@@ -1,11 +1,14 @@
 package utils
 
-import "encoding/base64"
+import (
+	"encoding/base64"
+	"strings"
+)
 
 // `
 
 type User struct {
-	UserID         uint   `json:"id"`
+	UserID         int    `json:"id"`
 	Username       string `json:"username"`
 	Name           string `json:"name"`
 	Surname        string `json:"surname"`
@@ -15,8 +18,8 @@ type User struct {
 }
 
 type Photo struct {
-	PhotoID      uint   `json:"id"`
-	UserID       uint   `json:"user"`
+	PhotoID      int    `json:"id"`
+	UserID       int    `json:"user"`
 	Image        string `json:"image"`
 	Timestamp    string `json:"timestamp"`
 	LikeCount    int    `json:"likeCount"`
@@ -24,23 +27,21 @@ type Photo struct {
 }
 
 type Comment struct {
-	CommentID uint   `json:"id"`
+	CommentID int    `json:"id"`
 	Text      string `json:"text"`
-	UserID    uint   `json:"user"`
-	PhotoID   uint   `json:"photo"`
+	UserID    int    `json:"user"`
+	PhotoID   int    `json:"photo"`
 	Date      string `json:"date"`
 }
 
 type Like struct {
-	UserID  uint `json:"user"`
-	PhotoID uint `json:"photo"`
+	UserID  int `json:"user"`
+	PhotoID int `json:"photo"`
 }
 
 func (c Comment) Validate() bool {
-	if len(c.Text) < 1 && len(c.Text) > 5000 {
-		return false
-	}
-	return true
+	c.Text = strings.TrimSpace(c.Text) // Removes spaces at the beginning and the end. If the string is empty, the length becomes 0
+	return len(c.Text) > 1 && len(c.Text) < 5000
 }
 
 func BytesToBase64(bytes []byte) string {
