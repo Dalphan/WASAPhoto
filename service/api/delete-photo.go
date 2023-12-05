@@ -30,6 +30,7 @@ func (rt *_router) deletePhoto(w http.ResponseWriter, r *http.Request, ps httpro
 	if err != nil {
 		return
 	}
+	// CONTROLLA CHE LA FOTO E' DELL'UTENTE
 
 	res, err = rt.db.DeletePhoto(pid)
 	if res == database.ERROR { // The photo exists in the database, so sql.NoRows isn't checked

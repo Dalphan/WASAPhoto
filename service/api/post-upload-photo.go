@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"io"
 	"net/http"
-	"time"
 
 	"github.com/Dalphan/WASAPhoto/service/database"
 	"github.com/Dalphan/WASAPhoto/service/utils"
@@ -36,7 +35,7 @@ func (rt *_router) uploadPhoto(w http.ResponseWriter, r *http.Request, ps httpro
 
 	// Non si puo salvare cosi l'immagine, la risposta è completamente occupata dall'immagine in base64
 	photo.Image = utils.BytesToBase64(imageBytes)
-	photo.Timestamp = time.Now().Format("2006-01-02T15:04:05Z")
+	photo.Timestamp = utils.NowFormat()
 
 	PID, res, err := rt.db.CreatePhoto(photo)
 	if res == database.NO_ROWS {

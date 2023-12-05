@@ -5,9 +5,14 @@ import (
 	"net/http"
 	"regexp"
 	"strconv"
+	"time"
 
 	"github.com/julienschmidt/httprouter"
 )
+
+func NowFormat() string {
+	return time.Now().Format("2006-01-02T15:04:05Z")
+}
 
 // Database checks if username is between 3 and 16 characters
 func ValidateUsername(username string) error {
