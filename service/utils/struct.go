@@ -36,6 +36,13 @@ type Like struct {
 	PhotoID uint `json:"photo"`
 }
 
+func (c Comment) Validate() bool {
+	if len(c.Text) < 1 && len(c.Text) > 5000 {
+		return false
+	}
+	return true
+}
+
 func BytesToBase64(bytes []byte) string {
 	return base64.StdEncoding.EncodeToString(bytes)
 }

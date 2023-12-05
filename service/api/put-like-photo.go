@@ -32,14 +32,24 @@ func (rt *_router) likePhoto(w http.ResponseWriter, r *http.Request, ps httprout
 	like, res, err := rt.db.LikePhoto(pid, lid)
 	switch res {
 	case database.UNIQUE_FAILED:
-	case database.SUCCESS:
+		w.WriteHeader(http.StatusOK)
 		utils.SetHeaderJson(w)
 		err = json.NewEncoder(w).Encode(like)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 		}
+		return
+	case database.SUCCESS:
+		w.WriteHeader(http.StatusCreated)
+		utils.SetHeaderJson(w)
+		err = json.NewEncoder(w).Encode(like)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+		}
+		return
 	case database.NO_ROWS:
 		http.Error(w, utils.ErrUserNotFound.Error()+" or "+utils.ErrPhotoNotFound.Error(), http.StatusNotFound)
+		return
 	case database.ERROR:
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}

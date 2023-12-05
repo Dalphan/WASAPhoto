@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"net/http"
 
+	"github.com/Dalphan/WASAPhoto/service/database"
 	"github.com/Dalphan/WASAPhoto/service/utils"
 	"github.com/julienschmidt/httprouter"
 )
@@ -23,15 +24,35 @@ func (rt *_router) commentPhoto(w http.ResponseWriter, r *http.Request, ps httpr
 		return
 	}
 
+	if !comment.Validate() {
+		http.Error(w, err.Error(), http.StatusNotAcceptable)
+		return
+	}
+
 	uid, err := utils.GetAuthorization(w, r)
 	if err != nil {
 		return
 	}
 
-	//CONTROLLA CHE IL COMMENTO E' DELL'UTENTE
+	//CONTROLLA CHE IL COMMENTO E' DELL'UTENTE E CHE NON COMMENTA FOTO DI CHI LO HA BANNATO
 
 	comment.PhotoID = uint(pid)
 	comment.UserID = uint(uid)
 	comment.Date = utils.NowFormat()
 
+	res, err := rt.db.CommentPhoto(comment)
+	if res == database.NO_ROWS {
+		http.Error(w, utils.ErrPhotoNotFound.Error()+" or "+utils.ErrUserNotFound.Error(), http.StatusNotFound)
+		return
+	}
+	if res == database.ERROR {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	w.WriteHeader(http.StatusCreated)
+	utils.SetHeaderJson(w)
+	err = json.NewEncoder(w).Encode(comment)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+	}
 }
