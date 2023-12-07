@@ -64,8 +64,8 @@ func GetAuthorization(w http.ResponseWriter, r *http.Request, id ...int) (int, e
 	uid, err := strconv.Atoi(r.Header.Get("Authorization"))
 
 	if err != nil || (len(id) > 0 && uid != id[0]) {
-		http.Error(w, ErrUnauthorazied.Error(), http.StatusUnauthorized)
-		return 0, ErrUnauthorazied
+		http.Error(w, ErrUnauthoraized.Error(), http.StatusUnauthorized)
+		return 0, ErrUnauthoraized
 	}
 
 	return uid, nil

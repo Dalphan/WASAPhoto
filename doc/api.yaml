@@ -615,7 +615,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Comment'
+                $ref: '#/components/schemas/Message'
         "400": 
           $ref: '#/components/responses/BadRequest'
         "401": 
@@ -814,8 +814,8 @@ components:
           $ref: '#/components/schemas/User/properties/id'
         photo:
           $ref: '#/components/schemas/Photo/properties/id'
-    Error:
-      description: Message containing additional info about the error
+    Message:
+      description: Message containing additional info about the response
       type: string
       minLength: 0
       maxLength: 255
@@ -827,35 +827,35 @@ components:
       content:
         text/plain:
           schema:
-            $ref: '#/components/schemas/Error'
+            $ref: '#/components/schemas/Message'
     Unauthorized:
       description: |
         The server could not understand the request due to malformed syntax, invalid parameters, or missing required information.
       content:
         text/plain:
           schema:
-            $ref: '#/components/schemas/Error'
+            $ref: '#/components/schemas/Message'
     NotFound:
       description: |
         Resource not found. The requested URL or endpoint does not exist.
       content:
         text/plain:
           schema:
-            $ref: '#/components/schemas/Error'
+            $ref: '#/components/schemas/Message'
     NotAcceptable:
       description: |
         Requested representation not acceptable. Adjust request headers or content.
       content:
         text/plain:
           schema:
-            $ref: '#/components/schemas/Error'
+            $ref: '#/components/schemas/Message'
     InternalServerError:
       description: |
         Internal Server Error. An unexpected server error occurred while processing the request.
       content:
         text/plain:
           schema:
-            $ref: '#/components/schemas/Error'
+            $ref: '#/components/schemas/Message'
 
 # Apply bearer authentication to every method
 security:

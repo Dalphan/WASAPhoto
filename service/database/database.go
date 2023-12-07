@@ -57,7 +57,9 @@ type AppDatabase interface {
 	LikePhoto(int, int) (utils.Like, int, error)
 	UnlikePhoto(int, int) (int, error)
 	CommentPhoto(utils.Comment) (int, error)
-	UncommentPhoto(int) (int, error)
+	UncommentPhoto(int, int) (int, error)
+	GetCommentById(int) (utils.Comment, int, error)
+	GetCommentsByPhoto(int) ([]utils.Comment, int, error)
 
 	Ping() error
 }

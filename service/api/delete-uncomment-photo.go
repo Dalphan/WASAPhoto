@@ -11,7 +11,7 @@ import (
 func (rt *_router) uncommentPhoto(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	utils.SetHeaderText(w)
 
-	_, err := utils.GetHttpParam(w, ps, "pid")
+	pid, err := utils.GetHttpParam(w, ps, "pid")
 	if err != nil {
 		return
 	}
@@ -21,19 +21,33 @@ func (rt *_router) uncommentPhoto(w http.ResponseWriter, r *http.Request, ps htt
 		return
 	}
 
-	_, err = utils.GetAuthorization(w, r)
+	uid, err := utils.GetAuthorization(w, r)
 	if err != nil {
 		return
 	}
 
-	// Solo l'utente che ha fatto il commento lo può rimuovere
+	// The user can only delete their own comments
+	c, res, err := rt.db.GetCommentById(cid)
+	switch res {
+	case database.NO_ROWS:
+		http.Error(w, utils.ErrCommentNotFound.Error(), http.StatusNotFound)
+		return
+	case database.ERROR:
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	case database.SUCCESS:
+		if c.UserID != uid { // The comment is from another user
+			http.Error(w, utils.ErrUnauthoraized.Error(), http.StatusUnauthorized)
+			return
+		}
+	}
 
-	res, err := rt.db.UncommentPhoto(cid)
+	res, err = rt.db.UncommentPhoto(cid, pid)
 	if res == database.ERROR {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	} else if res == database.NO_ROWS {
-		http.Error(w, utils.ErrPhotoNotFound.Error()+" or "+utils.ErrCommentNotFound.Error(), http.StatusNotFound)
+		http.Error(w, utils.ErrCommentNotFound.Error(), http.StatusNotFound)
 		return
 	}
 
