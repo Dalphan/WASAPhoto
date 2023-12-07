@@ -91,7 +91,7 @@ func New(db *sql.DB) (AppDatabase, error) {
 		}
 
 		sqlStmt = `CREATE TABLE Users (
-			UID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+			UID INTEGER NOT NULL PRIMARY KEY,
 			Username TEXT NOT NULL UNIQUE CHECK(length(Username) >= 3 AND length(Username <= 16)),
 			name TEXT,
 			surname TEXT
@@ -102,7 +102,7 @@ func New(db *sql.DB) (AppDatabase, error) {
 		}
 
 		sqlStmt = `CREATE TABLE Photo (
-			PID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+			PID INTEGER NOT NULL PRIMARY KEY,
 			UID INTEGER NOT NULL,
 			image BLOB,
 			date TEXT,
@@ -114,13 +114,13 @@ func New(db *sql.DB) (AppDatabase, error) {
 		}
 
 		sqlStmt = `CREATE TABLE Comment (
-			CID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+			CID INTEGER NOT NULL PRIMARY KEY,
 			PID INTEGER NOT NULL,
 			UID INTEGER NOT NULL,
 			text TEXT,
 			date TEXT,
 			FOREIGN KEY (UID) references Users(UID)
-			FOREIGN KEY (PID) references Photo(PID)
+			FOREIGN KEY (PID) references Photo(PID) ON DELETE CASCADE
 		);`
 		_, err = db.Exec(sqlStmt)
 		if err != nil {
@@ -132,7 +132,7 @@ func New(db *sql.DB) (AppDatabase, error) {
 			UID INTEGER NOT NULL,
 			PRIMARY KEY (PID, UID),
 			FOREIGN KEY (UID) references Users(UID)
-			FOREIGN KEY (PID) references Photo(PID)
+			FOREIGN KEY (PID) references Photo(PID) ON DELETE CASCADE
 		);`
 		_, err = db.Exec(sqlStmt)
 		if err != nil {

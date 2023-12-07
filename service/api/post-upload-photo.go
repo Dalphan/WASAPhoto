@@ -2,7 +2,6 @@ package api
 
 import (
 	"encoding/json"
-	"fmt"
 	"io"
 	"net/http"
 
@@ -47,8 +46,6 @@ func (rt *_router) uploadPhoto(w http.ResponseWriter, r *http.Request, ps httpro
 		return
 	}
 	photo.PhotoID = PID
-
-	fmt.Println("PHOTO ID", photo.PhotoID)
 
 	utils.SetHeaderJson(w)
 	w.WriteHeader(http.StatusCreated)

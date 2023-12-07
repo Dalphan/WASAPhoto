@@ -34,6 +34,8 @@ func (rt *_router) likePhoto(w http.ResponseWriter, r *http.Request, ps httprout
 	case database.UNIQUE_FAILED:
 		w.WriteHeader(http.StatusOK)
 		utils.SetHeaderJson(w)
+		like.PhotoID = pid
+		like.UserID = lid
 		err = json.NewEncoder(w).Encode(like)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)

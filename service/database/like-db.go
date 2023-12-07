@@ -4,12 +4,8 @@ import "github.com/Dalphan/WASAPhoto/service/utils"
 
 func (db *appdbimpl) LikePhoto(pid int, uid int) (utils.Like, int, error) {
 	var like utils.Like
-	row, err := db.c.Exec(`	INSERT INTO Like
+	_, err := db.c.Exec(`	INSERT INTO Like
 							VALUES (?, ?)`, pid, uid)
-
-	if res, err := checkRowsAffected(row); res != SUCCESS {
-		return like, res, err
-	}
 
 	if res := checkResults(err); res != SUCCESS {
 		return like, res, err
