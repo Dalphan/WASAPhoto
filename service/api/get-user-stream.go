@@ -1,8 +1,11 @@
 package api
 
 import (
+	"encoding/json"
 	"net/http"
+	"strconv"
 
+	"github.com/Dalphan/WASAPhoto/service/database"
 	"github.com/Dalphan/WASAPhoto/service/utils"
 	"github.com/julienschmidt/httprouter"
 )
@@ -20,4 +23,26 @@ func (rt *_router) getUserStream(w http.ResponseWriter, r *http.Request, ps http
 		return
 	}
 
+	page_str := r.URL.Query().Get("page")
+	if page_str == "" {
+		page_str = "0"
+	}
+
+	page, err := strconv.Atoi(page_str)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	photos, res, err := rt.db.GetUserStream(uid, page)
+	if res == database.ERROR {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	err = json.NewEncoder(w).Encode(photos)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
 }

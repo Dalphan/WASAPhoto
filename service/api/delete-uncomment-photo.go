@@ -47,9 +47,9 @@ func (rt *_router) uncommentPhoto(w http.ResponseWriter, r *http.Request, ps htt
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	} else if res == database.NO_ROWS {
-		http.Error(w, utils.ErrCommentNotFound.Error(), http.StatusNotFound)
+		http.Error(w, utils.ErrPhotoNotFound.Error(), http.StatusNotFound)
 		return
 	}
 
-	w.Write([]byte("Comment deleted succesfully"))
+	w.Write([]byte("Comment deleted succesfully\n"))
 }

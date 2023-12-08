@@ -188,6 +188,16 @@ paths:
       description: |
         Return an array of photos posted by the users in the user's following list
       operationId: getMyStream
+      parameters:
+        - name: page
+          in: query
+          description: The page count for loading photos.
+          required: true
+          schema:
+            type: integer
+            description: The number of the page to loading
+            minimum: 0
+            maximum: 10000
       responses:
         "200":
           description: Photos returned successfully

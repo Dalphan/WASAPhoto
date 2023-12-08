@@ -1,15 +1,18 @@
 package database
 
-import "github.com/Dalphan/WASAPhoto/service/utils"
+import (
+	"github.com/Dalphan/WASAPhoto/service/utils"
+)
 
-func (db *appdbimpl) CommentPhoto(c utils.Comment) (int, error) {
+func (db *appdbimpl) CommentPhoto(c utils.Comment) (int, int, error) {
 	err := db.c.QueryRow(` 	INSERT INTO Comment (PID, UID, text, date)
-							VALUES (?,?,?,?)`, c.PhotoID, c.UserID, c.Text, c.Date).Scan(&c.CommentID)
+							VALUES (?,?,?,?)
+							RETURNING CID`, c.PhotoID, c.UserID, c.Text, c.Date).Scan(&c.CommentID)
 
 	if res := checkResults(err); res != SUCCESS {
-		return res, err
+		return 0, res, err
 	} else {
-		return SUCCESS, nil
+		return c.CommentID, SUCCESS, nil
 	}
 }
 
