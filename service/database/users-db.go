@@ -7,6 +7,8 @@ import (
 	"github.com/Dalphan/WASAPhoto/service/utils"
 )
 
+const LIMIT_STREAM = 10
+
 func checkUpdateUser(user utils.User, err error) (utils.User, int, error) {
 	res := checkResults(err)
 
@@ -83,4 +85,28 @@ func (db *appdbimpl) CreateUser(username string) (int, int, error) {
 							VALUES (?)
 							RETURNING UID`, username).Scan(&UID)
 	return UID, SUCCESS, err
+}
+
+func (db *appdbimpl) GetUserStream(uid int, page int) ([]utils.Photo, int, error) {
+	rows, err := db.c.Query(`	SELECT p.*
+								FROM Followings f, Photo p
+								WHERE p.UID = f.FollowedID
+								AND f.UID = ?
+								LIMIT ? OFFSET ?`, uid, LIMIT_STREAM, page*LIMIT_STREAM)
+
+	var photos []utils.Photo
+	if err != nil {
+		return nil, ERROR, err
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var photo utils.Photo
+		if err := rows.Scan(&photo.PhotoID, &photo.UserID, &photo.Image, &photo.Timestamp); err != nil {
+			return nil, ERROR, err
+		}
+		photos = append(photos, photo)
+	}
+	return photos, SUCCESS, nil
+
 }

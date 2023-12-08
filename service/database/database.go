@@ -45,6 +45,7 @@ type AppDatabase interface {
 	CreateUser(string) (int, int, error)
 	UpdateUser(utils.User) (utils.User, int, error)
 	UpdateUsername(int, string) (utils.User, int, error)
+	GetUserStream(int, int) ([]utils.Photo, int, error)
 	BanUser(int, int) (int, error)
 	UnbanUser(int, int) (int, error)
 	FollowUser(int, int) (int, error)
