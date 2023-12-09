@@ -463,7 +463,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Photo'
+                $ref: '#/components/schemas/Message'
         "400": 
           $ref: '#/components/responses/BadRequest'
         "401": 

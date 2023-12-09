@@ -1,6 +1,7 @@
 package api
 
 import (
+	"encoding/json"
 	"net/http"
 
 	"github.com/Dalphan/WASAPhoto/service/database"
@@ -51,5 +52,9 @@ func (rt *_router) uncommentPhoto(w http.ResponseWriter, r *http.Request, ps htt
 		return
 	}
 
-	w.Write([]byte("Comment deleted succesfully\n"))
+	utils.SetHeaderJson(w)
+	err = json.NewEncoder(w).Encode("Comment deleted succesfully")
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+	}
 }

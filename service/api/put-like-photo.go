@@ -27,7 +27,21 @@ func (rt *_router) likePhoto(w http.ResponseWriter, r *http.Request, ps httprout
 		return
 	}
 
-	// Check if user of the photo banned the user putting the like
+	// Check if the photo exists
+	photo, res, err := rt.db.GetPhotoById(pid)
+	switch res {
+	case database.NO_ROWS:
+		http.Error(w, utils.ErrPhotoNotFound.Error(), http.StatusNotFound)
+		return
+	case database.ERROR:
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	// Photo returned succesfully
+	// Check if photo owner banned the one posting the comment
+	if CheckBanned(w, rt, photo.UserID, lid, utils.ErrPhotoNotFound) {
+		return
+	}
 
 	like, res, err := rt.db.LikePhoto(pid, lid)
 	switch res {
@@ -50,7 +64,7 @@ func (rt *_router) likePhoto(w http.ResponseWriter, r *http.Request, ps httprout
 		}
 		return
 	case database.NO_ROWS:
-		http.Error(w, utils.ErrUserNotFound.Error()+" or "+utils.ErrPhotoNotFound.Error(), http.StatusNotFound)
+		http.Error(w, utils.ErrUserNotFound.Error(), http.StatusNotFound)
 		return
 	case database.ERROR:
 		http.Error(w, err.Error(), http.StatusInternalServerError)

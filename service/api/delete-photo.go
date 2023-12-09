@@ -26,11 +26,11 @@ func (rt *_router) deletePhoto(w http.ResponseWriter, r *http.Request, ps httpro
 		return
 	}
 
-	_, err = utils.GetAuthorization(w, r, int(photo.UserID))
+	// Check if the photo owner is the user deleting it
+	_, err = utils.GetAuthorization(w, r, photo.UserID)
 	if err != nil {
 		return
 	}
-	// CONTROLLA CHE LA FOTO E' DELL'UTENTE
 
 	res, err = rt.db.DeletePhoto(pid)
 	if res == database.ERROR { // The photo exists in the database, so sql.NoRows isn't checked
@@ -40,7 +40,7 @@ func (rt *_router) deletePhoto(w http.ResponseWriter, r *http.Request, ps httpro
 
 	//ritorna encoded la foto eliminata?
 	utils.SetHeaderJson(w)
-	err = json.NewEncoder(w).Encode("FOTO ELIMINATA")
+	err = json.NewEncoder(w).Encode("Photo deleted succesfully")
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
