@@ -21,16 +21,20 @@ func (rt *_router) getComments(w http.ResponseWriter, r *http.Request, ps httpro
 	if err != nil {
 		return
 	}
-	uid += 1
 
 	// Check if photo exists
-	_, p_res, err := rt.db.GetPhotoById(pid)
+	photo, p_res, err := rt.db.GetPhotoById(pid)
 	switch p_res {
 	case database.ERROR:
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	case database.NO_ROWS:
 		http.Error(w, utils.ErrPhotoNotFound.Error(), http.StatusNotFound)
+		return
+	}
+
+	// Check if the user of the photo banned uid
+	if CheckBanned(w, rt, photo.UserID, uid, utils.ErrPhotoNotFound) {
 		return
 	}
 

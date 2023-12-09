@@ -36,8 +36,9 @@ func (rt *_router) getUserProfile(w http.ResponseWriter, r *http.Request, ps htt
 		} else { // User found
 
 			// Check if the User has banned the one searching
-			uid += 1
-			//
+			if CheckBanned(w, rt, user.UserID, uid, utils.ErrUserNotFound) {
+				return
+			}
 
 			utils.SetHeaderJson(w)
 			err = json.NewEncoder(w).Encode(user)

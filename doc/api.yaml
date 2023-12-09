@@ -207,7 +207,7 @@ paths:
                 type: array
                 description: The array of photos constituting the user's stream.
                 minItems: 0
-                maxItems: 10000
+                maxItems: 10
                 items:
                   $ref: '#/components/schemas/Photo'
         "400": 

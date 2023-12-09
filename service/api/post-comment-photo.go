@@ -34,7 +34,21 @@ func (rt *_router) commentPhoto(w http.ResponseWriter, r *http.Request, ps httpr
 		return
 	}
 
-	//CONTROLLA CHE IL COMMENTO E' DELL'UTENTE E CHE NON COMMENTA FOTO DI CHI LO HA BANNATO
+	// Check if the photo exists
+	photo, res, err := rt.db.GetPhotoById(pid)
+	switch res {
+	case database.NO_ROWS:
+		http.Error(w, utils.ErrPhotoNotFound.Error(), http.StatusNotFound)
+		return
+	case database.ERROR:
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	// Photo returned succesfully
+	// Check if photo owner banned the one posting the comment
+	if CheckBanned(w, rt, photo.UserID, uid, utils.ErrPhotoNotFound) {
+		return
+	}
 
 	comment.PhotoID = pid
 	comment.UserID = uid
@@ -42,7 +56,7 @@ func (rt *_router) commentPhoto(w http.ResponseWriter, r *http.Request, ps httpr
 
 	cid, res, err := rt.db.CommentPhoto(comment)
 	if res == database.NO_ROWS {
-		http.Error(w, utils.ErrPhotoNotFound.Error()+" or "+utils.ErrUserNotFound.Error(), http.StatusNotFound)
+		http.Error(w, utils.ErrUserNotFound.Error(), http.StatusNotFound)
 		return
 	}
 	if res == database.ERROR {

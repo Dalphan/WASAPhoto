@@ -20,7 +20,13 @@ func getFollows(w http.ResponseWriter, r *http.Request, ps httprouter.Params, rt
 	}
 
 	// Check for Authorization
-	if _, err = utils.GetAuthorization(w, r, uid); err != nil {
+	auth, err := utils.GetAuthorization(w, r)
+	if err != nil {
+		return
+	}
+
+	// Check if uid banned auth
+	if CheckBanned(w, rt, uid, auth, utils.ErrUserNotFound) {
 		return
 	}
 

@@ -17,8 +17,13 @@ func (rt *_router) getUserProfileById(w http.ResponseWriter, r *http.Request, ps
 		return
 	}
 
-	_, err = utils.GetAuthorization(w, r)
+	auth, err := utils.GetAuthorization(w, r)
 	if err != nil {
+		return
+	}
+
+	// If the user making the request is banned by the searched user, the response will not be found
+	if CheckBanned(w, rt, uid, auth, utils.ErrUserNotFound) {
 		return
 	}
 

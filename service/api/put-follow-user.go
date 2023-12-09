@@ -33,6 +33,11 @@ func (rt *_router) followUser(w http.ResponseWriter, r *http.Request, ps httprou
 		return
 	}
 
+	// Check if fid banned uid
+	if CheckBanned(w, rt, fid, uid, utils.ErrUserNotFound) {
+		return
+	}
+
 	switch res, err := rt.db.FollowUser(uid, fid); res {
 	case database.UNIQUE_FAILED:
 		w.WriteHeader(http.StatusOK)

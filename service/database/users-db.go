@@ -108,5 +108,18 @@ func (db *appdbimpl) GetUserStream(uid int, page int) ([]utils.Photo, int, error
 		photos = append(photos, photo)
 	}
 	return photos, SUCCESS, nil
+}
 
+func (db *appdbimpl) CheckIfBanned(uid int, bid int) (bool, error) {
+	var ret bool
+	err := db.c.QueryRow(`SELECT EXISTS(SELECT *
+									FROM BANS
+									WHERE UID = ?
+									AND BannedID = ?)`, uid, bid).Scan(&ret)
+
+	if err != nil {
+		return ret, err
+	}
+
+	return ret, nil
 }
