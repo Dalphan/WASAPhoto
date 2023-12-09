@@ -129,6 +129,10 @@ func (db *appdbimpl) GetUserStream(uid int, page int) ([]utils.Photo, int, error
 		if err := rows.Scan(&photo.PhotoID, &photo.UserID, &photo.Image, &photo.Timestamp); err != nil {
 			return nil, ERROR, err
 		}
+		photo, res, err := db.fillPhoto(photo)
+		if res != SUCCESS {
+			return nil, ERROR, err
+		}
 		photos = append(photos, photo)
 	}
 	return photos, SUCCESS, nil
