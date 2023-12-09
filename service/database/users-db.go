@@ -19,6 +19,30 @@ func checkUpdateUser(user utils.User, err error) (utils.User, int, error) {
 	return user, SUCCESS, nil
 }
 
+func (db *appdbimpl) fillUser(user utils.User) (utils.User, int, error) {
+	err := db.c.QueryRow(`	SELECT COUNT(*)
+							FROM Followings
+							WHERE UID = ?`, user.UserID).Scan(&user.FollowingCount)
+	if err != nil {
+		return user, ERROR, err
+	}
+
+	err = db.c.QueryRow(`	SELECT COUNT(*)
+							FROM Followings
+							WHERE FollowedID = ?`, user.UserID).Scan(&user.FollowersCount)
+	if err != nil {
+		return user, ERROR, err
+	}
+
+	err = db.c.QueryRow(`	SELECT COUNT(*)
+							FROM Photo
+							WHERE UID = ?`, user.UserID).Scan(&user.PhotoCount)
+	if err != nil {
+		return user, ERROR, err
+	}
+	return user, SUCCESS, nil
+}
+
 func (db *appdbimpl) UpdateUsername(uid int, username string) (utils.User, int, error) {
 	var user utils.User
 	var name, surname sql.NullString
@@ -56,7 +80,7 @@ func (db *appdbimpl) FindUserByID(uid int) (utils.User, int, error) {
 	if res := checkResults(err); res != SUCCESS {
 		return *new(utils.User), res, err
 	} else {
-		return user, res, nil
+		return db.fillUser(user)
 	}
 }
 
@@ -76,7 +100,7 @@ func (db *appdbimpl) FindUserByUsername(username string) (utils.User, int, error
 		return user, ERROR, err
 	}
 	// La SELECT ha ritornato l'utente completo di informazioni
-	return user, SUCCESS, nil
+	return db.fillUser(user)
 }
 
 func (db *appdbimpl) CreateUser(username string) (int, int, error) {
