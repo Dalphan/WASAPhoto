@@ -116,6 +116,7 @@ func (db *appdbimpl) GetUserStream(uid int, page int) ([]utils.Photo, int, error
 								FROM Followings f, Photo p
 								WHERE p.UID = f.FollowedID
 								AND f.UID = ?
+								ORDER BY p.date DESC
 								LIMIT ? OFFSET ?`, uid, LIMIT_STREAM, page*LIMIT_STREAM)
 
 	var photos []utils.Photo
