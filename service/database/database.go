@@ -108,6 +108,7 @@ func New(db *sql.DB) (AppDatabase, error) {
 			UID INTEGER NOT NULL,
 			image BLOB,
 			date TEXT,
+			caption TEXT,
 			FOREIGN KEY (UID) references Users(UID)
 		);`
 		_, err = db.Exec(sqlStmt)

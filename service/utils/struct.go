@@ -22,6 +22,7 @@ type Photo struct {
 	UserID       int    `json:"user"`
 	Image        string `json:"image"`
 	Timestamp    string `json:"timestamp"`
+	Caption      string `json:"caption"`
 	LikeCount    int    `json:"likeCount"`
 	CommentCount int    `json:"commentCount"`
 }

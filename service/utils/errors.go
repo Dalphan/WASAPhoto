@@ -10,6 +10,7 @@ var ErrUsernameTaken = errors.New("the username is already taken")
 
 var ErrPhotoTooBig = errors.New("the provided photo exceeds the maximum dimension")
 var ErrPhotoNotFound = errors.New("photo not found")
+var ErrCaptionTooBig = errors.New("the caption exceeds the maximun length")
 
 var ErrCommentNotValid = errors.New("the given comment doesn't match the required length")
 var ErrCommentNotFound = errors.New("comment not found")

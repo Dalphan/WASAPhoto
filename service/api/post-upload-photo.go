@@ -21,6 +21,12 @@ func (rt *_router) uploadPhoto(w http.ResponseWriter, r *http.Request, ps httpro
 	var photo utils.Photo
 	photo.UserID = uid
 
+	photo.Caption = r.URL.Query().Get("caption")
+	if len(photo.Caption) > 1000 {
+		http.Error(w, utils.ErrCaptionTooBig.Error(), http.StatusNotAcceptable)
+		return
+	}
+
 	imageBytes, err := io.ReadAll(r.Body)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
