@@ -484,6 +484,39 @@ paths:
         "500":
           $ref: '#/components/responses/InternalServerError'
   
+  # getLikes
+  /photos/{photoId}/likes:
+    parameters:
+      - $ref: '#/components/parameters/photoId'
+    
+    get:
+      tags:
+        - likes
+      summary: Return photo likes
+      description: |
+        Return the list of likes for the given photo
+      operationId: getLikes
+      responses:
+        "200":
+          description: List returned successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                description: The list of likes
+                minItems: 0
+                maxItems: 1000000
+                items:
+                  $ref: '#/components/schemas/Like'
+        "400": 
+          $ref: '#/components/responses/BadRequest'
+        "401": 
+          $ref: '#/components/responses/Unauthorized'
+        "404":
+          $ref: '#/components/responses/NotFound'
+        "500":
+          $ref: '#/components/responses/InternalServerError'
+  
   # likePhoto
   # unlikePhoto
   /photos/{photoId}/likes/{likedId}:

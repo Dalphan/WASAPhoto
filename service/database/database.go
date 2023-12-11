@@ -58,6 +58,7 @@ type AppDatabase interface {
 	GetPhotoById(int) (utils.Photo, int, error)
 	LikePhoto(int, int) (utils.Like, int, error)
 	UnlikePhoto(int, int) (int, error)
+	GetLikesByPhoto(int) ([]utils.Like, int, error)
 	CommentPhoto(utils.Comment) (int, int, error)
 	UncommentPhoto(int, int) (int, error)
 	GetCommentById(int) (utils.Comment, int, error)
