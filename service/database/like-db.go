@@ -31,9 +31,10 @@ func (db *appdbimpl) UnlikePhoto(pid int, uid int) (int, error) {
 
 func (db *appdbimpl) GetLikesByPhoto(pid int) ([]utils.Like, int, error) {
 	var likes []utils.Like
-	rows, err := db.c.Query(`	SELECT *
-								FROM Comment
-								WHERE PID = ?`, pid)
+	rows, err := db.c.Query(`	SELECT l.PID, l.UID, u.Username
+								FROM Like l, Users u 
+								WHERE l.UID = u.UID
+								AND l.PID = ?`, pid)
 	if err != nil {
 		return nil, ERROR, err
 	}
@@ -41,7 +42,7 @@ func (db *appdbimpl) GetLikesByPhoto(pid int) ([]utils.Like, int, error) {
 
 	for rows.Next() {
 		var like utils.Like
-		if err := rows.Scan(&like.PhotoID, &like.UserID); err != nil {
+		if err := rows.Scan(&like.PhotoID, &like.UserID, &like.Username); err != nil {
 			return nil, ERROR, err
 		}
 		likes = append(likes, like)

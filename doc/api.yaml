@@ -850,6 +850,8 @@ components:
           maxLength: 5000
         user:
           $ref: '#/components/schemas/User/properties/id'
+        username:
+          $ref: '#/components/schemas/User/properties/username'
         photo:
           $ref: '#/components/schemas/Photo/properties/id' 
         date:
@@ -866,6 +868,8 @@ components:
       properties:
         user:
           $ref: '#/components/schemas/User/properties/id'
+        username:
+          $ref: '#/components/schemas/User/properties/username'
         photo:
           $ref: '#/components/schemas/Photo/properties/id'
     Message:

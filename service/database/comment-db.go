@@ -33,9 +33,10 @@ func (db *appdbimpl) UncommentPhoto(cid int, pid int) (int, error) {
 
 func (db *appdbimpl) GetCommentsByPhoto(pid int) ([]utils.Comment, int, error) {
 	var c []utils.Comment
-	rows, err := db.c.Query(`	SELECT *
-								FROM Comment
-								WHERE PID = ?`, pid)
+	rows, err := db.c.Query(`	SELECT c.*, u.Username
+								FROM Comment c, Users u
+								WHERE c.UID = u.UID 
+								c.PID = ?`, pid)
 	if err != nil {
 		return nil, ERROR, err
 	}
@@ -43,7 +44,7 @@ func (db *appdbimpl) GetCommentsByPhoto(pid int) ([]utils.Comment, int, error) {
 
 	for rows.Next() {
 		var comment utils.Comment
-		if err := rows.Scan(&comment.CommentID, &comment.PhotoID, &comment.UserID, &comment.Text, &comment.Date); err != nil {
+		if err := rows.Scan(&comment.CommentID, &comment.PhotoID, &comment.UserID, &comment.Text, &comment.Date, &comment.Username); err != nil {
 			return nil, ERROR, err
 		}
 		c = append(c, comment)

@@ -31,13 +31,15 @@ type Comment struct {
 	CommentID int    `json:"id"`
 	Text      string `json:"text"`
 	UserID    int    `json:"user"`
+	Username  string `json:"username"`
 	PhotoID   int    `json:"photo"`
 	Date      string `json:"date"`
 }
 
 type Like struct {
-	UserID  int `json:"user"`
-	PhotoID int `json:"photo"`
+	UserID   int    `json:"user"`
+	Username string `json:"username"`
+	PhotoID  int    `json:"photo"`
 }
 
 func (c Comment) Validate() bool {
