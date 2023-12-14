@@ -38,7 +38,11 @@ func (db *appdbimpl) GetLikesByPhoto(pid int) ([]utils.Like, int, error) {
 	if err != nil {
 		return nil, ERROR, err
 	}
-	defer rows.Close()
+	defer func() {
+		if closeErr := rows.Close(); closeErr != nil {
+			err = closeErr // Assign the error to the outer variable
+		}
+	}()
 
 	for rows.Next() {
 		var like utils.Like
@@ -47,5 +51,5 @@ func (db *appdbimpl) GetLikesByPhoto(pid int) ([]utils.Like, int, error) {
 		}
 		likes = append(likes, like)
 	}
-	return likes, SUCCESS, nil
+	return likes, SUCCESS, err
 }

@@ -41,7 +41,7 @@ func (rt *_router) login(w http.ResponseWriter, r *http.Request, ps httprouter.P
 			return
 		}
 	} else { // If the user exists, get the UserID
-		UID = int(user.UserID)
+		UID = user.UserID
 	}
 
 	w.Header().Set("content-type", "application/json")

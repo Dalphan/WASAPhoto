@@ -25,7 +25,7 @@ func (rt *_router) updateProfile(w http.ResponseWriter, r *http.Request, ps http
 	if err != nil { // Error getting the user ID
 		return
 	}
-	if user.UserID != 0 && int(user.UserID) != uid {
+	if user.UserID != 0 && user.UserID != uid {
 		http.Error(w, utils.ErrUnauthoraized.Error(), http.StatusBadRequest)
 		return
 	}

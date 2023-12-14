@@ -14,20 +14,29 @@ func (db *appdbimpl) BanUser(uid int, bid int) (int, error) {
 
 	res := checkResults(err)
 	if res != SUCCESS {
-		tx.Rollback()
+		err2 := tx.Rollback()
+		if err2 != nil {
+			err = err2
+		}
 		return res, err
 	}
 	_, err = tx.Exec(`	DELETE FROM Followings
 						WHERE (UID = ? AND BannedID)
 						OR (UID = ? and BannedID = ?)`, uid, bid, bid, uid)
 	if err != nil {
-		tx.Rollback()
+		err2 := tx.Rollback()
+		if err2 != nil {
+			err = err2
+		}
 		return ERROR, err
 	}
 
 	err = tx.Commit()
 	if err != nil {
-		tx.Rollback()
+		err2 := tx.Rollback()
+		if err2 != nil {
+			err = err2
+		}
 		return ERROR, err
 	}
 	return SUCCESS, err

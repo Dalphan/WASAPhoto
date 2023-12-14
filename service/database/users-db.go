@@ -123,7 +123,11 @@ func (db *appdbimpl) GetUserStream(uid int, page int) ([]utils.Photo, int, error
 	if err != nil {
 		return nil, ERROR, err
 	}
-	defer rows.Close()
+	defer func() {
+		if closeErr := rows.Close(); closeErr != nil {
+			err = closeErr // Assign the error to the outer variable
+		}
+	}()
 
 	for rows.Next() {
 		var photo utils.Photo

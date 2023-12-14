@@ -38,7 +38,6 @@ func (rt *_router) deletePhoto(w http.ResponseWriter, r *http.Request, ps httpro
 		return
 	}
 
-	//ritorna encoded la foto eliminata?
 	utils.SetHeaderJson(w)
 	err = json.NewEncoder(w).Encode("Photo deleted succesfully")
 	if err != nil {
