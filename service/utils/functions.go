@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"regexp"
 	"strconv"
+	"strings"
 	"time"
 
 	"github.com/julienschmidt/httprouter"
@@ -61,7 +62,12 @@ func SetHeaderJson(w http.ResponseWriter) {
 }
 
 func GetAuthorization(w http.ResponseWriter, r *http.Request, id ...int) (int, error) {
-	uid, err := strconv.Atoi(r.Header.Get("Authorization"))
+	auth := strings.Split(r.Header.Get("Authorization"), " ")
+
+	if len(auth) <= 1 {
+		return 0, ErrUnauthoraized
+	}
+	uid, err := strconv.Atoi(auth[1])
 
 	if err != nil || (len(id) > 0 && uid != id[0]) {
 		http.Error(w, ErrUnauthoraized.Error(), http.StatusUnauthorized)

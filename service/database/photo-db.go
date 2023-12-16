@@ -47,7 +47,7 @@ func (db *appdbimpl) GetPhotoById(pid int) (utils.Photo, int, error) {
 	var photo utils.Photo
 	err := db.c.QueryRow(`	SELECT *
 							FROM Photo
-							WHERE PID = ?`, pid).Scan(&photo.PhotoID, &photo.UserID, &photo.Image, &photo.Timestamp)
+							WHERE PID = ?`, pid).Scan(&photo.PhotoID, &photo.UserID, &photo.Image, &photo.Timestamp, &photo.Caption)
 
 	if res := checkResults(err); res != SUCCESS {
 		return *new(utils.Photo), res, err

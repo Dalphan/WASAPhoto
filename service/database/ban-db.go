@@ -21,8 +21,8 @@ func (db *appdbimpl) BanUser(uid int, bid int) (int, error) {
 		return res, err
 	}
 	_, err = tx.Exec(`	DELETE FROM Followings
-						WHERE (UID = ? AND BannedID)
-						OR (UID = ? and BannedID = ?)`, uid, bid, bid, uid)
+						WHERE (UID = ? AND FollowedID)
+						OR (UID = ? and FollowedID = ?)`, uid, bid, bid, uid)
 	if err != nil {
 		err2 := tx.Rollback()
 		if err2 != nil {
