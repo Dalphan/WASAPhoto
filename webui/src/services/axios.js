@@ -1,4 +1,5 @@
 import axios from "axios";
+import getCurrentId from "./authentication";
 
 const instance = axios.create({
 	baseURL: __API_URL__,
@@ -6,7 +7,11 @@ const instance = axios.create({
 });
 
 const setAuth = () => {
-	instance.defaults.headers.common['Authorization'] = 'Bearer ' + localStorage['token']
+	// console.log("QUI PASSA")
+	instance.defaults.headers.common['Authorization'] = 'Bearer ' + getCurrentId()
 }
 
-export default instance;
+export {
+	setAuth,
+	instance as axios,
+}

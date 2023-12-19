@@ -2,7 +2,33 @@
 import { RouterLink, RouterView } from 'vue-router'
 </script>
 <script>
-export default {}
+export default {
+	data: function() {
+		return {
+
+		}
+	},
+	methods: {
+
+	},
+	mounted() {
+		// localStorage.token = null
+		this.$setAuth()
+
+		this.$axios.interceptors.response.use(response => {
+			return response;
+		}, error => {
+			if (error.response.status != 0) {
+				// If the user is Unauthorized, redirect to login
+				if (error.response.status === 401) {
+					this.$router.push({ path: '/' })
+					this.logged_in = false;
+					return;
+				}
+			}
+		});
+	}
+}
 </script>
 
 <template>
@@ -23,7 +49,7 @@ export default {}
 					</h6>
 					<ul class="nav flex-column">
 						<li class="nav-item">
-							<RouterLink to="/" class="nav-link">
+							<RouterLink to="/home" class="nav-link">
 								<svg class="feather"><use href="/feather-sprite-v4.29.0.svg#home"/></svg>
 								Home
 							</RouterLink>
@@ -35,7 +61,7 @@ export default {}
 							</RouterLink>
 						</li>
 						<li class="nav-item">
-							<RouterLink to="/link2" class="nav-link">
+							<RouterLink to="/home" class="nav-link">
 								<svg class="feather"><use href="/feather-sprite-v4.29.0.svg#key"/></svg>
 								Menu item 2
 							</RouterLink>
