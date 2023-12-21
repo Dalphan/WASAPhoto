@@ -38,7 +38,7 @@ func (db *appdbimpl) GetFollowings(uid int) ([]utils.User, int, error) {
 	if err != nil {
 		return nil, ERROR, err
 	}
-	defer rows.Close()
+	// defer rows.Close()
 
 	return getSelectedUsers(rows)
 }
@@ -51,7 +51,7 @@ func (db *appdbimpl) GetFollowers(uid int) ([]utils.User, int, error) {
 	if err != nil {
 		return nil, ERROR, err
 	}
-	defer rows.Close()
+	// defer rows.Close()
 
 	return getSelectedUsers(rows)
 }

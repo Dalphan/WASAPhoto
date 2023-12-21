@@ -50,13 +50,20 @@ func checkResults(err error) int {
 }
 
 func getSelectedUsers(rows *sql.Rows) ([]utils.User, int, error) {
+	var err error = nil
+	defer func() {
+		if closeErr := rows.Close(); closeErr != nil {
+			err = closeErr // Assign the error to the outer variable
+		}
+	}()
+
 	var users []utils.User
 	for rows.Next() {
 		var user utils.User
-		if err := rows.Scan(&user.UserID, &user.Username); err != nil {
+		if err = rows.Scan(&user.UserID, &user.Username); err != nil {
 			return nil, ERROR, err
 		}
 		users = append(users, user)
 	}
-	return users, SUCCESS, nil
+	return users, SUCCESS, err
 }

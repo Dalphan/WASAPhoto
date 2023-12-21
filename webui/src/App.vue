@@ -9,24 +9,27 @@ export default {
 		}
 	},
 	methods: {
-
+		logout() {
+			localStorage.removeItem("token")
+			this.$router.push("/").then(() => this.$router.go())
+		}
 	},
 	mounted() {
 		// localStorage.token = null
 		this.$setAuth()
 
-		this.$axios.interceptors.response.use(response => {
-			return response;
-		}, error => {
-			if (error.response.status != 0) {
-				// If the user is Unauthorized, redirect to login
-				if (error.response.status === 401) {
-					this.$router.push({ path: '/' })
-					this.logged_in = false;
-					return;
-				}
-			}
-		});
+		// this.$axios.interceptors.response.use(response => {
+		// 	return response;
+		// }, error => {
+		// 	if (error.response.status != 0) {
+		// 		// If the user is Unauthorized, redirect to login
+		// 		if (error.response.status === 401) {
+		// 			this.$router.push({ path: '/' })
+		// 			this.logged_in = false;
+		// 			return;
+		// 		}
+		// 	}
+		// });
 	}
 }
 </script>
@@ -65,6 +68,16 @@ export default {
 								<svg class="feather"><use href="/feather-sprite-v4.29.0.svg#key"/></svg>
 								Menu item 2
 							</RouterLink>
+						</li>
+						<li class="nav-item" v-if="this.$getCurrentId()">
+							<!-- <RouterLink to="/home" class="nav-link">
+								<svg class="feather"><use href="/feather-sprite-v4.29.0.svg#key"/></svg>
+								Log out
+							</RouterLink> -->
+							<div class="nav-link" role="button" @click="logout">
+								<svg class="feather"><use href="/feather-sprite-v4.29.0.svg#log-out"/></svg>
+								Log out
+							</div>
 						</li>
 					</ul>
 
