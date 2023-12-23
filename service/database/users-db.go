@@ -131,9 +131,11 @@ func (db *appdbimpl) GetUserStream(uid int, page int) ([]utils.Photo, int, error
 
 	for rows.Next() {
 		var photo utils.Photo
-		if err := rows.Scan(&photo.PhotoID, &photo.UserID, &photo.Image, &photo.Timestamp); err != nil {
+		var nullCaption sql.NullString
+		if err := rows.Scan(&photo.PhotoID, &photo.UserID, &photo.Image, &photo.Timestamp, &nullCaption); err != nil {
 			return nil, ERROR, err
 		}
+		photo.Caption = nullCaption.String
 		photo, res, err := db.fillPhoto(photo)
 		if res != SUCCESS {
 			return nil, ERROR, err

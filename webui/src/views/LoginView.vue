@@ -37,7 +37,8 @@ export default {
 				if (response.status == 200 || response.status == 201) {
 					this.id = response.data;
 					localStorage.token = this.id;
-					this.$router.push("/home").then(() => { this.$router.go() })
+					this.$setAuth();
+					this.$router.push({name: 'Home'});
 				}			
 			} catch (e) {
 				const {response} = e; // Get response from error body
@@ -58,7 +59,7 @@ export default {
 		var currentId = this.$getCurrentId();
 		// Check if the user was already logged, if yes go to home page
 		if (currentId) {
-			this.$router.push("/home").then(() => { this.$router.go() });
+			this.$router.push({name: 'Home'});
 		}
 	}
 }

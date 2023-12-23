@@ -5,31 +5,36 @@ import { RouterLink, RouterView } from 'vue-router'
 export default {
 	data: function() {
 		return {
-
+			logged: null,
 		}
 	},
+	watch:{
+		$route (to, from){
+			this.logged = this.$getCurrentId(); // Check if user is logged, if yes render the navbar
+		}
+	},	
 	methods: {
 		logout() {
 			localStorage.removeItem("token")
-			this.$router.push("/").then(() => this.$router.go())
+			this.$router.push({name: 'Login'})
 		}
 	},
 	mounted() {
 		// localStorage.token = null
 		this.$setAuth()
 
-		// this.$axios.interceptors.response.use(response => {
-		// 	return response;
-		// }, error => {
-		// 	if (error.response.status != 0) {
-		// 		// If the user is Unauthorized, redirect to login
-		// 		if (error.response.status === 401) {
-		// 			this.$router.push({ path: '/' })
-		// 			this.logged_in = false;
-		// 			return;
-		// 		}
-		// 	}
-		// });
+		this.$axios.interceptors.response.use(response => {
+			return response;
+		}, error => {
+				// If the user is Unauthorized, redirect to login
+			if (error.response.status === 401) {
+				this.$router.push({ path: '/' })
+				this.logged_in = false;
+				return;
+			}
+			else 
+				return Promise.reject(error) // Leave other error handlers
+		});
 	}
 }
 </script>
@@ -43,7 +48,7 @@ export default {
 		</button>
 	</header>
 
-	<div class="container-fluid">
+	<!--<div class="container-fluid">
 		<div class="row">
 			<nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
 				<div class="position-sticky pt-3 sidebar-sticky">
@@ -70,10 +75,6 @@ export default {
 							</RouterLink>
 						</li>
 						<li class="nav-item" v-if="this.$getCurrentId()">
-							<!-- <RouterLink to="/home" class="nav-link">
-								<svg class="feather"><use href="/feather-sprite-v4.29.0.svg#key"/></svg>
-								Log out
-							</RouterLink> -->
 							<div class="nav-link" role="button" @click="logout">
 								<svg class="feather"><use href="/feather-sprite-v4.29.0.svg#log-out"/></svg>
 								Log out
@@ -98,6 +99,67 @@ export default {
 			<main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
 				<RouterView />
 			</main>
+		</div>
+	</div>-->
+	<div class="container-fluid">
+		<div class="row">
+			<div v-if="logged"> <!-- render this if the user is logged-->
+				<nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
+					<div class="position-sticky pt-3 sidebar-sticky">
+						<h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted text-uppercase">
+							<span>General</span>
+						</h6>
+						<ul class="nav flex-column">
+							<li class="nav-item">
+								<RouterLink to="/home" class="nav-link">
+									<svg class="feather"><use href="/feather-sprite-v4.29.0.svg#home"/></svg>
+									Home
+								</RouterLink>
+							</li>
+							<li class="nav-item">
+								<RouterLink to="/user" class="nav-link">
+									<svg class="feather"><use href="/feather-sprite-v4.29.0.svg#user"/></svg>
+									Profile
+								</RouterLink>
+							</li>
+							<li class="nav-item">
+								<RouterLink to="/home" class="nav-link">
+									<svg class="feather"><use href="/feather-sprite-v4.29.0.svg#key"/></svg>
+									Menu item 2
+								</RouterLink>
+							</li>
+							<li class="nav-item">
+								<div class="nav-link" role="button" @click="logout">
+									<svg class="feather"><use href="/feather-sprite-v4.29.0.svg#log-out"/></svg>
+									Log out
+								</div>
+							</li>
+						</ul>
+
+						<h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted text-uppercase">
+							<span>Secondary menu</span>
+						</h6>
+						<ul class="nav flex-column">
+							<li class="nav-item">
+								<RouterLink :to="'/some/' + 'variable_here' + '/path'" class="nav-link">
+									<svg class="feather"><use href="/feather-sprite-v4.29.0.svg#file-text"/></svg>
+									Item 1
+								</RouterLink>
+							</li>
+						</ul>
+					</div>
+				</nav>
+			
+
+				<main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+					<RouterView />
+				</main>
+			</div>
+			<div v-else> <!-- render this if the user is not logged -->
+				<main class="col-md-12 ms-sm-auto col-lg-12 px-md-4">
+					<RouterView />
+				</main>
+			</div> 
 		</div>
 	</div>
 </template>

@@ -4,7 +4,7 @@ export default {
 		return {
 			errormsg: null,
 			loading: false,
-			some_data: null,
+			stream: null,
 		}
 	},
 	methods: {
@@ -21,17 +21,37 @@ export default {
 			// }
 			// this.loading = false;
 		},
+		async getUserStream() {
+			this.loading = true;
+			this.errormsg = null;
+			var path = "/users/" + this.$getCurrentId() + "/stream";
+			try {
+				let response = await this.$axios.get(path);
+				console.log(response);
+				if (response.status == 200) {
+					this.stream = response.data
+					// for (var post in this.stream) {
+					// 	post.image = 'data:image/png;base64,' + btoa(post.image);
+					// }
+					// this.stream.forEach(function(e, index, stream){
+					// 	stream[index].image = 'data:image/jpeg;base64,' + stream[index].image
+					// });
+				}
+			} catch (e) {
+				this.errormsg = e.toString();				
+			}
+			this.loading = false;
+		}
 	},
 	mounted() {
-		this.refresh()
+		this.getUserStream()
 	}
 }
 </script>
 
 <template>
 	<div>
-		<div
-			class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+		<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
 			<h1 class="h2">Home page</h1>
 			<div class="btn-toolbar mb-2 mb-md-0">
 				<div class="btn-group me-2">
@@ -52,7 +72,12 @@ export default {
 
 		<ErrorMsg v-if="errormsg" :msg="errormsg"></ErrorMsg>
 		<div>
-			{{ some_data }}
+			<div class="row" v-for="post in stream">
+				<p v-text="post.user"></p>
+				
+						<img :src="post.image">
+				
+			</div>
 		</div>
 	</div>
 
