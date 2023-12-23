@@ -12,7 +12,7 @@ import (
 )
 
 func NowFormat() string {
-	return time.Now().Format("2006-01-02T15:04:05Z")
+	return time.Now().Format("2006-01-02T15:04:05")
 }
 
 // Database checks if username is between 3 and 16 characters

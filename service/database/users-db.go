@@ -112,9 +112,10 @@ func (db *appdbimpl) CreateUser(username string) (int, int, error) {
 }
 
 func (db *appdbimpl) GetUserStream(uid int, page int) ([]utils.Photo, int, error) {
-	rows, err := db.c.Query(`	SELECT p.*
-								FROM Followings f, Photo p
+	rows, err := db.c.Query(`	SELECT p.*, u.Username
+								FROM Followings f, Photo p, Users u
 								WHERE p.UID = f.FollowedID
+								AND f.FollowedID = u.UID
 								AND f.UID = ?
 								ORDER BY p.date DESC
 								LIMIT ? OFFSET ?`, uid, LIMIT_STREAM, page*LIMIT_STREAM)
@@ -132,7 +133,7 @@ func (db *appdbimpl) GetUserStream(uid int, page int) ([]utils.Photo, int, error
 	for rows.Next() {
 		var photo utils.Photo
 		var nullCaption sql.NullString
-		if err := rows.Scan(&photo.PhotoID, &photo.UserID, &photo.Image, &photo.Timestamp, &nullCaption); err != nil {
+		if err := rows.Scan(&photo.PhotoID, &photo.UserID, &photo.Image, &photo.Timestamp, &nullCaption, &photo.Username); err != nil {
 			return nil, ERROR, err
 		}
 		photo.Caption = nullCaption.String

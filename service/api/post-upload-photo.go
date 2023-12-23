@@ -27,14 +27,22 @@ func (rt *_router) uploadPhoto(w http.ResponseWriter, r *http.Request, ps httpro
 		return
 	}
 
-	imageBytes, err := io.ReadAll(r.Body)
+	err = r.ParseMultipartForm(20 << 20) // 20 MB limit
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		http.Error(w, utils.ErrPhotoTooBig.Error(), http.StatusNotAcceptable)
 		return
 	}
 
-	if len(imageBytes) > 20971520 {
-		http.Error(w, utils.ErrPhotoTooBig.Error(), http.StatusNotAcceptable)
+	imageFile, _, err := r.FormFile("image")
+	if err != nil {
+		http.Error(w, "Error while retrieving image", http.StatusBadRequest)
+		return
+	}
+	defer imageFile.Close()
+
+	imageBytes, err := io.ReadAll(imageFile)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
@@ -54,6 +62,7 @@ func (rt *_router) uploadPhoto(w http.ResponseWriter, r *http.Request, ps httpro
 	photo.PhotoID = PID
 
 	utils.SetHeaderJson(w)
+	// w.Header().Set("Content-Type", "image/*")
 	w.WriteHeader(http.StatusCreated)
 	err = json.NewEncoder(w).Encode(photo)
 	if err != nil {

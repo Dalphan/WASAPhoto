@@ -40,6 +40,7 @@ func (rt *_router) getUserStream(w http.ResponseWriter, r *http.Request, ps http
 		return
 	}
 
+	utils.SetHeaderJson(w)
 	err = json.NewEncoder(w).Encode(photos)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)

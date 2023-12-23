@@ -19,6 +19,7 @@ type User struct {
 
 type Photo struct {
 	PhotoID      int    `json:"id"`
+	Username     string `json:"username"`
 	UserID       int    `json:"user"`
 	Image        string `json:"image"`
 	Timestamp    string `json:"timestamp"`

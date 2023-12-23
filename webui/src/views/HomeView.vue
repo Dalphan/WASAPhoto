@@ -8,39 +8,47 @@ export default {
 		}
 	},
 	methods: {
-		async refresh() {
-			// this.loading = true;
-			// this.errormsg = null;
-			// try {
-			// 	let response = await this.$axios.post("/session", {
-			// 		name: 'Maria',
-			// 	});
-			// 	this.some_data = response.data;
-			// } catch (e) {
-			// 	this.errormsg = e.toString();
-			// }
-			// this.loading = false;
-		},
 		async getUserStream() {
 			this.loading = true;
 			this.errormsg = null;
-			var path = "/users/" + this.$getCurrentId() + "/stream";
+			var path = `/users/${this.$getCurrentId()}/stream`;
 			try {
 				let response = await this.$axios.get(path);
 				console.log(response);
 				if (response.status == 200) {
 					this.stream = response.data
-					// for (var post in this.stream) {
-					// 	post.image = 'data:image/png;base64,' + btoa(post.image);
-					// }
 					// this.stream.forEach(function(e, index, stream){
-					// 	stream[index].image = 'data:image/jpeg;base64,' + stream[index].image
+					// 	stream[index].image = 'data:image/*;base64,' + stream[index].image;
 					// });
 				}
 			} catch (e) {
 				this.errormsg = e.toString();				
 			}
 			this.loading = false;
+		},
+
+		timestampToDate(timestamp){
+			const today = new Date(Date.now())
+
+			console.log(new Date(timestamp));
+			console.log(today)
+
+			var difference = new Date() - new Date(timestamp);	
+			console.log(difference);
+			var seconds = Math.floor(difference / 1000);
+			var minutes = Math.floor(seconds / 60);
+			var hours = Math.floor(minutes / 60);
+			var days = Math.floor(hours / 24);
+			
+			if (days > 0) {
+				return `${days} day${days > 1 ? 's' : ''} ago`;
+			} else if (hours > 0) {
+				return `${hours} hour${hours > 1 ? 's' : ''} ago`;
+			} else if (minutes > 0) {
+				return `${minutes} minute${minutes > 1 ? 's' : ''} ago`;
+			} else {
+				return `${seconds} seconds ago`;
+			}
 		}
 	},
 	mounted() {
@@ -73,10 +81,10 @@ export default {
 		<ErrorMsg v-if="errormsg" :msg="errormsg"></ErrorMsg>
 		<div>
 			<div class="row" v-for="post in stream">
-				<p v-text="post.user"></p>
-				
-						<img :src="post.image">
-				
+				<p v-text="post.username"></p>
+				<img :src="`data:image/*;base64,${post.image}`">
+				<p v-text="post.caption"></p>
+				<p>Commenti: {{ post.commentCount }} Likes: {{ post.likeCount }} {{ timestampToDate(post.timestamp) }}</p>
 			</div>
 		</div>
 	</div>
