@@ -79,14 +79,17 @@ export default {
 		</div>
 
 		<ErrorMsg v-if="errormsg" :msg="errormsg"></ErrorMsg>
-		<div>
-			<div class="row" v-for="post in stream">
+		<div v-if="stream">
+			<div class="row" v-for="(post, index) in stream" :key="post.id">
 				<p v-text="post.username"></p>
 				<img :src="`data:image/*;base64,${post.image}`">
 				<p v-text="post.caption"></p>
 				<p>Commenti: {{ post.commentCount }} Likes: {{ post.likeCount }} {{ timestampToDate(post.timestamp) }}</p>
 			</div>
 		</div>
+		<div v-else>
+			<p> Sorry nothing to show here </p>	
+		</div>	
 	</div>
 
 </template>

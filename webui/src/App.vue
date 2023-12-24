@@ -28,8 +28,7 @@ export default {
 		}, error => {
 				// If the user is Unauthorized, redirect to login
 			if (error.response.status === 401) {
-				this.$router.push({ path: '/' })
-				this.logged_in = false;
+				this.$router.push({ name: 'Login' })
 				return;
 			}
 			else 
@@ -125,7 +124,7 @@ export default {
 							<li class="nav-item">
 								<RouterLink to="/home" class="nav-link">
 									<svg class="feather"><use href="/feather-sprite-v4.29.0.svg#key"/></svg>
-									Menu item 2
+									Search
 								</RouterLink>
 							</li>
 							<li class="nav-item">
