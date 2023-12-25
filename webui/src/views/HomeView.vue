@@ -1,3 +1,6 @@
+<script setup>
+import Modal from '../components/PhotoModal.vue'
+</script>
 <script>
 export default {
 	data: function() {
@@ -5,7 +8,11 @@ export default {
 			errormsg: null,
 			loading: false,
 			stream: null,
+			selectedPost: null,
 		}
+	},
+	components: {
+		Modal,
 	},
 	methods: {
 		async getUserStream() {
@@ -14,12 +21,14 @@ export default {
 			var path = `/users/${this.$getCurrentId()}/stream`;
 			try {
 				let response = await this.$axios.get(path);
-				console.log(response);
 				if (response.status == 200) {
-					this.stream = response.data
-					// this.stream.forEach(function(e, index, stream){
-					// 	stream[index].image = 'data:image/*;base64,' + stream[index].image;
-					// });
+					this.stream = response.data;
+
+					this.stream.forEach( e => {
+						// stream[index].image = 'data:image/*;base64,' + stream[index].image;
+						e.image = `data:image/*;base64,${e.image}`;
+						e.timestamp = this.$timestampToDate(e.timestamp);
+					});
 				}
 			} catch (e) {
 				this.errormsg = e.toString();				
@@ -27,28 +36,8 @@ export default {
 			this.loading = false;
 		},
 
-		timestampToDate(timestamp){
-			const today = new Date(Date.now())
-
-			console.log(new Date(timestamp));
-			console.log(today)
-
-			var difference = new Date() - new Date(timestamp);	
-			console.log(difference);
-			var seconds = Math.floor(difference / 1000);
-			var minutes = Math.floor(seconds / 60);
-			var hours = Math.floor(minutes / 60);
-			var days = Math.floor(hours / 24);
-			
-			if (days > 0) {
-				return `${days} day${days > 1 ? 's' : ''} ago`;
-			} else if (hours > 0) {
-				return `${hours} hour${hours > 1 ? 's' : ''} ago`;
-			} else if (minutes > 0) {
-				return `${minutes} minute${minutes > 1 ? 's' : ''} ago`;
-			} else {
-				return `${seconds} seconds ago`;
-			}
+		toggleModal(post) {
+			this.selectedPost = post;
 		}
 	},
 	mounted() {
@@ -82,15 +71,16 @@ export default {
 		<div v-if="stream">
 			<div class="row" v-for="(post, index) in stream" :key="post.id">
 				<p v-text="post.username"></p>
-				<img :src="`data:image/*;base64,${post.image}`">
+				<img :src="post.image" @click="toggleModal(post)">
 				<p v-text="post.caption"></p>
-				<p>Commenti: {{ post.commentCount }} Likes: {{ post.likeCount }} {{ timestampToDate(post.timestamp) }}</p>
+				<p>Commenti: {{ post.commentCount }} Likes: {{ post.likeCount }} {{ post.timestamp }}</p>
 			</div>
 		</div>
 		<div v-else>
 			<p> Sorry nothing to show here </p>	
 		</div>	
 	</div>
+	<Modal v-if="selectedPost" @close="toggleModal(null)" :photo="selectedPost"> </Modal>
 
 </template>
 

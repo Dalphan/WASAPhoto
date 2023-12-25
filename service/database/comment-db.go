@@ -36,7 +36,7 @@ func (db *appdbimpl) GetCommentsByPhoto(pid int) ([]utils.Comment, int, error) {
 	rows, err := db.c.Query(`	SELECT c.*, u.Username
 								FROM Comment c, Users u
 								WHERE c.UID = u.UID 
-								c.PID = ?`, pid)
+								AND c.PID = ?`, pid)
 	if err != nil {
 		return nil, ERROR, err
 	}
