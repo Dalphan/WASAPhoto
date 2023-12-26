@@ -31,12 +31,19 @@ func (db *appdbimpl) UncommentPhoto(cid int, pid int) (int, error) {
 	}
 }
 
-func (db *appdbimpl) GetCommentsByPhoto(pid int) ([]utils.Comment, int, error) {
+// uid is used to check if the user has been banned by the owners of the comments
+func (db *appdbimpl) GetCommentsByPhoto(pid int, uid int) ([]utils.Comment, int, error) {
 	var c []utils.Comment
 	rows, err := db.c.Query(`	SELECT c.*, u.Username
-								FROM Comment c, Users u
-								WHERE c.UID = u.UID 
-								AND c.PID = ?`, pid)
+								FROM Comment c
+								JOIN Users u
+									ON c.UID = u.UID
+								LEFT JOIN Bans b
+									ON c.UID = b.UID 
+									AND b.BannedID = ?
+								WHERE c.PID = ? 
+								AND (b.UID IS NULL OR b.BannedID IS NULL)
+								ORDER BY c.date DESC`, uid, pid)
 	if err != nil {
 		return nil, ERROR, err
 	}

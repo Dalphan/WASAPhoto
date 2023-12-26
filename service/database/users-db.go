@@ -112,13 +112,14 @@ func (db *appdbimpl) CreateUser(username string) (int, int, error) {
 }
 
 func (db *appdbimpl) GetUserStream(uid int, page int) ([]utils.Photo, int, error) {
-	rows, err := db.c.Query(`	SELECT p.*, u.Username
+	rows, err := db.c.Query(`	SELECT p.*, u.Username, (l.UID NOT NULL) as liked
 								FROM Followings f, Photo p, Users u
+								LEFT JOIN Like l on l.PID = p.PID AND l.UID = ?
 								WHERE p.UID = f.FollowedID
 								AND f.FollowedID = u.UID
 								AND f.UID = ?
 								ORDER BY p.date DESC
-								LIMIT ? OFFSET ?`, uid, LIMIT_STREAM, page*LIMIT_STREAM)
+								LIMIT ? OFFSET ?`, uid, uid, LIMIT_STREAM, page*LIMIT_STREAM)
 
 	var photos []utils.Photo
 	if err != nil {
@@ -133,7 +134,7 @@ func (db *appdbimpl) GetUserStream(uid int, page int) ([]utils.Photo, int, error
 	for rows.Next() {
 		var photo utils.Photo
 		var nullCaption sql.NullString
-		if err := rows.Scan(&photo.PhotoID, &photo.UserID, &photo.Image, &photo.Timestamp, &nullCaption, &photo.Username); err != nil {
+		if err := rows.Scan(&photo.PhotoID, &photo.UserID, &photo.Image, &photo.Timestamp, &nullCaption, &photo.Username, &photo.Liked); err != nil {
 			return nil, ERROR, err
 		}
 		photo.Caption = nullCaption.String

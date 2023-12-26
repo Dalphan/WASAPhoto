@@ -1,5 +1,5 @@
 import axios from "axios";
-import getCurrentId from "./authentication";
+import { getCurrentId } from "./authentication";
 
 const instance = axios.create({
 	baseURL: __API_URL__,

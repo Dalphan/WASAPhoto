@@ -38,7 +38,7 @@ func (rt *_router) getComments(w http.ResponseWriter, r *http.Request, ps httpro
 		return
 	}
 
-	comments, res, err := rt.db.GetCommentsByPhoto(pid)
+	comments, res, err := rt.db.GetCommentsByPhoto(pid, uid)
 	switch res {
 	case database.ERROR:
 		http.Error(w, err.Error(), http.StatusInternalServerError)

@@ -15,8 +15,9 @@ export default {
 	},	
 	methods: {
 		logout() {
-			localStorage.removeItem("token")
-			this.$router.push({name: 'Login'})
+			localStorage.removeItem("token");
+			localStorage.removeItem("username");
+			this.$router.push({name: 'Login'});
 		}
 	},
 	mounted() {

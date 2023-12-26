@@ -37,6 +37,7 @@ export default {
 				if (response.status == 200 || response.status == 201) {
 					this.id = response.data;
 					localStorage.token = this.id;
+					localStorage.username = this.username;
 					this.$setAuth();
 					this.$router.push({name: 'Home'});
 				}			
