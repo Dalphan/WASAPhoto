@@ -7,28 +7,48 @@ export default {
 		return {
 			errormsg: null,
 			loading: false,
-			stream: null,
+			stream: [],
 			selectedPost: null,
+			streamPage: 0,
+			moreContent: false,
 		}
 	},
 	components: {
 		Modal,
 	},
 	methods: {
+		scroll () {
+			// Check when user reach the end of the page
+			window.onscroll = () => {
+				let bottomOfWindow = window.scrollY + window.innerHeight >= document.documentElement.scrollHeight;
+				if (bottomOfWindow) {
+					if (this.moreContent) {
+						this.streamPage++;
+						this.getUserStream();
+					}
+				}
+			}
+		},
+
 		async getUserStream() {
 			this.loading = true;
 			this.errormsg = null;
-			var path = `/users/${this.$getCurrentId()}/stream`;
+			var path = `/users/${this.$getCurrentId()}/stream?page=${this.streamPage}`;
 			try {
 				let response = await this.$axios.get(path);
 				if (response.status == 200) {
-					this.stream = response.data;
-
-					this.stream.forEach( e => {
+					// adjust image and timestamp field			
+					response.data.forEach( e => {
 						// stream[index].image = 'data:image/*;base64,' + stream[index].image;
 						e.image = `data:image/*;base64,${e.image}`;
 						e.timestamp = this.$timestampToDate(e.timestamp);
 					});
+					if (response.data !== null) {
+						this.moreContent = response.data.length === 10;
+						this.stream = this.stream.length > 0 ? this.stream.concat(response.data) : response.data;
+					}
+					else 
+						this.moreContent = false;				
 				}
 			} catch (e) {
 				this.errormsg = e.toString();				
@@ -41,7 +61,9 @@ export default {
 		}
 	},
 	mounted() {
-		this.getUserStream()
+		this.streamPage = 0;
+		this.getUserStream();
+		this.scroll();
 	}
 }
 </script>
@@ -69,11 +91,11 @@ export default {
 
 		<ErrorMsg v-if="errormsg" :msg="errormsg"></ErrorMsg>
 		<div v-if="stream">
-			<div class="row" v-for="(post, index) in stream" :key="post.id">
+			<div class="row" v-for="post in stream" :key="post.id">
 				<p v-text="post.username"></p>
 				<img :src="post.image" @click="toggleModal(post)">
 				<p v-text="post.caption"></p>
-				<p>Commenti: {{ post.commentCount }} Likes: {{ post.likeCount }} {{ post.timestamp }}</p>
+				<p>{{ post.commentCount }} comments {{ post.likeCount }} likes {{ post.timestamp }}</p>
 			</div>
 		</div>
 		<div v-else>

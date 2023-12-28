@@ -6,6 +6,7 @@ export default {
 	data: function() {
 		return {
 			logged: null,
+			userLink: null,
 		}
 	},
 	watch:{
@@ -23,6 +24,8 @@ export default {
 	mounted() {
 		// localStorage.token = null
 		this.$setAuth()
+
+		this.userLink = "/user/" + this.$getCurrentUsername();
 
 		this.$axios.interceptors.response.use(response => {
 			return response;
@@ -117,7 +120,7 @@ export default {
 								</RouterLink>
 							</li>
 							<li class="nav-item">
-								<RouterLink to="/user" class="nav-link">
+								<RouterLink :to="this.userLink" class="nav-link">
 									<svg class="feather"><use href="/feather-sprite-v4.29.0.svg#user"/></svg>
 									Profile
 								</RouterLink>
