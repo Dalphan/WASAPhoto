@@ -86,16 +86,19 @@ func (db *appdbimpl) FindUserByID(uid int) (utils.User, int, error) {
 
 func (db *appdbimpl) FindUserByUsername(username string) (utils.User, int, error) {
 	var user utils.User
+	var name sql.NullString
+	var surname sql.NullString
 
 	err := db.c.QueryRow(`	SELECT *
 							FROM Users
-							Where Username = ?`, username).Scan(&user.UserID, &user.Username, &user.Name, &user.Surname)
+							Where Username = ?`, username).Scan(&user.UserID, &user.Username, &name, &surname)
+
+	user.Name = name.String
+	user.Surname = surname.String
 
 	// La SELECT non ritorna niente
 	if errors.Is(err, sql.ErrNoRows) {
 		return *new(utils.User), NO_ROWS, nil
-	} else if user.UserID != 0 { // La SELECT ha ritornato un utente che ha solo username al momento
-		return user, SUCCESS, nil
 	} else if err != nil { // La SELECT ha ritornato un errore imprevisto
 		return user, ERROR, err
 	}
