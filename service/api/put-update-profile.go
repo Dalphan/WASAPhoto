@@ -42,6 +42,11 @@ func (rt *_router) updateProfile(w http.ResponseWriter, r *http.Request, ps http
 		return
 	}
 
+	if !user.Validate() {
+		http.Error(w, utils.ErrUserDetailsNotValid.Error(), http.StatusNotAcceptable)
+		return
+	}
+
 	// Update user in database. If the username or the user doesn't exist, is already taken it should return an error
 	user, res, err := rt.db.UpdateUser(user)
 	if res == database.UNIQUE_FAILED { // The updated username is already taken

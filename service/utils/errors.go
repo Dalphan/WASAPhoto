@@ -4,6 +4,7 @@ import "errors"
 
 var ErrUsernameMissing = errors.New("missing required username")
 var ErrUsernameNotValid = errors.New("the username doesnt match the required pattern")
+var ErrUserDetailsNotValid = errors.New("the user's details dont match the required pattern")
 var ErrUserNotFound = errors.New("user not found")
 var ErrUnauthoraized = errors.New("unauthorazied operation")
 var ErrUsernameTaken = errors.New("the username is already taken")

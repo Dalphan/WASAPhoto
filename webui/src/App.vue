@@ -12,6 +12,7 @@ export default {
 	watch:{
 		$route (to, from){
 			this.logged = this.$getCurrentId(); // Check if user is logged, if yes render the navbar
+			this.userLink = "/user/" + this.$getCurrentUsername();
 		}
 	},	
 	methods: {
@@ -139,7 +140,7 @@ export default {
 							</li>
 						</ul>
 
-						<h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted text-uppercase">
+						<!-- <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted text-uppercase">
 							<span>Secondary menu</span>
 						</h6>
 						<ul class="nav flex-column">
@@ -149,7 +150,7 @@ export default {
 									Item 1
 								</RouterLink>
 							</li>
-						</ul>
+						</ul> -->
 					</div>
 				</nav>
 			

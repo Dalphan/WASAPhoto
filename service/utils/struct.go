@@ -44,6 +44,10 @@ type Like struct {
 	PhotoID  int    `json:"photo"`
 }
 
+func (u User) Validate() bool {
+	return len(u.Name) < 20 && len(u.Surname) < 25
+}
+
 func (c Comment) Validate() bool {
 	c.Text = strings.TrimSpace(c.Text) // Removes spaces at the beginning and the end. If the string is empty, the length becomes 0
 	return len(c.Text) > 1 && len(c.Text) < 5000
