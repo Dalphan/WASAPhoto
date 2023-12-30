@@ -24,6 +24,7 @@ func (rt *_router) Handler() http.Handler {
 	rt.router.GET("/users/:id/photos", rt.getUserPhotos)
 
 	// Ban routes
+	rt.router.GET("/users/:id/banned", rt.getBanned)
 	rt.router.PUT("/users/:id/banned/:bid", rt.banUser)
 	rt.router.DELETE("/users/:id/banned/:bid", rt.unbanUser)
 

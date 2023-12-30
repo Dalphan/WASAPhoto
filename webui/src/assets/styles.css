@@ -10,21 +10,66 @@
 }
 
 .modal {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    width: 100vw;
-    position: fixed;
-    top: 0;
-    left: 0;
-    background-color: rgba(255, 255, 255, 0.7);
-  }
-  
-  .modal-inner {
-    position: relative;
-    max-width: auto;
-    box-shadow: 4px 4px 6px 4px rgba(0, 0, 0, 0.1), 4px 4px 4px 4px rgba(0, 0, 0, 0.06);
-    background-color: #fff;
-    padding: 30px 24px;
-  }
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  width: 100vw;
+  position: fixed;
+  top: 0;
+  left: 0;
+  background-color: rgba(255, 255, 255, 0.7);
+}
+
+.modal-inner {
+  position: relative;
+  max-width: auto;
+  box-shadow: 4px 4px 6px 4px rgba(0, 0, 0, 0.1), 4px 4px 4px 4px rgba(0, 0, 0, 0.06);
+  background-color: #fff;
+  padding: 30px 24px;
+}
+
+.send-button {
+  height: 100%;
+  cursor: pointer;
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+  background-color: white;
+}
+
+.send-button:hover {
+  background-color: rgba(13,110,253, 1) !important;
+  color:white !important;
+}
+
+.profile-buttons-primary {
+  background-color: #3b82f6;
+  color: #f3f7fe;
+}
+
+.profile-buttons-danger {
+  background-color: #fc4646;
+  color: #f3f7fe;
+}
+
+.profile-buttons {
+  font-size: 0.9rem;
+  border: none;
+  border-radius: 20px;
+  width: auto;
+  height: auto;
+  padding: 0.3rem 0.6rem;
+  transition: .3s;
+}
+
+.profile-buttons-danger:hover {
+  background-color: #f3f7fe;
+  box-shadow: 0 0 0 5px #f63b3b5f;
+  color: #fc4646;
+}
+
+.profile-buttons-primary:hover {
+  background-color: #f3f7fe;
+  box-shadow: 0 0 0 5px #3b83f65f;
+  color: #3b82f6;
+}

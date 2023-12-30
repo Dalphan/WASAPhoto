@@ -1,6 +1,6 @@
 <script setup>
 import Modal from '../components/PhotoModal.vue'
-import FollowModal from '../components/FollowListModal.vue'
+import UsersListModal from '../components/UsersListModal.vue'
 </script>
 <script>
 export default {
@@ -17,11 +17,12 @@ export default {
 			streamPage: 0,
 			selectedPost: null, 
 			followPath: null,
+			bans: [],
 		}
 	},
 	components: {
 		Modal,
-		FollowModal,
+		UsersListModal,
 	},
 	watch:{
 		async '$route.params.username'(newUsername) {
@@ -64,6 +65,8 @@ export default {
 			this.loading = false;
 
 			this.getPhotos();
+
+			if (this.$getCurrentId() == this.user.id) this.getBanned();
 		},
 
 		async getPhotos(){
@@ -74,7 +77,6 @@ export default {
 			try {
 				let response = await this.$axios.get(path);
 				if (response.status == 200) {
-					console.log(response);
 					response.data.forEach( e => {
 						// stream[index].image = 'data:image/*;base64,' + stream[index].image;
 						e.image = `data:image/*;base64,${e.image}`;
@@ -92,6 +94,23 @@ export default {
 				return;				
 			}
 			this.loading = false;
+		},
+
+		async getBanned() {
+			this.loading = true;
+            this.errormsg = null;
+            try {
+                var path = `/users/${this.user.id}/banned`;
+                let response = await this.$axios.get(path);
+
+                if (response.status === 200) {
+                    this.bans = response.data;
+					console.log(this.bans);
+                }
+            } catch (e) {
+                this.errormsg = e.toString();
+            }
+            this.loading = false;
 		},
 
 		async editProfile(){
@@ -124,7 +143,7 @@ export default {
 			this.selectedPost = post;
 		},
 
-		// 1 for Followers, 2 for Following
+		// 1 for Followers, 2 for Following, 3 for Banned
 		toggleFollowModal(index) {
 			this.followPath = index
 		}
@@ -181,12 +200,16 @@ export default {
 					</div>
 					<ul class="list-group list-group-flush">
 						<li class="list-group-item d-flex align-items-center" @click="toggleFollowModal(1)">
-							<label>Followers:&nbsp;</label> 
-							<strong class="fs-6">{{ user.followersCount }}</strong> 
+							<label role="button">Followers:&nbsp;</label> 
+							<strong role="button" class="fs-6">{{ user.followersCount }}</strong> 
 						</li>
 						<li class="list-group-item d-flex align-items-center" @click="toggleFollowModal(2)">
-							<label>Following:&nbsp;</label> 
-							<strong class="fs-6"> {{ user.followingCount }}</strong> 
+							<label role="button">Following:&nbsp;</label> 
+							<strong role="button" class="fs-6"> {{ user.followingCount }}</strong> 
+						</li>
+						<li v-if="this.$getCurrentId() == user.id" class="list-group-item d-flex align-items-center" @click="toggleFollowModal(3)">
+							<label role="button">Bans:&nbsp;</label> 
+							<strong role="button" class="fs-6"> {{ bans.length }}</strong> 
 						</li>
 						<li class="list-group-item d-flex align-items-center">
 							<label>Posts:&nbsp;</label> 
@@ -221,44 +244,12 @@ export default {
 		</div>
 	</div>
 	<Modal v-if="selectedPost" @close="toggleModal(null)" :photo="selectedPost"> </Modal>
-	<FollowModal v-if="followPath" @close="toggleFollowModal(null)" :path="followPath"></FollowModal>
+	<UsersListModal v-if="followPath" @close="toggleFollowModal(null)" :path="followPath" :name="user.username" :id="user.id" :bans="bans"></UsersListModal>
 </template>
 
 <style>
 .input-profile {
 	font-size: 0.9rem;
-}
-
-.profile-buttons-primary {
-  background-color: #3b82f6;
-  color: #f3f7fe;
-}
-
-.profile-buttons-danger {
-  background-color: #fc4646;
-  color: #f3f7fe;
-}
-
-.profile-buttons {
-  font-size: 0.9rem;
-  border: none;
-  border-radius: 20px;
-  width: auto;
-  height: auto;
-  padding: 0.3rem 0.6rem;
-  transition: .3s;
-}
-
-.profile-buttons-danger:hover {
-  background-color: #f3f7fe;
-  box-shadow: 0 0 0 5px #f63b3b5f;
-  color: #fc4646;
-}
-
-.profile-buttons-primary:hover {
-  background-color: #f3f7fe;
-  box-shadow: 0 0 0 5px #3b83f65f;
-  color: #3b82f6;
 }
 
 </style>

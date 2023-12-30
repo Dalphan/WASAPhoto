@@ -223,7 +223,7 @@
                       <div class="input-group">
                         <input v-model="commentText" type="text" class="form-control input-comment" placeholder="Write a comment..." aria-label="Write a comment..." aria-describedby="send">
                         <div class="input-group-append">
-                          <span @click="sendComment" class="input-group-text text-primary send-comment" id="send">
+                          <span @click="sendComment" class="input-group-text text-primary send-button" id="send">
                             <svg class="feather"><use href="/feather-sprite-v4.29.0.svg#send"/></svg>
                           </span>
                         </div>
@@ -303,20 +303,7 @@
 }
 
 .input-comment {
-  font-size: 0.9rem;
-}
-
-.send-comment {
-  height: 100%;
-  cursor: pointer;
-  border-top-left-radius: 0;
-  border-bottom-left-radius: 0;
-  background-color: white;
-}
-
-.send-comment:hover {
-  background-color: rgba(13,110,253, 1) !important;
-  color:white !important;
+  font-size: 0.85rem;
 }
 
 .comment-container {

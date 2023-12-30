@@ -48,6 +48,7 @@ type AppDatabase interface {
 	GetUserStream(int, int) ([]utils.Photo, int, error)
 	GetUserPhotos(int, int) ([]utils.Photo, int, error)
 	CheckIfBanned(int, int) (bool, error)
+	GetBanned(int) ([]utils.User, int, error)
 	BanUser(int, int) (int, error)
 	UnbanUser(int, int) (int, error)
 	FollowUser(int, int) (int, error)

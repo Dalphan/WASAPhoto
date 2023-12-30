@@ -1,5 +1,7 @@
 package database
 
+import "github.com/Dalphan/WASAPhoto/service/utils"
+
 // Banning a user involves removing their follow status from both users
 // and deleting likes and comments made by the banned user on the photos
 // of the user who is implementing the ban.
@@ -55,4 +57,16 @@ func (db *appdbimpl) UnbanUser(uid int, bid int) (int, error) {
 	} else {
 		return res, nil
 	}
+}
+
+func (db *appdbimpl) GetBanned(uid int) ([]utils.User, int, error) {
+	rows, err := db.c.Query(`	SELECT u.UID, u.Username
+								FROM 	Users u, Bans b
+								WHERE 	b.BannedID = u.UID
+								AND 	b.UID = ?`, uid)
+	if err != nil {
+		return nil, ERROR, err
+	}
+
+	return getSelectedUsers(rows)
 }

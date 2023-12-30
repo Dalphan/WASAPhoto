@@ -261,6 +261,39 @@ paths:
         "500":
           $ref: '#/components/responses/InternalServerError'
 
+  # getBanned
+  /users/{userId}/banned:
+    parameters:
+      - $ref: '#/components/parameters/userId'
+    
+    get:
+      tags:
+        - ban
+      summary: Return user banned
+      description: |
+        Return the list of users banned by the given user
+      operationId: getBanned
+      responses:
+        "200":
+          description: List returned successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                description: The list of the users
+                minItems: 0
+                maxItems: 2147483647  #integer max value
+                items:
+                  $ref: '#/components/schemas/User'
+        "400": 
+          $ref: '#/components/responses/BadRequest'
+        "401": 
+          $ref: '#/components/responses/Unauthorized'
+        "404":
+          $ref: '#/components/responses/NotFound'
+        "500":
+          $ref: '#/components/responses/InternalServerError'
+
   # banUser
   # unbanUser
   /users/{userId}/banned/{bannedId}:
@@ -336,7 +369,7 @@ paths:
         - following
       summary: Return user followings
       description: |
-        Return the list of users followed by the current user
+        Return the list of users followed by the given user
       operationId: getFollowings
       responses:
         "200":
@@ -369,7 +402,7 @@ paths:
         - following
       summary: Return user followers
       description: |
-        Return the list of users who follow the current user
+        Return the list of users who follow the given user
       operationId: getFollowers
       responses:
         "200":
