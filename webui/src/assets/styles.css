@@ -1,0 +1,30 @@
+.user-link {
+    text-decoration: none;
+    color: black;
+    width: fit-content;
+}
+
+.user-link:hover {
+    text-decoration: underline;
+    color: black;
+}
+
+.modal {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    width: 100vw;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color: rgba(255, 255, 255, 0.7);
+  }
+  
+  .modal-inner {
+    position: relative;
+    max-width: auto;
+    box-shadow: 4px 4px 6px 4px rgba(0, 0, 0, 0.1), 4px 4px 4px 4px rgba(0, 0, 0, 0.06);
+    background-color: #fff;
+    padding: 30px 24px;
+  }

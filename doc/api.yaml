@@ -192,10 +192,10 @@ paths:
         - name: page
           in: query
           description: The page count for loading photos.
-          required: true
           schema:
             type: integer
-            description: The number of the page to loading
+            description: The number of the page to load
+            example: 1
             minimum: 0
             maximum: 10000
       responses:
@@ -206,6 +206,48 @@ paths:
               schema:
                 type: array
                 description: The array of photos constituting the user's stream.
+                minItems: 0
+                maxItems: 10
+                items:
+                  $ref: '#/components/schemas/Photo'
+        "400": 
+          $ref: '#/components/responses/BadRequest'
+        "401": 
+          $ref: '#/components/responses/Unauthorized'
+        "404":
+          $ref: '#/components/responses/NotFound'
+        "500":
+          $ref: '#/components/responses/InternalServerError'
+
+  # getProfilePhotos
+  /users/{userId}/photos:
+    parameters:
+      - $ref: '#/components/parameters/userId'
+    get:
+      tags:
+        - users
+      summary: Get user profile photos
+      description: |
+        Return an array of photos posted by the given user.
+      operationId: getProfilePhotos
+      parameters:
+        - name: page
+          in: query
+          description: The page count for loading photos.
+          schema:
+            type: integer
+            description: The number of the page to load
+            example: 1
+            minimum: 0
+            maximum: 10000
+      responses:
+        "200":
+          description: Photos returned successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                description: The array containing photos from the user's stream.
                 minItems: 0
                 maxItems: 10
                 items:

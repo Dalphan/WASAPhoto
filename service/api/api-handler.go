@@ -21,6 +21,7 @@ func (rt *_router) Handler() http.Handler {
 	rt.router.GET("/users/:id", rt.getUserProfileById)
 	rt.router.PUT("/users/:id/username", rt.setMyUsername)
 	rt.router.GET("/users/:id/stream", rt.getUserStream)
+	rt.router.GET("/users/:id/photos", rt.getUserPhotos)
 
 	// Ban routes
 	rt.router.PUT("/users/:id/banned/:bid", rt.banUser)

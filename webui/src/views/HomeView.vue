@@ -1,4 +1,5 @@
 <script setup>
+import { RouterLink } from 'vue-router';
 import Modal from '../components/PhotoModal.vue'
 </script>
 <script>
@@ -92,9 +93,11 @@ export default {
 		<ErrorMsg v-if="errormsg" :msg="errormsg"></ErrorMsg>
 		<div v-if="stream">
 			<div class="row" v-for="post in stream" :key="post.id">
-				<p v-text="post.username"></p>
-				<img :src="post.image" @click="toggleModal(post)">
-				<p v-text="post.caption"></p>
+				<RouterLink :to="this.$pathToProfile(post.username)" class="user-link">
+					<p v-text="post.username"></p>
+				</RouterLink>
+				<img role="button" :src="post.image" @click="toggleModal(post)">
+				<p v-if="post.caption" v-text="post.caption"></p>
 				<p>{{ post.commentCount }} comments {{ post.likeCount }} likes {{ post.timestamp }}</p>
 			</div>
 		</div>

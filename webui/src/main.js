@@ -1,13 +1,15 @@
 import {createApp, reactive} from 'vue'
 import App from './App.vue'
 import router from './router'
-import { axios, setAuth } from './services/axios.js';
+import { axios, pathToProfile, setAuth } from './services/axios.js';
 import { getCurrentId, getCurrentUsername } from './services/authentication.js';
 import ErrorMsg from './components/ErrorMsg.vue'
 import LoadingSpinner from './components/LoadingSpinner.vue'
 
 import './assets/dashboard.css'
 import './assets/main.css'
+import './assets/styles.css'
+
 
 const timestampToDate = (timestamp) => {
     const difference = new Date() - new Date(timestamp);	
@@ -34,6 +36,7 @@ app.config.globalProperties.$setAuth = setAuth;
 app.config.globalProperties.$getCurrentId = getCurrentId;
 app.config.globalProperties.$getCurrentUsername = getCurrentUsername;
 app.config.globalProperties.$timestampToDate = timestampToDate;
+app.config.globalProperties.$pathToProfile = pathToProfile;
 
 app.component("ErrorMsg", ErrorMsg);
 app.component("LoadingSpinner", LoadingSpinner);

@@ -150,6 +150,41 @@ func (db *appdbimpl) GetUserStream(uid int, page int) ([]utils.Photo, int, error
 	return photos, SUCCESS, nil
 }
 
+func (db *appdbimpl) GetUserPhotos(uid int, page int) ([]utils.Photo, int, error) {
+	rows, err := db.c.Query(`	SELECT p.*, u.Username, (l.UID NOT NULL) as liked
+								FROM Photo p, Users u
+								LEFT JOIN Like l on l.PID = p.PID AND l.UID = ?
+								WHERE p.UID = u.UID
+								AND u.UID = ?
+								ORDER BY p.date DESC
+								LIMIT ? OFFSET ?`, uid, uid, LIMIT_STREAM, page*LIMIT_STREAM)
+
+	var photos []utils.Photo
+	if err != nil {
+		return nil, ERROR, err
+	}
+	defer func() {
+		if closeErr := rows.Close(); closeErr != nil {
+			err = closeErr // Assign the error to the outer variable
+		}
+	}()
+
+	for rows.Next() {
+		var photo utils.Photo
+		var nullCaption sql.NullString
+		if err := rows.Scan(&photo.PhotoID, &photo.UserID, &photo.Image, &photo.Timestamp, &nullCaption, &photo.Username, &photo.Liked); err != nil {
+			return nil, ERROR, err
+		}
+		photo.Caption = nullCaption.String
+		photo, res, err := db.fillPhoto(photo)
+		if res != SUCCESS {
+			return nil, ERROR, err
+		}
+		photos = append(photos, photo)
+	}
+	return photos, SUCCESS, nil
+}
+
 func (db *appdbimpl) CheckIfBanned(uid int, bid int) (bool, error) {
 	var ret bool
 	err := db.c.QueryRow(`SELECT EXISTS(SELECT *

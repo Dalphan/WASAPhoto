@@ -11,7 +11,12 @@ const setAuth = () => {
 	instance.defaults.headers.common['Authorization'] = 'Bearer ' + getCurrentId()
 }
 
+function pathToProfile(name) {
+	return "/user/" + name;
+}
+
 export {
 	setAuth,
+	pathToProfile,
 	instance as axios,
 }
