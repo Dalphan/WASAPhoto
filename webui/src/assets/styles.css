@@ -57,6 +57,11 @@
   color: #f3f7fe;
 }
 
+.profile-buttons-secondary {
+  background-color: #17b5dd;
+  color: #f3f7fe;
+}
+
 .profile-buttons {
   font-size: 0.9rem;
   border: none;
@@ -83,4 +88,29 @@
   background-color: #f3f7fe;
   box-shadow: 0 0 0 5px #1ca8175f;
   color: #1ca817;
+}
+
+.profile-buttons-secondary:hover {
+  background-color: #f3f7fe;
+  box-shadow: 0 0 0 5px #17b5dd5f;
+  color: #17b5dd;
+}
+
+.form-body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
+  background-color: #e4ecf5;
+}
+
+.form-inner {
+  max-width: 60vh;
+  width: 1000px;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  background-color: #fff;
+  text-align: center;
 }

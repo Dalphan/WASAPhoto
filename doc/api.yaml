@@ -878,6 +878,11 @@ components:
           description: True if the searching user follows the found user
           example: false
           readOnly: true
+        banned:
+          type: boolean
+          description: True if the searching user has banned the found user
+          example: false
+          readOnly: true
     Photo:
       description: |
         A single photo posted by an user

@@ -106,7 +106,7 @@ export default {
                 var path = `/users/${this.user.id}/banned`;
                 let response = await this.$axios.get(path);
 
-                if (response.status === 200) {
+                if (response.status == 200) {
 					if (response.data !== null) this.bans = response.data;
                 }
             } catch (e) {
@@ -141,6 +141,115 @@ export default {
 			this.loading = false;
 		},
 
+		async FollowUser() {
+			this.loading = true;
+            this.errormsg = null;
+			let id = this.$getCurrentId();
+            try {
+                var path = `/users/${id}/following/${this.user.id}`;
+                let response = await this.$axios.put(path);
+
+                if (response.status == 200 || response.status == 201) {
+					if (id === this.user.id) {
+						// The user is in their profile page
+						// NOT IMPLEMENTED
+					} else {
+						// The user is not in their profile page
+						this.user.followed = true;
+						this.user.followersCount++;
+					}
+                }
+            } catch (e) {
+				this.errormsg = e.toString();
+            }
+            this.loading = false;
+		},
+
+		async UnfollowUser() {
+			this.loading = true;
+            this.errormsg = null;
+			let id = this.$getCurrentId();
+            try {
+                var path = `/users/${id}/following/${this.user.id}`;
+                let response = await this.$axios.delete(path);
+
+                if (response.status == 200 || response.status == 201) {
+					if (id === this.user.id) {
+						// The user is in their profile page
+						// NOT IMPLEMENTED
+					} else {
+						// The user is not in their profile page
+						this.user.followed = false;
+						this.user.followersCount--;
+					}
+                }
+            } catch (e) {
+				this.errormsg = e.toString();
+            }
+            this.loading = false;
+		},
+
+		toggleFollow() {
+			if (this.user.followed) this.UnfollowUser();
+			else this.FollowUser();
+		},
+
+		async BanUser() {
+			this.loading = true;
+            this.errormsg = null;
+			let id = this.$getCurrentId();
+            try {
+                var path = `/users/${id}/banned/${this.user.id}`;
+                let response = await this.$axios.put(path);
+
+                if (response.status == 200 || response.status == 201) {
+					if (id === this.user.id) {
+						// The user is in their profile page
+						// NOT IMPLEMENTED
+					} else {
+						// The user is not in their profile page
+						this.user.banned = true;
+
+						// The ban removes the follow too
+						this.user.followed = false;
+						this.user.followersCount--;
+						this.user.followingCount = response.data.followingCount;
+					}
+                }
+            } catch (e) {
+				this.errormsg = e.toString();
+            }
+            this.loading = false;
+		},
+
+		async UnbanUser() {
+			this.loading = true;
+            this.errormsg = null;
+			let id = this.$getCurrentId();
+            try {
+                var path = `/users/${id}/banned/${this.user.id}`;
+                let response = await this.$axios.delete(path);
+
+                if (response.status == 200 || response.status == 201) {
+					if (id === this.user.id) {
+						// The user is in their profile page
+						// NOT IMPLEMENTED
+					} else {
+						// The user is not in their profile page
+						this.user.banned = false;
+					}
+                }
+            } catch (e) {
+				this.errormsg = e.toString();
+            }
+            this.loading = false;
+		},
+
+		toggleBan() {
+			if (this.user.banned) this.UnbanUser();
+			else this.BanUser();
+		},
+
 		toggleModal(post) {
 			this.selectedPost = post;
 		},
@@ -168,13 +277,33 @@ export default {
 			<!-- User Information -->
 				<div class="card">
 					<div class="card-body">
-						<h5 class="card-title"> {{ user.username }} </h5>
+						<h4 class="card-title"> {{ user.username }} </h4>
 						<p v-if="user.name || user.surname" class="card-text mb-1"> {{ user.name }} {{ user.surname }}</p>
 						<small v-else class="fst-italic">No name and surname</small>
 						<div v-if="this.$getCurrentId() == user.id" class="mt-2">
 							<button class="profile-buttons profile-buttons-primary" type="button" data-bs-toggle="collapse" data-bs-target="#divEdit" aria-expanded="false" aria-controls="divEdit">
 								Edit
 							</button>
+						</div>
+						<div v-else class="mt-2">
+							<div class="d-flex justify-content-between">
+								<div @click="toggleFollow">
+									<button v-if="user.followed" class="profile-buttons profile-buttons-primary" type="button">
+										Unfollow
+									</button>
+									<button v-else="user.followed" class="profile-buttons profile-buttons-secondary" type="button">
+										Follow
+									</button>
+								</div>
+								<div @click="toggleBan">
+									<button v-if="user.banned" class="profile-buttons profile-buttons-success" type="button">
+										Unban
+									</button>
+									<button v-else class="profile-buttons profile-buttons-danger" type="button">
+										Ban
+									</button>
+								</div>
+							</div>
 						</div>
 						<div class="collapse" id="divEdit">
 							<div class="mt-2 mb-3 row">
@@ -256,5 +385,4 @@ export default {
 .input-profile {
 	font-size: 0.9rem;
 }
-
 </style>

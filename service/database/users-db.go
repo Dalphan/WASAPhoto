@@ -96,12 +96,15 @@ func (db *appdbimpl) FindUserByUsername(username string, opz ...int) (utils.User
 		uid = 0
 	}
 
-	err := db.c.QueryRow(`	SELECT u.*, (f.UID IS NOT NULL) AS followed
+	err := db.c.QueryRow(`	SELECT u.*, (f.UID IS NOT NULL) AS followed, (b.UID IS NOT NULL) AS banned
 							FROM Users u
 							LEFT JOIN Followings f
 							ON u.UID = f.FollowedID
 							AND f.UID = ?
-							Where Username = ?`, uid, username).Scan(&user.UserID, &user.Username, &name, &surname, &user.Followed)
+							LEFT JOIN Bans b
+							ON u.UID = b.BannedID
+							AND b.UID = ?
+							Where Username = ?`, uid, uid, username).Scan(&user.UserID, &user.Username, &name, &surname, &user.Followed, &user.Banned)
 
 	user.Name = name.String
 	user.Surname = surname.String

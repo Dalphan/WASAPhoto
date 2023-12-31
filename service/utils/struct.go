@@ -16,6 +16,7 @@ type User struct {
 	FollowingCount int    `json:"followingCount"`
 	PhotoCount     int    `json:"photoCount"`
 	Followed       bool   `json:"followed"`
+	Banned         bool   `json:"banned"`
 }
 
 type Photo struct {
