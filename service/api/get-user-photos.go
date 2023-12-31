@@ -35,7 +35,7 @@ func (rt *_router) getUserPhotos(w http.ResponseWriter, r *http.Request, ps http
 	}
 
 	// Check if the User has banned the one searching
-	if CheckBanned(w, rt, authid, uid, utils.ErrUserNotFound) {
+	if CheckBanned(w, rt, uid, authid, utils.ErrUserNotFound) {
 		return
 	}
 

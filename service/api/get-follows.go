@@ -9,7 +9,7 @@ import (
 	"github.com/julienschmidt/httprouter"
 )
 
-type db_follow func(int) ([]utils.User, int, error)
+type db_follow func(int, int) ([]utils.User, int, error)
 
 func getFollows(w http.ResponseWriter, r *http.Request, ps httprouter.Params, rt *_router, follow db_follow, mes string) {
 	utils.SetHeaderText(w)
@@ -30,7 +30,7 @@ func getFollows(w http.ResponseWriter, r *http.Request, ps httprouter.Params, rt
 		return
 	}
 
-	users, res, err := follow(uid)
+	users, res, err := follow(uid, auth)
 	if res == database.ERROR {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return

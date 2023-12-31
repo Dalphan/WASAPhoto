@@ -38,7 +38,7 @@ func (rt *_router) getLikes(w http.ResponseWriter, r *http.Request, ps httproute
 		return
 	}
 
-	likes, res, err := rt.db.GetLikesByPhoto(pid)
+	likes, res, err := rt.db.GetLikesByPhoto(pid, uid)
 	switch res {
 	case database.ERROR:
 		http.Error(w, err.Error(), http.StatusInternalServerError)

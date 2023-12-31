@@ -40,7 +40,7 @@ import (
 
 // AppDatabase is the high level interface for the DB
 type AppDatabase interface {
-	FindUserByUsername(string) (utils.User, int, error)
+	FindUserByUsername(string, ...int) (utils.User, int, error)
 	FindUserByID(int) (utils.User, int, error)
 	CreateUser(string) (int, int, error)
 	UpdateUser(utils.User) (utils.User, int, error)
@@ -53,14 +53,14 @@ type AppDatabase interface {
 	UnbanUser(int, int) (int, error)
 	FollowUser(int, int) (int, error)
 	UnfollowUser(int, int) (int, error)
-	GetFollowings(int) ([]utils.User, int, error)
-	GetFollowers(int) ([]utils.User, int, error)
+	GetFollowings(int, int) ([]utils.User, int, error)
+	GetFollowers(int, int) ([]utils.User, int, error)
 	CreatePhoto(utils.Photo) (int, int, error)
 	DeletePhoto(int) (int, error)
 	GetPhotoById(int) (utils.Photo, int, error)
 	LikePhoto(int, int) (utils.Like, int, error)
 	UnlikePhoto(int, int) (int, error)
-	GetLikesByPhoto(int) ([]utils.Like, int, error)
+	GetLikesByPhoto(int, int) ([]utils.Like, int, error)
 	CommentPhoto(utils.Comment) (int, int, error)
 	UncommentPhoto(int, int) (int, error)
 	GetCommentById(int) (utils.Comment, int, error)

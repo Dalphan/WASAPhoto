@@ -47,6 +47,11 @@
   color: #f3f7fe;
 }
 
+.profile-buttons-success {
+  background-color: #1ca817;
+  color: #f3f7fe;
+}
+
 .profile-buttons-danger {
   background-color: #fc4646;
   color: #f3f7fe;
@@ -72,4 +77,10 @@
   background-color: #f3f7fe;
   box-shadow: 0 0 0 5px #3b83f65f;
   color: #3b82f6;
+}
+
+.profile-buttons-success:hover {
+  background-color: #f3f7fe;
+  box-shadow: 0 0 0 5px #1ca8175f;
+  color: #1ca817;
 }

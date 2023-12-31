@@ -81,7 +81,7 @@ export default {
             this.loading = false;
         },
 
-        filterusersList(){
+        filterUsersList(){
             if (this.searchedUser === "") {
                 this.filteredList = this.usersList;
                 return;
@@ -103,7 +103,7 @@ export default {
                 <div class="input-group mb-3">
                     <input v-model="searchedUser" type="text" class="form-control" placeholder="Search...">
                     <div class="input-group-append">
-                        <button class="input-group-text text-primary send-button" type="button" @click="filterusersList">
+                        <button class="input-group-text text-primary send-button" type="button" @click="filterUsersList">
                             <svg class="feather"><use href="/feather-sprite-v4.29.0.svg#search"/></svg>
                         </button>
                     </div>
@@ -116,6 +116,9 @@ export default {
                             </RouterLink>
                             <button v-if="path === 2 && this.$getCurrentId() == this.id" class="profile-buttons profile-buttons-danger" title="Remove following">
                                 <svg class="feather"><use href="/feather-sprite-v4.29.0.svg#x-circle"/></svg>
+                            </button>
+                            <button v-if="path === 3 && this.$getCurrentId() == this.id" class="profile-buttons profile-buttons-success" title="Remove ban">
+                                <svg class="feather"><use href="/feather-sprite-v4.29.0.svg#user-plus"/></svg>
                             </button>
                             <!--<button v-else class="profile-buttons profile-buttons-primary">Follow</button>-->
                         </li>

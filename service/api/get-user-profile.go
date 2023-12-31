@@ -24,7 +24,7 @@ func (rt *_router) getUserProfile(w http.ResponseWriter, r *http.Request, ps htt
 		return
 	} else {
 		// Valid username, search the profile in the database
-		user, res, err := rt.db.FindUserByUsername(username)
+		user, res, err := rt.db.FindUserByUsername(username, uid)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return

@@ -37,6 +37,10 @@ func (rt *_router) followUser(w http.ResponseWriter, r *http.Request, ps httprou
 	if CheckBanned(w, rt, fid, uid, utils.ErrUserNotFound) {
 		return
 	}
+	// The user is unable to follow users whom they have banned
+	if CheckBanned(w, rt, uid, fid, utils.ErrUserNotFound) {
+		return
+	}
 
 	switch res, err := rt.db.FollowUser(uid, fid); res {
 	case database.UNIQUE_FAILED:

@@ -84,14 +84,24 @@ func (db *appdbimpl) FindUserByID(uid int) (utils.User, int, error) {
 	}
 }
 
-func (db *appdbimpl) FindUserByUsername(username string) (utils.User, int, error) {
+func (db *appdbimpl) FindUserByUsername(username string, opz ...int) (utils.User, int, error) {
 	var user utils.User
 	var name sql.NullString
 	var surname sql.NullString
 
-	err := db.c.QueryRow(`	SELECT *
-							FROM Users
-							Where Username = ?`, username).Scan(&user.UserID, &user.Username, &name, &surname)
+	var uid int
+	if len(opz) > 0 {
+		uid = opz[0]
+	} else {
+		uid = 0
+	}
+
+	err := db.c.QueryRow(`	SELECT u.*, (f.UID IS NOT NULL) AS followed
+							FROM Users u
+							LEFT JOIN Followings f
+							ON u.UID = f.FollowedID
+							AND f.UID = ?
+							Where Username = ?`, uid, username).Scan(&user.UserID, &user.Username, &name, &surname, &user.Followed)
 
 	user.Name = name.String
 	user.Surname = surname.String

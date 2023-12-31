@@ -29,12 +29,17 @@ func (db *appdbimpl) UnlikePhoto(pid int, uid int) (int, error) {
 	return SUCCESS, nil
 }
 
-func (db *appdbimpl) GetLikesByPhoto(pid int) ([]utils.Like, int, error) {
+// The uid is used to remove users who have banned the user receiving the list of likes
+func (db *appdbimpl) GetLikesByPhoto(pid int, uid int) ([]utils.Like, int, error) {
 	var likes []utils.Like
 	rows, err := db.c.Query(`	SELECT l.PID, l.UID, u.Username
 								FROM Like l, Users u 
+								LEFT JOIN Bans b
+								ON b.UID = l.UID
+								AND b.BannedID = ?
 								WHERE l.UID = u.UID
-								AND l.PID = ?`, pid)
+								AND l.PID = ?
+								AND (b.BannedID IS NULL)`, uid, pid)
 	if err != nil {
 		return nil, ERROR, err
 	}

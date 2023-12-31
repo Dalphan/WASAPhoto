@@ -30,11 +30,16 @@ func (db *appdbimpl) UnfollowUser(uid int, fid int) (int, error) {
 	}
 }
 
-func (db *appdbimpl) GetFollowings(uid int) ([]utils.User, int, error) {
+// bid parameter is used to remove from the list the users that banned the user performing the request
+func (db *appdbimpl) GetFollowings(uid int, bid int) ([]utils.User, int, error) {
 	rows, err := db.c.Query(`	SELECT u.UID, u.Username
 								FROM Users u, Followings f
+								LEFT JOIN Bans b
+									ON f.FollowedID = b.UID 
+									AND b.BannedID = ?
 								WHERE 	f.FollowedID = u.UID
-								AND 	f.UID = ?`, uid)
+								AND (b.UID IS NULL OR b.BannedID IS NULL)
+								AND f.UID = ?`, bid, uid)
 	if err != nil {
 		return nil, ERROR, err
 	}
@@ -43,11 +48,16 @@ func (db *appdbimpl) GetFollowings(uid int) ([]utils.User, int, error) {
 	return getSelectedUsers(rows)
 }
 
-func (db *appdbimpl) GetFollowers(uid int) ([]utils.User, int, error) {
+// bid parameter is used to remove from the list the users that banned the user performing the request
+func (db *appdbimpl) GetFollowers(uid int, bid int) ([]utils.User, int, error) {
 	rows, err := db.c.Query(`	SELECT u.UID, u.Username
 								FROM Users u, Followings f
+								LEFT JOIN Bans b
+								ON f.UID = b.UID 
+								AND b.BannedID = ?
 								WHERE 	f.UID = u.UID
-								AND 	f.FollowedID = ?`, uid)
+								AND (b.UID IS NULL OR b.BannedID IS NULL)
+								AND 	f.FollowedID = ?`, bid, uid)
 	if err != nil {
 		return nil, ERROR, err
 	}

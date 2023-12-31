@@ -1,6 +1,7 @@
 <script setup>
 import Modal from '../components/PhotoModal.vue'
 import UsersListModal from '../components/UsersListModal.vue'
+import ErrorMsg from '../components/ErrorMsg.vue'
 </script>
 <script>
 export default {
@@ -23,6 +24,7 @@ export default {
 	components: {
 		Modal,
 		UsersListModal,
+		ErrorMsg,
 	},
 	watch:{
 		async '$route.params.username'(newUsername) {
@@ -59,7 +61,8 @@ export default {
 					this.surname = this.user.surname;	
 				}
 			} catch (e) {
-				this.errormsg = e.toString();
+				this.user = null;
+				this.errormsg = e.response.data !== null ? e.response.data : e.toString();
 				return;				
 			}
 			this.loading = false;
@@ -77,12 +80,12 @@ export default {
 			try {
 				let response = await this.$axios.get(path);
 				if (response.status == 200) {
-					response.data.forEach( e => {
-						// stream[index].image = 'data:image/*;base64,' + stream[index].image;
-						e.image = `data:image/*;base64,${e.image}`;
-						e.timestamp = this.$timestampToDate(e.timestamp);
-					});
 					if (response.data !== null) {
+						response.data.forEach( e => {
+							e.image = `data:image/*;base64,${e.image}`;
+							e.timestamp = this.$timestampToDate(e.timestamp);
+						});
+
 						this.moreContent = response.data.length === 10;
 						this.photos = this.photos.length > 0 ? this.photos.concat(response.data) : response.data;
 					}
@@ -90,7 +93,7 @@ export default {
 						this.moreContent = false;	
 				}
 			} catch (e) {
-				this.errormsg = e.toString();
+				this.errormsg = e.toString() + " DA FOTO";
 				return;				
 			}
 			this.loading = false;
@@ -104,11 +107,10 @@ export default {
                 let response = await this.$axios.get(path);
 
                 if (response.status === 200) {
-                    this.bans = response.data;
-					console.log(this.bans);
+					if (response.data !== null) this.bans = response.data;
                 }
             } catch (e) {
-                this.errormsg = e.toString();
+				this.errormsg = e.toString();
             }
             this.loading = false;
 		},
@@ -158,6 +160,9 @@ export default {
 
 <template>
 	<div class="col-md-12 ms-sm-auto col-lg-12 px-md-4 mt-5">
+		<div class="row" v-if="errormsg">
+			<ErrorMsg :msg="errormsg"></ErrorMsg>
+		</div>
 		<div class="row" v-if="user">
 			<div class="col-md-3">
 			<!-- User Information -->

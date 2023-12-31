@@ -28,10 +28,10 @@ func (rt *_router) getBanned(w http.ResponseWriter, r *http.Request, ps httprout
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-	if len(banned) == 0 {
-		http.Error(w, utils.ErrUserNotFound.Error(), http.StatusNotFound)
-		return
-	}
+	// if len(banned) == 0 {
+	// 	http.Error(w, utils.ErrUserNotFound.Error(), http.StatusNotFound)
+	// 	return
+	// }
 
 	utils.SetHeaderJson(w)
 	err = json.NewEncoder(w).Encode(banned)

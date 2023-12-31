@@ -7,12 +7,14 @@ export default {
 		return {
 			logged: null,
 			userLink: null,
+			currentUsername: null,
 		}
 	},
 	watch:{
 		$route (to, from){
 			this.logged = this.$getCurrentId(); // Check if user is logged, if yes render the navbar
-			this.userLink = "/user/" + this.$getCurrentUsername();
+			this.currentUsername = this.$getCurrentUsername();
+			this.userLink = "/user/" + this.currentUsername;
 		}
 	},	
 	methods: {
@@ -139,6 +141,10 @@ export default {
 								</div>
 							</li>
 						</ul>
+
+						<h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted text-uppercase">
+							<span>Logged as {{ currentUsername }}</span>
+						</h6>
 
 						<!-- <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted text-uppercase">
 							<span>Secondary menu</span>
