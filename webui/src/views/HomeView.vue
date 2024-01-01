@@ -38,18 +38,16 @@ export default {
 			try {
 				let response = await this.$axios.get(path);
 				if (response.status == 200) {
-					// adjust image and timestamp field			
-					response.data.forEach( e => {
-						// stream[index].image = 'data:image/*;base64,' + stream[index].image;
-						e.image = `data:image/*;base64,${e.image}`;
-						e.timestamp = this.$timestampToDate(e.timestamp);
-					});
 					if (response.data !== null) {
+						// adjust image and timestamp field			
+						response.data.forEach( e => {
+							e.image = `data:image/*;base64,${e.image}`;
+							e.timestamp = this.$timestampToDate(e.timestamp);
+						});
 						this.moreContent = response.data.length === 10;
 						this.stream = this.stream.length > 0 ? this.stream.concat(response.data) : response.data;
 					}
-					else 
-						this.moreContent = false;				
+					else this.moreContent = false;			
 				}
 			} catch (e) {
 				this.errormsg = e.toString();				
@@ -91,7 +89,7 @@ export default {
 		</div>
 
 		<ErrorMsg v-if="errormsg" :msg="errormsg"></ErrorMsg>
-		<div v-if="stream">
+		<div v-if="stream.length > 0">
 			<div class="row" v-for="post in stream" :key="post.id">
 				<RouterLink :to="this.$pathToProfile(post.username)" class="user-link">
 					<p v-text="post.username"></p>
@@ -102,7 +100,7 @@ export default {
 			</div>
 		</div>
 		<div v-else>
-			<p> Sorry nothing to show here </p>	
+			<p> There is nothing to display here. Begin by following someone! </p>	
 		</div>	
 	</div>
 	<Modal v-if="selectedPost" @close="toggleModal(null)" :photo="selectedPost"> </Modal>

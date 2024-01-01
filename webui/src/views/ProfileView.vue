@@ -110,7 +110,6 @@ export default {
 				var path = `/photos/${this.photos[index].id}`;
 				let response = await this.$axios.delete(path);
 
-				console.log(response);
 				if (response.status == 200) {
 					this.photos.splice(index, 1);
 					this.user.photoCount--;
@@ -400,7 +399,7 @@ export default {
 							<div class="card-body">
 								<div class="d-flex justify-content-between">
 									<h5 class="card-title"> {{ user.username }}</h5>
-									<div title="Delete Post" @click="deletePost(index)">
+									<div v-if="this.$getCurrentId() == user.id" title="Delete Post" @click="deletePost(index)">
 										<svg role="button" class="feather text-danger" style="width: 24px; height: 24px;">
 											<use href="/feather-sprite-v4.29.0.svg#trash-2"/>
 										</svg>

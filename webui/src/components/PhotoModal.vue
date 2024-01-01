@@ -69,8 +69,7 @@
                 this.currentUser = this.$getCurrentId();
 
                 if (response.data !== null) {
-                this.likes = response.data;
-                console.log(this.likes);
+                  this.likes = response.data;
                 }
             }
             } catch (e) {
