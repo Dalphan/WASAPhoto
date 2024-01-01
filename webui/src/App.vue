@@ -21,6 +21,7 @@ export default {
 		logout() {
 			localStorage.removeItem("token");
 			localStorage.removeItem("username");
+			this.$setAuth();
 			this.$router.push({name: 'Login'});
 		}
 	},

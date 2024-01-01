@@ -67,17 +67,41 @@ export default {
 </script>
 
 <template>
-    <div id="app">
+    <!-- <div id="app">
         <h2>Login</h2>
-		<!--<form>-->
 			<div class="form-group">
 			<label for="Username">Username</label>
 			<input type="text" class="form-control" id="Username" placeholder="Enter username" v-model="username">
 			<small id="usernameHelp" class="form-text font-italic text-danger" v-if="error" v-text="errormsg"></small>
 		</div>
 		<button @click="login" class="btn btn-outline-dark">Log in</button>
-		<!--</form>-->
-	</div>
+	</div> -->
+	<div class="form-body">
+        <div style="max-width: 100vh;" class="form-inner">
+            <div class="mb-3">
+                <h1>WASAPhoto Login</h1>
+            </div>
+			<div style="font-size: 1.3rem;">
+				<div class="form-group mb-3">
+					<label for="Username">Username</label>
+					<input style="text-align: center;" v-model="username" id="Username" type="text" class="form-control" placeholder="Type username...">
+					<!-- <div class="input-group-append">
+						<button class="input-group-text text-primary send-button" type="button" @click="searchUsers">
+							<svg class="feather"><use href="/feather-sprite-v4.29.0.svg#search"/></svg>
+						</button>
+					</div> -->
+				</div>
+				<button style="font-size:1.2rem;" class="profile-buttons profile-buttons-primary" type="button" @click="login">
+					<svg style="margin-left: 2px;" class="feather"><use href="/feather-sprite-v4.29.0.svg#log-in"/></svg>
+					Login
+				</button>
+			</div>
+			<div v-if="errormsg" >
+				<hr>
+				<ErrorMsg :msg="errormsg"></ErrorMsg>
+			</div>
+        </div>
+    </div>
 </template>
 
 <style>

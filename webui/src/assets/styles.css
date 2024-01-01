@@ -23,7 +23,6 @@
 
 .modal-inner {
   position: relative;
-  max-width: auto;
   box-shadow: 4px 4px 6px 4px rgba(0, 0, 0, 0.1), 4px 4px 4px 4px rgba(0, 0, 0, 0.06);
   background-color: #fff;
   padding: 30px 24px;

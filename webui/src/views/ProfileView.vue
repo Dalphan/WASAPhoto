@@ -2,6 +2,7 @@
 import Modal from '../components/PhotoModal.vue'
 import UsersListModal from '../components/UsersListModal.vue'
 import ErrorMsg from '../components/ErrorMsg.vue'
+import NewPostModal from '../components/NewPostModal.vue'
 </script>
 <script>
 export default {
@@ -19,12 +20,14 @@ export default {
 			selectedPost: null, 
 			followPath: null,
 			bans: [],
+			createPost: false,
 		}
 	},
 	components: {
 		Modal,
 		UsersListModal,
 		ErrorMsg,
+		NewPostModal,
 	},
 	watch:{
 		async '$route.params.username'(newUsername) {
@@ -93,7 +96,27 @@ export default {
 						this.moreContent = false;	
 				}
 			} catch (e) {
-				this.errormsg = e.toString() + " DA FOTO";
+				this.errormsg = e.toString();
+				return;				
+			}
+			this.loading = false;
+		},
+
+		async deletePost(index){
+			// Load user posts
+			this.loading = true;
+			this.errormsg = null;
+			try {
+				var path = `/photos/${this.photos[index].id}`;
+				let response = await this.$axios.delete(path);
+
+				console.log(response);
+				if (response.status == 200) {
+					this.photos.splice(index, 1);
+					this.user.photoCount--;
+				}
+			} catch (e) {
+				this.errormsg = e.toString();
 				return;				
 			}
 			this.loading = false;
@@ -257,6 +280,16 @@ export default {
 		// 1 for Followers, 2 for Following, 3 for Banned
 		toggleFollowModal(index) {
 			this.followPath = index
+		},
+
+		toggleCreateModal(reload){
+			this.createPost = !this.createPost;
+			if (reload) {
+				this.streamPage = 0;
+				this.photos = [];
+				this.user.photoCount++;
+				this.getPhotos();
+			}
 		}
 	},
 	mounted() {
@@ -345,9 +378,15 @@ export default {
 							<label role="button">Bans:&nbsp;</label> 
 							<strong role="button" class="fs-6"> {{ bans.length }}</strong> 
 						</li>
-						<li class="list-group-item d-flex align-items-center">
-							<label>Posts:&nbsp;</label> 
-							<strong class="fs-6"> {{ user.photoCount }}</strong> 
+						<li class="list-group-item d-flex align-items-center justify-content-between">
+							<div>
+								<label>Posts:&nbsp;</label> 
+								<strong class="fs-6">{{ user.photoCount }}</strong> 
+							</div>
+							<button v-if="this.$getCurrentId() == user.id" class="profile-buttons profile-buttons-success" @click="toggleCreateModal(false)">
+								<svg style="margin-left: 2px;" class="feather"><use href="/feather-sprite-v4.29.0.svg#plus"/></svg>
+								New post
+							</button>
 						</li>
 					</ul>
 				</div>
@@ -359,7 +398,14 @@ export default {
 					<div v-if="photos.length > 0">
 						<div class="card" v-for="(photo, index) in photos" :key="index">
 							<div class="card-body">
-								<h5 class="card-title"> {{ user.username }}</h5>
+								<div class="d-flex justify-content-between">
+									<h5 class="card-title"> {{ user.username }}</h5>
+									<div title="Delete Post" @click="deletePost(index)">
+										<svg role="button" class="feather text-danger" style="width: 24px; height: 24px;">
+											<use href="/feather-sprite-v4.29.0.svg#trash-2"/>
+										</svg>
+									</div>
+								</div>
 								<img :src="photo.image" class="card-img-top img-fluid" alt="" @click="toggleModal(photo)">	
 								<p class="card-text" v-if="photo.caption" v-text="photo.caption"></p>		
 								<p class="card-text">Likes: {{ photo.likeCount }}, Comments: {{ photo.commentCount }}</p>
@@ -379,6 +425,7 @@ export default {
 	</div>
 	<Modal v-if="selectedPost" @close="toggleModal(null)" :photo="selectedPost"> </Modal>
 	<UsersListModal v-if="followPath" @close="toggleFollowModal(null)" :path="followPath" :name="user.username" :id="user.id" :bans="bans"></UsersListModal>
+	<NewPostModal v-if="createPost" @close="toggleCreateModal(false)" @closeReload="toggleCreateModal(true)" :username="user.username"></NewPostModal>
 </template>
 
 <style>

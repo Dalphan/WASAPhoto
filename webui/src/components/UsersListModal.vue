@@ -114,12 +114,14 @@ export default {
                             <RouterLink @click="close" :to="this.$pathToProfile(u.username)" class="user-link">
                                 <strong>{{ u.username }}</strong><br>
                             </RouterLink>
+                            <!--  
                             <button v-if="path === 2 && this.$getCurrentId() == this.id" class="profile-buttons profile-buttons-danger" title="Remove following">
                                 <svg class="feather"><use href="/feather-sprite-v4.29.0.svg#x-circle"/></svg>
                             </button>
                             <button v-if="path === 3 && this.$getCurrentId() == this.id" class="profile-buttons profile-buttons-success" title="Remove ban">
                                 <svg class="feather"><use href="/feather-sprite-v4.29.0.svg#user-plus"/></svg>
-                            </button>
+                            </button>-->
+
                             <!--<button v-else class="profile-buttons profile-buttons-primary">Follow</button>-->
                         </li>
                     </ul>
