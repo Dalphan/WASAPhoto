@@ -21,12 +21,15 @@ export default {
         },
         handleImageChange(event) {
             this.file = event.target.files[0];
-            if (this.file) {
+            if (this.file && this.file['type'].startsWith('image')) {
                 const reader = new FileReader();
                 reader.onload = (e) => {
                     this.selectedImage = e.target.result;
                 };
                 reader.readAsDataURL(this.file);
+            } else {
+                event.target.value = "";
+                alert('The given file is not an image');
             }
         },
 
@@ -47,7 +50,8 @@ export default {
                     this.$emit('closeReload');
                 }
 			} catch (e) {
-				this.errormsg = e.toString();
+				this.errormsg = e.response.data === null ? e.toString() : e.response.data;
+                alert(this.errormsg);
 			}
 			this.loading = false;
 		},

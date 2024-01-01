@@ -35,10 +35,32 @@ func (rt *_router) uploadPhoto(w http.ResponseWriter, r *http.Request, ps httpro
 
 	imageFile, _, err := r.FormFile("image")
 	if err != nil {
-		http.Error(w, "Error while retrieving image", http.StatusBadRequest)
+		http.Error(w, "Error while getting the image", http.StatusBadRequest)
 		return
 	}
 	defer imageFile.Close()
+
+	// Read the first 512 bytes to get the Content-Type
+	buffer := make([]byte, 512)
+	_, err = imageFile.Read(buffer)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	// Check if it's an image with the Content-Type
+	contentType := http.DetectContentType(buffer)
+	if contentType[:5] != "image" {
+		http.Error(w, utils.ErrNotPhoto.Error(), http.StatusBadRequest)
+		return
+	}
+
+	// Go back to the start of the file
+	_, err = imageFile.Seek(0, io.SeekStart)
+	if err != nil {
+		http.Error(w, "Error while rewinding the image file", http.StatusInternalServerError)
+		return
+	}
 
 	imageBytes, err := io.ReadAll(imageFile)
 	if err != nil {
@@ -46,7 +68,6 @@ func (rt *_router) uploadPhoto(w http.ResponseWriter, r *http.Request, ps httpro
 		return
 	}
 
-	// Non si puo salvare cosi l'immagine, la risposta è completamente occupata dall'immagine in base64
 	photo.Image = utils.BytesToBase64(imageBytes)
 	photo.Timestamp = utils.NowFormat()
 
@@ -62,7 +83,6 @@ func (rt *_router) uploadPhoto(w http.ResponseWriter, r *http.Request, ps httpro
 	photo.PhotoID = PID
 
 	utils.SetHeaderJson(w)
-	// w.Header().Set("Content-Type", "image/*")
 	w.WriteHeader(http.StatusCreated)
 	err = json.NewEncoder(w).Encode(photo)
 	if err != nil {
