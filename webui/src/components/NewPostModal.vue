@@ -3,9 +3,7 @@
 <script>
 export default {
     name: 'NewPostModal',
-    props: {
-        username: "",
-    },
+    props: ["username"],
 	data: function() {
 		return {
 			errormsg: "",

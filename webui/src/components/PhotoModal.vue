@@ -1,9 +1,7 @@
 <script>
   export default {
     name: 'Modal',
-    props: {
-        photo: Object,
-    },
+    props: ["photo"],
     data: function() {
         return {
             errormsg: null,

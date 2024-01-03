@@ -89,19 +89,21 @@ export default {
 		</div>
 
 		<ErrorMsg v-if="errormsg" :msg="errormsg"></ErrorMsg>
-		<div v-if="stream.length > 0">
-			<div class="row" v-for="post in stream" :key="post.id">
-				<RouterLink :to="this.$pathToProfile(post.username)" class="user-link">
-					<p v-text="post.username"></p>
-				</RouterLink>
-				<img role="button" :src="post.image" @click="toggleModal(post)">
-				<p v-if="post.caption" v-text="post.caption"></p>
-				<p>{{ post.commentCount }} comments {{ post.likeCount }} likes {{ post.timestamp }}</p>
-			</div>
-		</div>
 		<div v-else>
-			<p> There is nothing to display here. Begin by following someone! </p>	
-		</div>	
+			<div v-if="stream.length > 0">
+				<div class="row" v-for="post in stream" :key="post.id">
+					<RouterLink :to="this.$pathToProfile(post.username)" class="user-link">
+						<p v-text="post.username"></p>
+					</RouterLink>
+					<img role="button" :src="post.image" @click="toggleModal(post)">
+					<p v-if="post.caption" v-text="post.caption"></p>
+					<p>{{ post.commentCount }} comments {{ post.likeCount }} likes {{ post.timestamp }}</p>
+				</div>
+			</div>
+			<div v-else>
+				<p> There is nothing to display here. Begin by following someone! </p>	
+			</div>	
+		</div>
 	</div>
 	<Modal v-if="selectedPost" @close="toggleModal(null)" :photo="selectedPost"> </Modal>
 
