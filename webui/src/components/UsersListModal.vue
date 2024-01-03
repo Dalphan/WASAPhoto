@@ -5,9 +5,9 @@
 export default {
     name: 'UsersListModal',
     props: {
-        path: 0,
-        name: "",
-        id: 0,
+        list_mode: 0,
+        username: "",
+        user_id: 0,
         bans: Array,
     },
     data: function() {
@@ -97,7 +97,7 @@ export default {
         <div class="modal-inner" @click.stop="" style="max-height: 80vh;">
             <div class="container mt-2">
                 <div class="text-center mb-4">
-                    <h3>{{ name }}'s {{ title }}</h3>
+                    <h3>{{ username }}'s {{ title }}</h3>
                 </div>
 
                 <div class="input-group mb-3">
@@ -110,15 +110,15 @@ export default {
                 </div>
                 <div>
                     <ul class="list-group" style="max-height: 60vh; overflow-y: auto;"> <!-- Set max-height and enable vertical scrolling for the list -->
-                        <li v-for="u in this.filteredList" class="list-group-item d-flex justify-content-between align-items-center">
+                        <li v-for="u in this.filteredList" class="list-group-item d-flex justify-content-between align-items-center" :key="u.id">
                             <RouterLink @click="close" :to="this.$pathToProfile(u.username)" class="user-link">
                                 <strong>{{ u.username }}</strong><br>
                             </RouterLink>
                             <!--  
-                            <button v-if="path === 2 && this.$getCurrentId() == this.id" class="profile-buttons profile-buttons-danger" title="Remove following">
+                            <button v-if="list_mode === 2 && this.$getCurrentId() == this.user_id" class="profile-buttons profile-buttons-danger" title="Remove following">
                                 <svg class="feather"><use href="/feather-sprite-v4.29.0.svg#x-circle"/></svg>
                             </button>
-                            <button v-if="path === 3 && this.$getCurrentId() == this.id" class="profile-buttons profile-buttons-success" title="Remove ban">
+                            <button v-if="list_mode === 3 && this.$getCurrentId() == this.user_id" class="profile-buttons profile-buttons-success" title="Remove ban">
                                 <svg class="feather"><use href="/feather-sprite-v4.29.0.svg#user-plus"/></svg>
                             </button>-->
 

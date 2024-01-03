@@ -323,7 +323,7 @@ export default {
 									<button v-if="user.followed" class="profile-buttons profile-buttons-primary" type="button">
 										Unfollow
 									</button>
-									<button v-else="user.followed" class="profile-buttons profile-buttons-secondary" type="button">
+									<button v-else class="profile-buttons profile-buttons-secondary" type="button">
 										Follow
 									</button>
 								</div>
@@ -423,7 +423,7 @@ export default {
 		</div>
 	</div>
 	<Modal v-if="selectedPost" @close="toggleModal(null)" :photo="selectedPost"> </Modal>
-	<UsersListModal v-if="followPath" @close="toggleFollowModal(null)" :path="followPath" :name="user.username" :id="user.id" :bans="bans"></UsersListModal>
+	<UsersListModal v-if="followPath" @close="toggleFollowModal(null)" :list_mode="followPath" :username="user.username" :user_id="user.id" :bans="bans"></UsersListModal>
 	<NewPostModal v-if="createPost" @close="toggleCreateModal(false)" @closeReload="toggleCreateModal(true)" :username="user.username"></NewPostModal>
 </template>
 

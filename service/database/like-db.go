@@ -43,10 +43,13 @@ func (db *appdbimpl) GetLikesByPhoto(pid int, uid int) ([]utils.Like, int, error
 	if err != nil {
 		return nil, ERROR, err
 	}
+	// defer func() {  // Da ancora errore rows.Err must be checked
+	// 	if closeErr := rows.Close(); closeErr != nil {
+	// 		err = closeErr // Assign the error to the outer variable
+	// 	}
+	// }()
 	defer func() {
-		if closeErr := rows.Close(); closeErr != nil {
-			err = closeErr // Assign the error to the outer variable
-		}
+		_ = rows.Close()
 	}()
 
 	for rows.Next() {

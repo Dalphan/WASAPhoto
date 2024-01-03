@@ -51,11 +51,11 @@ func checkResults(err error) int {
 
 func getSelectedUsers(rows *sql.Rows) ([]utils.User, int, error) {
 	var err error = nil
-	defer func() {
-		if closeErr := rows.Close(); closeErr != nil {
-			err = closeErr // Assign the error to the outer variable
-		}
-	}()
+	// defer func() {
+	// 	if closeErr := rows.Close(); closeErr != nil {
+	// 		err = closeErr // Assign the error to the outer variable
+	// 	}
+	// }()
 
 	var users []utils.User
 	for rows.Next() {
@@ -65,5 +65,8 @@ func getSelectedUsers(rows *sql.Rows) ([]utils.User, int, error) {
 		}
 		users = append(users, user)
 	}
+
+	_ = rows.Close()
+
 	return users, SUCCESS, err
 }

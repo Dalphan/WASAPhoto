@@ -47,10 +47,13 @@ func (db *appdbimpl) GetCommentsByPhoto(pid int, uid int) ([]utils.Comment, int,
 	if err != nil {
 		return nil, ERROR, err
 	}
+	// defer func() {
+	// 	if closeErr := rows.Close(); closeErr != nil {
+	// 		err = closeErr // Assign the error to the outer variable
+	// 	}
+	// }()
 	defer func() {
-		if closeErr := rows.Close(); closeErr != nil {
-			err = closeErr // Assign the error to the outer variable
-		}
+		_ = rows.Close()
 	}()
 
 	for rows.Next() {

@@ -141,10 +141,14 @@ func (db *appdbimpl) GetUserStream(uid int, page int) ([]utils.Photo, int, error
 	if err != nil {
 		return nil, ERROR, err
 	}
+	// defer func() {
+	// 	if closeErr := rows.Close(); closeErr != nil {
+	// 		err = closeErr // Assign the error to the outer variable
+	// 	}
+	// }()
+
 	defer func() {
-		if closeErr := rows.Close(); closeErr != nil {
-			err = closeErr // Assign the error to the outer variable
-		}
+		_ = rows.Close()
 	}()
 
 	for rows.Next() {
@@ -176,10 +180,14 @@ func (db *appdbimpl) GetUserPhotos(uid int, page int) ([]utils.Photo, int, error
 	if err != nil {
 		return nil, ERROR, err
 	}
+	// defer func() {
+	// 	if closeErr := rows.Close(); closeErr != nil {
+	// 		err = closeErr // Assign the error to the outer variable
+	// 	}
+	// }()
+
 	defer func() {
-		if closeErr := rows.Close(); closeErr != nil {
-			err = closeErr // Assign the error to the outer variable
-		}
+		_ = rows.Close()
 	}()
 
 	for rows.Next() {

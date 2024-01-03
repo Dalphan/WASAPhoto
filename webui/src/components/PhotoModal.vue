@@ -172,9 +172,7 @@
 </script>
 
 <template>
-  <transition name="modal-animation">
     <div class="modal" @click="close">
-      <transition name="modal-animation-inner">
         <div class="modal-inner" @click.stop="">      
           <div class="container">
             <div class="row">
@@ -244,7 +242,7 @@
                     </div>
                     <div id="likes" class="tab-pane fade" role="tabpanel">
                       <ul class="list-group">
-                        <li class="list-group-item" v-for="(l, index) in likes" :key="l.user">
+                        <li class="list-group-item" v-for="l in likes" :key="l.user">
                           <div class="comment-container"> 
                             <div class="d-flex">
                               <RouterLink :to="this.$pathToProfile(l.username)" class="user-link">
@@ -261,9 +259,7 @@
             </div>
           </div>
         </div>
-      </transition>
     </div>
-  </transition>
 </template>
 
 
