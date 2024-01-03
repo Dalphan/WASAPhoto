@@ -2,8 +2,9 @@
 FROM node:lts as builder
 # Copy Vue.js code
 WORKDIR /app
-COPY . .
+COPY webui webui
 ### Build Vue.js into plain HTML/CSS/JS
+WORKDIR /app/webui
 RUN npm run build-prod
 
 ### Create final container

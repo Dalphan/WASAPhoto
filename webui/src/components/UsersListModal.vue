@@ -21,7 +21,7 @@ export default {
         }
     },
     watch:{
-        path: {
+        list_mode: {
             immediate: true,
             handler(newVal, oldVal){
                 if (newVal != oldVal) {
@@ -51,7 +51,7 @@ export default {
             this.loading = true;
             this.errormsg = null;
             try {
-                var path = `/users/${this.id}/followers`;
+                var path = `/users/${this.user_id}/followers`;
                 let response = await this.$axios.get(path);
 
                 if (response.status === 200) {
@@ -68,7 +68,7 @@ export default {
             this.loading = true;
             this.errormsg = null;
             try {
-                var path = `/users/${this.id}/following`;
+                var path = `/users/${this.user_id}/following`;
                 let response = await this.$axios.get(path);
 
                 if (response.status === 200) {
