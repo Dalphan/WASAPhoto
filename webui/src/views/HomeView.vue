@@ -92,7 +92,7 @@ export default {
 		<div v-else>
 			<div v-if="stream.length > 0">
 				<div class="row" v-for="post in stream" :key="post.id">
-					<RouterLink :to="this.$pathToProfile(post.username)" class="user-link">
+					<RouterLink :to="$pathToProfile(post.username)" class="user-link">
 						<p v-text="post.username"></p>
 					</RouterLink>
 					<img role="button" :src="post.image" @click="toggleModal(post)">

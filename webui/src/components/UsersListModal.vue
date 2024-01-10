@@ -4,12 +4,7 @@
 <script>
 export default {
     name: 'UsersListModal',
-    props: {
-        list_mode: 0,
-        username: "",
-        user_id: 0,
-        bans: Array,
-    },
+    props: ["list_mode", "username", "user_id", "bans"],
     data: function() {
         return {
             errormsg: null,

@@ -27,7 +27,7 @@ export default {
 	},
 	mounted() {
 		// localStorage.token = null
-		this.$setAuth()
+		this.$setAuth();
 
 		this.userLink = "/user/" + this.$getCurrentUsername();
 
@@ -124,7 +124,7 @@ export default {
 								</RouterLink>
 							</li>
 							<li class="nav-item">
-								<RouterLink :to="this.userLink" class="nav-link">
+								<RouterLink :to="userLink" class="nav-link">
 									<svg class="feather"><use href="/feather-sprite-v4.29.0.svg#user"/></svg>
 									Profile
 								</RouterLink>
