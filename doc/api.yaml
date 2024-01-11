@@ -110,29 +110,6 @@ paths:
           $ref: '#/components/responses/NotAcceptable'
         "500":
           $ref: '#/components/responses/InternalServerError'
-    
-    get:
-      tags:
-        - users
-      summary: Get current user profile
-      description: |
-        Return the current user profile
-      operationId: getUserProfileById
-      responses:
-        "200":
-          description: Profile returned successfully
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/User'
-        "400": 
-          $ref: '#/components/responses/BadRequest'
-        "401": 
-          $ref: '#/components/responses/Unauthorized'
-        "404":
-          $ref: '#/components/responses/NotFound'
-        "500":
-          $ref: '#/components/responses/InternalServerError'
   
   # setMyUserName
   /users/{userId}/username:
