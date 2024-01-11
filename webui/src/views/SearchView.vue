@@ -69,7 +69,7 @@ export default {
 			<ErrorMsg v-if="errormsg" :msg="errormsg"></ErrorMsg>
             <div v-if="searched" class="card">
 				<div class="card-title mt-2 mb-0">
-					<RouterLink :to="this.$pathToProfile(searched.username)" class="user-link">
+					<RouterLink :to="$pathToProfile(searched.username)" class="user-link">
 						<h4>{{ searched.username }}</h4>
 					</RouterLink>	
 				</div>

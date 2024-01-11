@@ -10,6 +10,7 @@ export default {
 		return {
 			loading: false,
 			errormsg: null,
+			currentId: null,
 			user: null,
 			username: "",
 			name: "",
@@ -151,8 +152,11 @@ export default {
 					if (this.user.username !== this.username) {
 						this.$router.replace(`/user/${this.username}`);
 						localStorage.username = this.username;	
+						this.user.username = this.username;
 					}
-					this.user = response.data;	
+					// this.user = response.data;	
+					this.user.name = this.name;
+					this.user.surname = this.surname;
 				}
 			} catch (e) {
 				this.errormsg = e.toString();	
@@ -292,6 +296,7 @@ export default {
 		}
 	},
 	mounted() {
+		this.currentId = this.$getCurrentId();
 		this.getProfile();
 		this.streamPage = 0;
 		this.scroll();
@@ -312,7 +317,7 @@ export default {
 						<h4 class="card-title"> {{ user.username }} </h4>
 						<p v-if="user.name || user.surname" class="card-text mb-1"> {{ user.name }} {{ user.surname }}</p>
 						<small v-else class="fst-italic">No name and surname</small>
-						<div v-if="this.$getCurrentId() == user.id" class="mt-2">
+						<div v-if="currentId == user.id" class="mt-2">
 							<button class="profile-buttons profile-buttons-primary" type="button" data-bs-toggle="collapse" data-bs-target="#divEdit" aria-expanded="false" aria-controls="divEdit">
 								Edit
 							</button>
@@ -373,7 +378,7 @@ export default {
 							<label role="button">Following:&nbsp;</label> 
 							<strong role="button" class="fs-6"> {{ user.followingCount }}</strong> 
 						</li>
-						<li v-if="this.$getCurrentId() == user.id" class="list-group-item d-flex align-items-center" @click="toggleFollowModal(3)">
+						<li v-if="currentId == user.id" class="list-group-item d-flex align-items-center" @click="toggleFollowModal(3)">
 							<label role="button">Bans:&nbsp;</label> 
 							<strong role="button" class="fs-6"> {{ bans.length }}</strong> 
 						</li>
@@ -382,7 +387,7 @@ export default {
 								<label>Posts:&nbsp;</label> 
 								<strong class="fs-6">{{ user.photoCount }}</strong> 
 							</div>
-							<button v-if="this.$getCurrentId() == user.id" class="profile-buttons profile-buttons-success" @click="toggleCreateModal(false)">
+							<button v-if="currentId == user.id" class="profile-buttons profile-buttons-success" @click="toggleCreateModal(false)">
 								<svg style="margin-left: 2px;" class="feather"><use href="/feather-sprite-v4.29.0.svg#plus"/></svg>
 								New post
 							</button>
@@ -399,7 +404,7 @@ export default {
 							<div class="card-body">
 								<div class="d-flex justify-content-between">
 									<h5 class="card-title"> {{ user.username }}</h5>
-									<div v-if="this.$getCurrentId() == user.id" title="Delete Post" @click="deletePost(index)">
+									<div v-if="currentId == user.id" title="Delete Post" @click="deletePost(index)">
 										<svg role="button" class="feather text-danger" style="width: 24px; height: 24px;">
 											<use href="/feather-sprite-v4.29.0.svg#trash-2"/>
 										</svg>

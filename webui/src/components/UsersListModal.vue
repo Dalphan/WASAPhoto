@@ -105,15 +105,15 @@ export default {
                 </div>
                 <div>
                     <ul class="list-group" style="max-height: 60vh; overflow-y: auto;"> <!-- Set max-height and enable vertical scrolling for the list -->
-                        <li v-for="u in this.filteredList" class="list-group-item d-flex justify-content-between align-items-center" :key="u.id">
-                            <RouterLink @click="close" :to="this.$pathToProfile(u.username)" class="user-link">
+                        <li v-for="u in filteredList" class="list-group-item d-flex justify-content-between align-items-center" :key="u.id">
+                            <RouterLink @click="close" :to="$pathToProfile(u.username)" class="user-link">
                                 <strong>{{ u.username }}</strong><br>
                             </RouterLink>
                             <!--  
-                            <button v-if="list_mode === 2 && this.$getCurrentId() == this.user_id" class="profile-buttons profile-buttons-danger" title="Remove following">
+                            <button v-if="list_mode === 2 && $getCurrentId() == user_id" class="profile-buttons profile-buttons-danger" title="Remove following">
                                 <svg class="feather"><use href="/feather-sprite-v4.29.0.svg#x-circle"/></svg>
                             </button>
-                            <button v-if="list_mode === 3 && this.$getCurrentId() == this.user_id" class="profile-buttons profile-buttons-success" title="Remove ban">
+                            <button v-if="list_mode === 3 && $getCurrentId() == user_id" class="profile-buttons profile-buttons-success" title="Remove ban">
                                 <svg class="feather"><use href="/feather-sprite-v4.29.0.svg#user-plus"/></svg>
                             </button>-->
 

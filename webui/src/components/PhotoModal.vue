@@ -4,6 +4,7 @@
     props: ["photo"],
     data: function() {
         return {
+            photoLocal: this.photo,
             errormsg: null,
             loading: false,
             comments: [],
@@ -32,7 +33,7 @@
         async getComments(){
             this.loading = true;
             this.errormsg = null;
-            var path = `/photos/${this.photo.id}/comments`;
+            var path = `/photos/${this.photoLocal.id}/comments`;
             try {
             let response = await this.$axios.get(path);
             if (response.status == 200) {
@@ -57,7 +58,7 @@
         async getLikes(){
             this.loading = true;
             this.errormsg = null;
-            var path = `/photos/${this.photo.id}/likes`;
+            var path = `/photos/${this.photoLocal.id}/likes`;
             try {
             let response = await this.$axios.get(path);
             if (response.status == 200) {
@@ -79,12 +80,12 @@
         async deleteComment(id, index){
             this.loading = true;
             this.errormsg = null;
-            var path = `/photos/${this.photo.id}/comments/${id}`;
+            var path = `/photos/${this.photoLocal.id}/comments/${id}`;
             try {
             let response = await this.$axios.delete(path);
             if (response.status == 200) {
                 this.comments.splice(index, 1);
-                this.photo.commentCount--;
+                this.photoLocal.commentCount--;
             }
             } catch (e) {
             this.errormsg = e.toString();				
@@ -95,7 +96,7 @@
         async sendComment(){
             this.loading = true;
             this.errormsg = null;
-            var path = `/photos/${this.photo.id}/comments`;
+            var path = `/photos/${this.photoLocal.id}/comments`;
             this.currentUser = this.$getCurrentId();
             try {
             let response = await this.$axios.post(path, {
@@ -110,7 +111,7 @@
                 comment.username = this.$getCurrentUsername();
                 if (this.comments.length > 0) this.comments.splice(0, 0, comment);
                 else this.comments.push(comment);
-                this.photo.commentCount++;
+                this.photoLocal.commentCount++;
             }
             } catch (e) {
             this.errormsg = e.toString();				
@@ -122,12 +123,12 @@
             this.loading = true;
             this.errormsg = null;
             this.currentUser = this.$getCurrentId();
-            var path = `/photos/${this.photo.id}/likes/${this.currentUser}`;
+            var path = `/photos/${this.photoLocal.id}/likes/${this.currentUser}`;
             try {
             let response = await this.$axios.put(path);
             if (response.status == 200 || response.status == 201) {
-                this.photo.liked = true;
-                this.photo.likeCount++;
+                this.photoLocal.liked = true;
+                this.photoLocal.likeCount++;
 
                 let like = response.data;
                 like.username = this.$getCurrentUsername();
@@ -145,12 +146,12 @@
         async removeLike(){
             this.loading = true;
             this.errormsg = null;
-            var path = `/photos/${this.photo.id}/likes/${this.currentUser}`;
+            var path = `/photos/${this.photoLocal.id}/likes/${this.currentUser}`;
             try {
             let response = await this.$axios.delete(path);
             if (response.status == 200) {
-                this.photo.liked = false;
-                this.photo.likeCount--;
+                this.photoLocal.liked = false;
+                this.photoLocal.likeCount--;
 
                 // Remove like from the list
                 this.likes = this.likes.filter(like => !(like.user === response.data.user && like.photo === response.data.photo));
@@ -162,7 +163,7 @@
         },
 
         async putRemoveLike(){
-            if (this.photo.liked) this.removeLike();
+            if (this.photoLocal.liked) this.removeLike();
             else this.putLike();
         }
     },
@@ -181,7 +182,7 @@
               <div class="col-md-6">   
                 <div class="photo-details-container" ref="detailsContainer">     
                   <div class="d-flex justify-content-between">
-                      <RouterLink :to="this.$pathToProfile(photo.username)" class="user-link">
+                      <RouterLink :to="$pathToProfile(photo.username)" class="user-link">
                           <h4>{{ photo.username }}</h4>
                       </RouterLink>
                       <svg class="feather" role="button" @click="close"><use href="/feather-sprite-v4.29.0.svg#x"/></svg>
@@ -227,7 +228,7 @@
                         <li class="list-group-item" v-for="(c, index) in comments" :key="c.id">
                           <div class="comment-container"> 
                             <div class="d-flex justify-content-between align-items-center">
-                              <RouterLink :to="this.$pathToProfile(c.username)" class="user-link">
+                              <RouterLink :to="$pathToProfile(c.username)" class="user-link">
                                   <strong>{{ c.username }}</strong><br>
                               </RouterLink>
                               <svg v-if="c.user == currentUser" class="feather text-danger" role="button" @click="deleteComment(c.id, index)"><use href="/feather-sprite-v4.29.0.svg#trash-2"/></svg>
@@ -243,7 +244,7 @@
                         <li class="list-group-item" v-for="l in likes" :key="l.user">
                           <div class="comment-container"> 
                             <div class="d-flex">
-                              <RouterLink :to="this.$pathToProfile(l.username)" class="user-link">
+                              <RouterLink :to="$pathToProfile(l.username)" class="user-link">
                                   <strong>{{ l.username }}</strong><br>
                               </RouterLink>
                             </div>
