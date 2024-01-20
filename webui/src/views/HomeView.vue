@@ -70,46 +70,98 @@ export default {
 </script>
 
 <template>
-	<div>
+	<div class="stream-page">
 		<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-			<h1 class="h2"> {{ currentUsername }}'s stream </h1>
-			<!-- <div class="btn-toolbar mb-2 mb-md-0">
-				<div class="btn-group me-2">
-					<button type="button" class="btn btn-sm btn-outline-secondary" @click="refresh">
-						Refresh
-					</button>
-					<button type="button" class="btn btn-sm btn-outline-secondary" @click="exportList">
-						Export
-					</button>
-				</div>
-				<div class="btn-group me-2">
-					<button type="button" class="btn btn-sm btn-outline-primary" @click="newItem">
-						New
-					</button>
-				</div>
-			</div>		 -->
-		</div>
-
-		<ErrorMsg v-if="errormsg" :msg="errormsg"></ErrorMsg>
-		<div v-else>
-			<div v-if="stream.length > 0">
-				<div class="row" v-for="post in stream" :key="post.id">
+		<h2>{{ currentUsername }}'s Stream</h2>
+	  </div>
+  
+	  <ErrorMsg v-if="errormsg" :msg="errormsg"></ErrorMsg>
+	  <div v-else>
+		<div v-if="stream.length > 0">
+		  <div class="post-container" v-for="post in stream" :key="post.id">
+			<div class="user-info d-flex justify-content-between align-items-center">
+				<div>
 					<RouterLink :to="$pathToProfile(post.username)" class="user-link">
-						<p v-text="post.username"></p>
+						<span class="post-name">{{ post.username }}</span>
 					</RouterLink>
-					<img role="button" :src="post.image" @click="toggleModal(post)">
-					<p v-if="post.caption" v-text="post.caption"></p>
-					<p>{{ post.commentCount }} comments {{ post.likeCount }} likes {{ post.timestamp }}</p>
+				</div>
+				<div class="post-stats">
+					{{ post.timestamp }}
+					<text class="post-stats-heart"> {{ post.commentCount }} <svg class="feather" style="width: 23px; height: 23px;"><use href="/feather-sprite-v4.29.0.svg#message-circle"/></svg></text> 
+					<text>{{ post.likeCount }} <svg class="feather" style="width: 23px; height: 23px;"><use href="/feather-sprite-v4.29.0.svg#heart"/></svg> </text>
 				</div>
 			</div>
-			<div v-else>
-				<p> There is nothing to display here. Begin by following someone! </p>	
-			</div>	
+			<div class="post-content">
+			  <img role="button" :src="post.image" @click="toggleModal(post)" class="post-image"/>
+			  <p v-if="post.caption" class="post-caption">{{ post.caption }}</p>
+			</div>
+		  </div>
 		</div>
+		<div v-else>
+		  <p class="empty-message">There is nothing to display here. Begin by following someone!</p>
+		</div>
+	  </div>
 	</div>
-	<Modal v-if="selectedPost" @close="toggleModal(null)" :photo="selectedPost"> </Modal>
-
+	<Modal v-if="selectedPost" @close="toggleModal(null)" :photo="selectedPost"></Modal>
 </template>
+  
+<style scoped>
+.stream-page {
+	max-width: 70%;
+	margin: 0 auto;
+}
 
-<style>
+.post-container {
+	display: flex;
+	flex-direction: column;
+	margin-bottom: 20px;
+	border: 1px solid #ddd;
+	border-radius: 8px;
+	overflow: hidden;
+}
+
+.user-info {
+	padding: 15px;
+	background-color: #f8f8f8;
+}
+
+.post-name {
+	font-size: 1.3rem;
+	font-weight: bold;
+}
+
+.post-content {
+	max-width: 100%;
+	padding: 15px;
+}
+
+.post-image {
+	width: 100%;
+	cursor: pointer;
+}
+
+.post-caption {
+	margin-top: 8px;
+	font-size: 1rem;
+	margin-bottom: 0px;
+}
+
+.post-stats {
+	font-size: 0.85rem;
+	color: #888;
+	text-align:center;
+}
+
+.post-stats-heart{
+	border-left: 1px solid #888; 
+	padding-left: 5px; 
+	padding-right: 5px;
+}
+
+.empty-message {
+	font-size: 0.9rem;
+	color: #888;
+	text-align: center;
+}
 </style>
+  

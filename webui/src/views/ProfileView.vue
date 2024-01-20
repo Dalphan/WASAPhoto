@@ -400,19 +400,25 @@ export default {
 				<div class="card-columns">
 					<!-- <div class="card" v-for="(image, index) in images" :key="index"> -->
 					<div v-if="photos.length > 0">
-						<div class="card" v-for="(photo, index) in photos" :key="index">
-							<div class="card-body">
-								<div class="d-flex justify-content-between">
-									<h5 class="card-title"> {{ user.username }}</h5>
+						<div class="card post" v-for="(photo, index) in photos" :key="index">
+							<div class="user-info d-flex justify-content-between align-items-center">
+								<span class="post-name"> {{ user.username }}</span>
+								<div class="d-flex">
+									<div class="post-stats">
+										{{ photo.timestamp }}
+										<text class="post-stats-heart"> {{ photo.commentCount }} <svg class="feather" style="width: 23px; height: 23px;"><use href="/feather-sprite-v4.29.0.svg#message-circle"/></svg></text> 
+										<text>{{ photo.likeCount }} <svg class="feather" style="width: 23px; height: 23px;"><use href="/feather-sprite-v4.29.0.svg#heart"/></svg> </text>
+									</div>
 									<div v-if="currentId == user.id" title="Delete Post" @click="deletePost(index)">
 										<svg role="button" class="feather text-danger" style="width: 24px; height: 24px;">
 											<use href="/feather-sprite-v4.29.0.svg#trash-2"/>
 										</svg>
 									</div>
 								</div>
+							</div>
+							<div class="card-body">
 								<img :src="photo.image" class="card-img-top img-fluid" alt="" @click="toggleModal(photo)">	
-								<p class="card-text" v-if="photo.caption" v-text="photo.caption"></p>		
-								<p class="card-text">Likes: {{ photo.likeCount }}, Comments: {{ photo.commentCount }}</p>
+								<p class="post-caption" v-if="photo.caption" v-text="photo.caption"></p>
 							</div>
 						</div>
 					</div>
@@ -436,4 +442,38 @@ export default {
 .input-profile {
 	font-size: 0.9rem;
 }
+
+.user-info {
+	padding: 15px;
+	background-color: #f8f8f8;
+}
+
+.post-name {
+	font-size: 1.3rem;
+	font-weight: bold;
+}
+
+.post {
+	margin-bottom: 20px;
+}
+
+.post-caption {
+	margin-top: 8px;
+	font-size: 1rem;
+	margin-bottom: 0px;
+}
+  
+.post-stats {
+	font-size: 0.85rem;
+	color: #888;
+	margin-right: 15px;
+
+}
+
+.post-stats-heart{
+	border-left: 1px solid #888; 
+	padding-left: 5px; 
+	padding-right: 5px;
+}
+
 </style>
